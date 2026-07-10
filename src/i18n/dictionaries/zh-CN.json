@@ -98,7 +98,13 @@
     "schoolDistrict": "学区",
     "transitNotes": "交通备注",
     "floodZone": "位于洪水区",
-    "superstore": "邻近大卖场",
+    "amenitiesTitle": "生活配套",
+    "amenityOptions": {
+      "superstore": "邻近大卖场",
+      "transit_station": "地铁/轻轨站",
+      "park": "公园绿地",
+      "hospital": "医院诊所"
+    },
     "terrainNotes": "地势备注",
     "fengShuiOrientation": "风水朝向",
     "orientations": {
@@ -180,6 +186,10 @@
     "materialGrade": "建材等级",
     "fengShui": "风水朝向",
     "superstore": "邻近大卖场",
+    "amenities": "生活配套",
+    "schoolTop": "顶尖 80+",
+    "schoolGreat": "优良 60+",
+    "schoolMid": "中等 40+",
     "reset": "重置"
   },
   "listings": {

@@ -98,7 +98,13 @@
     "schoolDistrict": "School District",
     "transitNotes": "Transit Notes",
     "floodZone": "In Flood Zone",
-    "superstore": "Near Superstore",
+    "amenitiesTitle": "Amenities",
+    "amenityOptions": {
+      "superstore": "Near Superstore",
+      "transit_station": "Transit Station",
+      "park": "Park & Green Space",
+      "hospital": "Hospital & Clinics"
+    },
     "terrainNotes": "Terrain Notes",
     "fengShuiOrientation": "Feng Shui Orientation",
     "orientations": {
@@ -180,6 +186,10 @@
     "materialGrade": "Material Grade",
     "fengShui": "Feng Shui Orientation",
     "superstore": "Near Superstore",
+    "amenities": "Amenities",
+    "schoolTop": "Top 80+",
+    "schoolGreat": "Great 60+",
+    "schoolMid": "Average 40+",
     "reset": "Reset"
   },
   "listings": {

@@ -98,7 +98,13 @@
     "schoolDistrict": "學區",
     "transitNotes": "交通備註",
     "floodZone": "位於淹水區",
-    "superstore": "鄰近大賣場",
+    "amenitiesTitle": "生活機能",
+    "amenityOptions": {
+      "superstore": "鄰近大賣場",
+      "transit_station": "捷運/輕軌站",
+      "park": "公園綠地",
+      "hospital": "醫院診所"
+    },
     "terrainNotes": "地勢備註",
     "fengShuiOrientation": "風水座向",
     "orientations": {
@@ -180,6 +186,10 @@
     "materialGrade": "建材等級",
     "fengShui": "風水座向",
     "superstore": "鄰近大賣場",
+    "amenities": "生活機能",
+    "schoolTop": "頂尖 80+",
+    "schoolGreat": "優良 60+",
+    "schoolMid": "中等 40+",
     "reset": "重設"
   },
   "listings": {

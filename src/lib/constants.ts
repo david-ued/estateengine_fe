@@ -7,6 +7,10 @@ export const BASEMENT_STATUSES = ['none', 'storage', 'livable', 'parking'] as co
 
 export const PROPERTY_TYPES = ['house', 'condo', 'townhouse', 'apartment'] as const;
 
+// 生活機能標籤（存於 properties.custom_attributes 的 boolean key）
+export const AMENITIES = ['superstore', 'transit_station', 'park', 'hospital'] as const;
+export type Amenity = (typeof AMENITIES)[number];
+
 // 預設 Persona 範本（與 DB persona_templates 種子一致；名稱走字典 personas.*）
 // TODO：DB 連線後改為讀取 persona_templates 表
 export const PERSONAS = [

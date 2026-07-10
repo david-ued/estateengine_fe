@@ -24,7 +24,7 @@ const FILTER_KEYS = [
   'minBuilder',
   'minMaterial',
   'orientation',
-  'superstore',
+  'amenities',
   'sort',
 ] as const;
 
@@ -103,6 +103,7 @@ export default async function PropertiesPage({
           common={dict.common}
           orientations={dict.agentForm.orientations}
           propertyTypes={dict.agentForm.propertyTypes}
+          amenityLabels={dict.agentForm.amenityOptions}
           defaults={filters}
         />
       </div>

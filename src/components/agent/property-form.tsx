@@ -13,6 +13,7 @@ import {
 import type { Dictionary } from '@/i18n/get-dictionary';
 import { apiFetch } from '@/lib/api';
 import {
+  AMENITIES,
   BASEMENT_STATUSES,
   CITIES,
   ORIENTATIONS,
@@ -111,7 +112,9 @@ export function PropertyForm({
       basementStatus: text('basementStatus'),
       customAttributes: {
         ...(property?.custom_attributes ?? {}),
-        superstore: form.get('superstore') === 'on',
+        ...Object.fromEntries(
+          AMENITIES.map((amenity) => [amenity, form.get(amenity) === 'on']),
+        ),
       },
     };
     for (const dimension of SCORE_DIMENSIONS) {
@@ -436,15 +439,23 @@ export function PropertyForm({
           />
           {labels.floodZone}
         </label>
-        <label className="flex items-center gap-2 text-sm">
-          <input
-            name="superstore"
-            type="checkbox"
-            defaultChecked={Boolean(property?.custom_attributes?.superstore)}
-            className="size-5"
-          />
-          {labels.superstore}
-        </label>
+        {/* 生活機能標籤（買家端進階篩選的資料來源） */}
+        <div>
+          <p className="mb-2 text-sm font-medium">{labels.amenitiesTitle}</p>
+          <div className="grid grid-cols-2 gap-2">
+            {AMENITIES.map((amenity) => (
+              <label key={amenity} className="flex items-center gap-2 text-sm">
+                <input
+                  name={amenity}
+                  type="checkbox"
+                  defaultChecked={Boolean(property?.custom_attributes?.[amenity])}
+                  className="size-5"
+                />
+                {labels.amenityOptions[amenity]}
+              </label>
+            ))}
+          </div>
+        </div>
       </section>
 
       {/* 維度評分：權重配對的資料來源 */}

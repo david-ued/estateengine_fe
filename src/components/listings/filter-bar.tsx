@@ -4,6 +4,7 @@ import {
   IconAdjustmentsHorizontal,
   IconBath,
   IconBed,
+  IconBuildingHospital,
   IconBuildingStore,
   IconCash,
   IconCompass,
@@ -12,15 +13,43 @@ import {
   IconRulerMeasure,
   IconSchool,
   IconStar,
+  IconTrain,
+  IconTrees,
   IconWall,
   IconX,
 } from '@tabler/icons-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import type { Dictionary } from '@/i18n/get-dictionary';
-import { CITIES, ORIENTATIONS, PROPERTY_TYPES } from '@/lib/constants';
+import { AMENITIES, CITIES, ORIENTATIONS, PROPERTY_TYPES, type Amenity } from '@/lib/constants';
 import { DualRange } from '@/components/ui/dual-range';
 import { btn } from '@/components/ui/styles';
+
+const AMENITY_ICONS = {
+  superstore: IconBuildingStore,
+  transit_station: IconTrain,
+  park: IconTrees,
+  hospital: IconBuildingHospital,
+} as const;
+
+// 快速預設區間（點了即套用，滑桿可再精調）
+const PRICE_PRESETS: [number, number][] = [
+  [0, 500_000],
+  [500_000, 750_000],
+  [750_000, 1_000_000],
+  [1_000_000, 1_500_000],
+  [1_500_000, 3_000_000],
+];
+
+const SQFT_PRESETS: [number, number][] = [
+  [0, 800],
+  [800, 1_200],
+  [1_200, 2_000],
+  [2_000, 5_000],
+];
+
+// 學區段位（小白友善：不用拖數字）
+const SCHOOL_TIERS = [80, 60, 40] as const;
 
 const PRICE_MIN = 0;
 const PRICE_MAX = 3_000_000;
@@ -42,7 +71,7 @@ export interface ListingFilters {
   minBuilder?: string;
   minMaterial?: string;
   orientation?: string;
-  superstore?: string;
+  amenities?: string;
   sort?: string;
 }
 
@@ -59,7 +88,7 @@ interface FilterState {
   minBuilder: number;
   minMaterial: number;
   orientation: string;
-  superstore: boolean;
+  amenities: Amenity[];
 }
 
 function fromDefaults(defaults: ListingFilters): FilterState {
@@ -76,7 +105,9 @@ function fromDefaults(defaults: ListingFilters): FilterState {
     minBuilder: Number(defaults.minBuilder ?? 0),
     minMaterial: Number(defaults.minMaterial ?? 0),
     orientation: defaults.orientation ?? '',
-    superstore: defaults.superstore === 'true',
+    amenities: (defaults.amenities?.split(',') ?? []).filter((key): key is Amenity =>
+      (AMENITIES as readonly string[]).includes(key),
+    ),
   };
 }
 
@@ -96,6 +127,7 @@ export function FilterBar({
   common,
   orientations,
   propertyTypes,
+  amenityLabels,
   defaults,
 }: Readonly<{
   locale: string;
@@ -103,6 +135,7 @@ export function FilterBar({
   common: Pick<Dictionary['common'], 'close'>;
   orientations: Dictionary['agentForm']['orientations'];
   propertyTypes: Dictionary['agentForm']['propertyTypes'];
+  amenityLabels: Dictionary['agentForm']['amenityOptions'];
   defaults: ListingFilters;
 }>) {
   const router = useRouter();
@@ -131,7 +164,7 @@ export function FilterBar({
     if (state.minBuilder > 0) params.set('minBuilder', String(state.minBuilder));
     if (state.minMaterial > 0) params.set('minMaterial', String(state.minMaterial));
     if (state.orientation) params.set('orientation', state.orientation);
-    if (state.superstore) params.set('superstore', 'true');
+    if (state.amenities.length > 0) params.set('amenities', state.amenities.join(','));
 
     const sort = searchParams.get('sort');
     if (sort) params.set('sort', sort);
@@ -156,7 +189,7 @@ export function FilterBar({
     state.minBuilder > 0,
     state.minMaterial > 0,
     state.orientation,
-    state.superstore,
+    state.amenities.length > 0,
   ].filter(Boolean).length;
 
   return (
@@ -214,11 +247,34 @@ export function FilterBar({
             </div>
 
             <div className="flex flex-col gap-6 overflow-y-auto px-5 py-5">
-              {/* 價格區間 */}
+              {/* 價格區間：快速預設 + 滑桿精調 */}
               <section>
                 <h3 className={sectionTitle}>
                   <IconCash size={18} className="text-brand" /> {labels.price}
                 </h3>
+                <div className="mb-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    className={chip(state.priceLow === PRICE_MIN && state.priceHigh === PRICE_MAX)}
+                    onClick={() => patch({ priceLow: PRICE_MIN, priceHigh: PRICE_MAX })}
+                  >
+                    {labels.any}
+                  </button>
+                  {PRICE_PRESETS.map(([low, high]) => (
+                    <button
+                      key={`${low}-${high}`}
+                      type="button"
+                      className={chip(state.priceLow === low && state.priceHigh === high)}
+                      onClick={() => patch({ priceLow: low, priceHigh: high })}
+                    >
+                      {low === PRICE_MIN
+                        ? `≤ ${fmtPrice(high)}`
+                        : high === PRICE_MAX
+                          ? `${fmtPrice(low)}+`
+                          : `${fmtPrice(low)}–${fmtPrice(high)}`}
+                    </button>
+                  ))}
+                </div>
                 <DualRange
                   min={PRICE_MIN}
                   max={PRICE_MAX}
@@ -232,11 +288,34 @@ export function FilterBar({
                 />
               </section>
 
-              {/* 坪數區間 */}
+              {/* 坪數區間：快速預設 + 滑桿精調 */}
               <section>
                 <h3 className={sectionTitle}>
                   <IconRulerMeasure size={18} className="text-brand" /> {labels.sqft}
                 </h3>
+                <div className="mb-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    className={chip(state.sqftLow === SQFT_MIN && state.sqftHigh === SQFT_MAX)}
+                    onClick={() => patch({ sqftLow: SQFT_MIN, sqftHigh: SQFT_MAX })}
+                  >
+                    {labels.any}
+                  </button>
+                  {SQFT_PRESETS.map(([low, high]) => (
+                    <button
+                      key={`${low}-${high}`}
+                      type="button"
+                      className={chip(state.sqftLow === low && state.sqftHigh === high)}
+                      onClick={() => patch({ sqftLow: low, sqftHigh: high })}
+                    >
+                      {low === SQFT_MIN
+                        ? `≤ ${high}`
+                        : high === SQFT_MAX
+                          ? `${low.toLocaleString(locale)}+`
+                          : `${low.toLocaleString(locale)}–${high.toLocaleString(locale)}`}
+                    </button>
+                  ))}
+                </div>
                 <DualRange
                   min={SQFT_MIN}
                   max={SQFT_MAX}
@@ -256,14 +335,14 @@ export function FilterBar({
                   <IconBed size={18} className="text-brand" /> {labels.beds}
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {['', '1', '2', '3', '4'].map((value) => (
+                  {['', '1', '2', '3', '4', '5'].map((value) => (
                     <button
                       key={value || 'any'}
                       type="button"
                       className={chip(state.beds === value)}
                       onClick={() => patch({ beds: value })}
                     >
-                      {value === '' ? labels.any : value === '4' ? '4+' : value}
+                      {value === '' ? labels.any : value === '5' ? '5+' : value}
                     </button>
                   ))}
                 </div>
@@ -273,14 +352,14 @@ export function FilterBar({
                   <IconBath size={18} className="text-brand" /> {labels.baths}
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {['', '1', '2', '3'].map((value) => (
+                  {['', '1', '2', '3', '4'].map((value) => (
                     <button
                       key={value || 'any'}
                       type="button"
                       className={chip(state.baths === value)}
                       onClick={() => patch({ baths: value })}
                     >
-                      {value === '' ? labels.any : value === '3' ? '3+' : value}
+                      {value === '' ? labels.any : value === '4' ? '4+' : value}
                     </button>
                   ))}
                 </div>
@@ -321,19 +400,30 @@ export function FilterBar({
                   <div>
                     <h4 className={sectionTitle}>
                       <IconSchool size={18} className="text-accent" /> {labels.schoolRank}
-                      <span className="ml-auto font-mono text-xs text-neutral-500">
-                        {state.minSchool > 0 ? `≥ ${state.minSchool}` : labels.any}
-                      </span>
                     </h4>
-                    <input
-                      type="range"
-                      min={0}
-                      max={100}
-                      step={5}
-                      value={state.minSchool}
-                      onChange={(e) => patch({ minSchool: Number(e.target.value) })}
-                      className="w-full accent-brand"
-                    />
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        type="button"
+                        className={chip(state.minSchool === 0)}
+                        onClick={() => patch({ minSchool: 0 })}
+                      >
+                        {labels.any}
+                      </button>
+                      {SCHOOL_TIERS.map((tier) => (
+                        <button
+                          key={tier}
+                          type="button"
+                          className={chip(state.minSchool === tier)}
+                          onClick={() => patch({ minSchool: tier })}
+                        >
+                          {tier === 80
+                            ? labels.schoolTop
+                            : tier === 60
+                              ? labels.schoolGreat
+                              : labels.schoolMid}
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   {(
@@ -354,15 +444,17 @@ export function FilterBar({
                         >
                           {labels.any}
                         </button>
-                        {[3, 4, 5].map((grade) => (
+                        {[1, 2, 3, 4, 5].map((grade) => (
                           <button
                             key={grade}
                             type="button"
                             className={chip(state[key] === grade)}
                             onClick={() => patch({ [key]: grade })}
-                            aria-label={`${grade}+ / 5`}
+                            aria-label={grade === 5 ? '5 / 5' : `${grade}+ / 5`}
                           >
-                            <span aria-hidden="true">{'★'.repeat(grade)}+</span>
+                            <span aria-hidden="true">
+                              {grade}★{grade < 5 ? '+' : ''}
+                            </span>
                           </button>
                         ))}
                       </div>
@@ -394,16 +486,35 @@ export function FilterBar({
                     </div>
                   </div>
 
-                  <label className="flex cursor-pointer items-center gap-2 text-sm">
-                    <input
-                      type="checkbox"
-                      checked={state.superstore}
-                      onChange={(e) => patch({ superstore: e.target.checked })}
-                      className="size-5 accent-brand"
-                    />
-                    <IconBuildingStore size={18} className="text-accent" />
-                    {labels.superstore}
-                  </label>
+                  {/* 生活機能：多選 toggle chips */}
+                  <div>
+                    <h4 className={sectionTitle}>
+                      <IconBuildingStore size={18} className="text-accent" /> {labels.amenities}
+                    </h4>
+                    <div className="flex flex-wrap gap-2">
+                      {AMENITIES.map((amenity) => {
+                        const Icon = AMENITY_ICONS[amenity];
+                        const active = state.amenities.includes(amenity);
+                        return (
+                          <button
+                            key={amenity}
+                            type="button"
+                            className={`${chip(active)} inline-flex items-center gap-1.5`}
+                            onClick={() =>
+                              patch({
+                                amenities: active
+                                  ? state.amenities.filter((a) => a !== amenity)
+                                  : [...state.amenities, amenity],
+                              })
+                            }
+                          >
+                            <Icon size={15} />
+                            {amenityLabels[amenity]}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
                 </div>
               </section>
             </div>

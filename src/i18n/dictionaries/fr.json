@@ -98,7 +98,13 @@
     "schoolDistrict": "Secteur scolaire",
     "transitNotes": "Notes transports",
     "floodZone": "En zone inondable",
-    "superstore": "Près d'un hypermarché",
+    "amenitiesTitle": "Commodités",
+    "amenityOptions": {
+      "superstore": "Près d'un hypermarché",
+      "transit_station": "Station de transport",
+      "park": "Parc et espaces verts",
+      "hospital": "Hôpital et cliniques"
+    },
     "terrainNotes": "Notes sur le terrain",
     "fengShuiOrientation": "Orientation feng shui",
     "orientations": {
@@ -180,6 +186,10 @@
     "materialGrade": "Qualité des matériaux",
     "fengShui": "Orientation feng shui",
     "superstore": "Près d'un hypermarché",
+    "amenities": "Commodités",
+    "schoolTop": "Élite 80+",
+    "schoolGreat": "Très bon 60+",
+    "schoolMid": "Moyen 40+",
     "reset": "Réinitialiser"
   },
   "listings": {
