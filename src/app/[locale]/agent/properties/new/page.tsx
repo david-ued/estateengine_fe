@@ -23,7 +23,7 @@ export default async function NewPropertyPage({
         </Link>
         <h2 className="text-xl font-bold">{dict.agentForm.pageTitle}</h2>
       </div>
-      <PropertyForm locale={locale} labels={dict.agentForm} />
+      <PropertyForm locale={locale} labels={dict.agentForm} ai={dict.ai} />
     </main>
   );
 }

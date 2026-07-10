@@ -13,6 +13,7 @@
   "nav": {
     "home": "首頁",
     "listings": "物件列表",
+    "agents": "找房仲",
     "agentDashboard": "房仲後台",
     "signIn": "登入",
     "signOut": "登出"
@@ -85,6 +86,7 @@
     "schoolDistrict": "學區",
     "transitNotes": "交通備註",
     "floodZone": "位於淹水區",
+    "superstore": "鄰近大賣場",
     "terrainNotes": "地勢備註",
     "fengShuiOrientation": "風水座向",
     "orientations": {
@@ -150,7 +152,16 @@
     "apply": "套用篩選",
     "min": "最低",
     "max": "最高",
-    "any": "不限"
+    "any": "不限",
+    "title": "篩選",
+    "propertyType": "房屋類型",
+    "advancedTitle": "獨家進階篩選",
+    "schoolRank": "學區排名",
+    "builderQuality": "建商品質",
+    "materialGrade": "建材等級",
+    "fengShui": "風水座向",
+    "superstore": "鄰近大賣場",
+    "reset": "重設"
   },
   "listings": {
     "noResults": "目前沒有符合條件的物件。",
@@ -160,7 +171,14 @@
     "next": "下一頁",
     "newBadge": "新上市",
     "mapView": "地圖",
-    "listView": "列表"
+    "listView": "列表",
+    "sortRecommended": "系統推薦",
+    "sortNewest": "最新上架",
+    "sortPriceDesc": "價格由高至低",
+    "sortPriceAsc": "價格由低至高",
+    "daysBadge": "上市 {days} 天",
+    "tagTopMaterial": "頂級建材",
+    "tagTopSchool": "優質學區"
   },
   "personas": {
     "first_time_buyer": "小資首購族",
@@ -221,5 +239,25 @@
     "copy": "複製連結",
     "copied": "已複製！",
     "empty": "尚未建立任何推薦清單。"
+  },
+  "agents": {
+    "title": "找房仲",
+    "subtitle": "認識平台上的專業房仲，建立信任從這裡開始",
+    "listings": "個上架物件",
+    "focus": "主打區域",
+    "empty": "目前沒有房仲。"
+  },
+  "ai": {
+    "title": "AI 快速建檔",
+    "hint": "貼上物件敘述（如 MLS 原文）或上傳截圖，AI 幫你自動填表",
+    "placeholder": "貼上物件文字敘述…",
+    "uploadImage": "上傳截圖",
+    "parse": "解析並填入",
+    "parsing": "解析中…",
+    "balance": "剩餘點數",
+    "cost": "每次扣 {n} 點",
+    "insufficient": "點數不足，請儲值後再使用",
+    "error": "解析失敗，請改用手動填寫或稍後再試",
+    "filled": "已自動填入，請檢查並補齊空白欄位"
   }
 }

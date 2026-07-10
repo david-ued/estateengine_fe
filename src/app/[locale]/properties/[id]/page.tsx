@@ -175,7 +175,10 @@ export default async function PropertyDetailPage({
             <h2 className="text-xs uppercase tracking-wide text-neutral-500">
               {dict.property.listedBy}
             </h2>
-            <div className="mt-3 flex items-center gap-3">
+            <a
+              href={`/${locale}/agents/${agent.id}`}
+              className="mt-3 flex items-center gap-3 rounded-lg transition hover:opacity-80"
+            >
               {agent.avatar_url && (
                 // eslint-disable-next-line @next/next/no-img-element -- Supabase Storage 遠端圖
                 <img
@@ -190,7 +193,7 @@ export default async function PropertyDetailPage({
                   <p className="text-sm text-neutral-500">{agent.agency_name}</p>
                 )}
               </div>
-            </div>
+            </a>
             {agent.bio && (
               <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-300">
                 {agent.bio}

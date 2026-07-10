@@ -1,7 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { AiQuickFill } from '@/components/agent/ai-quick-fill';
 import type { Dictionary } from '@/i18n/get-dictionary';
 import { apiFetch } from '@/lib/api';
 import {
@@ -47,8 +48,15 @@ export function PropertyForm({
   locale,
   labels,
   property,
-}: Readonly<{ locale: string; labels: Labels; property?: Property }>) {
+  ai,
+}: Readonly<{
+  locale: string;
+  labels: Labels;
+  property?: Property;
+  ai?: Dictionary['ai'];
+}>) {
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
   const isEdit = Boolean(property);
   const [scores, setScores] = useState<Record<ScoreDimension, number>>({
     school: property?.score_school ?? 50,
@@ -97,6 +105,10 @@ export function PropertyForm({
       builderReputation: num('builderReputation'),
       materialGrade: num('materialGrade'),
       basementStatus: text('basementStatus'),
+      customAttributes: {
+        ...(property?.custom_attributes ?? {}),
+        superstore: form.get('superstore') === 'on',
+      },
     };
     for (const dimension of SCORE_DIMENSIONS) {
       payload[SCORE_FIELD_KEYS[dimension]] = scores[dimension];
@@ -146,8 +158,39 @@ export function PropertyForm({
     }
   }
 
+  /** AI 解析結果半自動填表：抓到的欄位填入，沒抓到的留白給房仲手動補 */
+  function applyAiFields(fields: Record<string, unknown>) {
+    const form = formRef.current;
+    if (!form) return;
+
+    const setValue = (name: string, value: unknown) => {
+      if (value === null || value === undefined || value === '') return;
+      const el = form.elements.namedItem(name);
+      if (el instanceof HTMLInputElement) {
+        if (el.type === 'checkbox') el.checked = Boolean(value);
+        else el.value = String(value);
+      } else if (el instanceof HTMLTextAreaElement || el instanceof HTMLSelectElement) {
+        el.value = String(value);
+      }
+    };
+
+    for (const name of [
+      'title', 'description', 'price', 'city', 'district', 'address',
+      'areaSqft', 'beds', 'baths', 'propertyType', 'schoolDistrict',
+      'transitNotes', 'terrainNotes', 'fengShuiOrientation', 'fengShuiNotes',
+      'builderName', 'builderReputation', 'materialGrade', 'basementStatus',
+    ]) {
+      setValue(name, fields[name]);
+    }
+    setValue('floodZone', fields.floodZone);
+    setValue('hasParking', fields.hasParking);
+  }
+
   return (
-    <form onSubmit={handleSubmit} className="flex w-full flex-col gap-6">
+    <form ref={formRef} onSubmit={handleSubmit} className="flex w-full flex-col gap-6">
+      {/* ⚡ AI 快速建檔（僅新增模式） */}
+      {!isEdit && ai && <AiQuickFill labels={ai} onFilled={applyAiFields} />}
+
       {/* 基本資料 */}
       <section className={sectionClass}>
         <h2 className="font-semibold">{labels.sectionBasics}</h2>
@@ -388,6 +431,15 @@ export function PropertyForm({
             className="size-5"
           />
           {labels.floodZone}
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            name="superstore"
+            type="checkbox"
+            defaultChecked={Boolean(property?.custom_attributes?.superstore)}
+            className="size-5"
+          />
+          {labels.superstore}
         </label>
       </section>
 

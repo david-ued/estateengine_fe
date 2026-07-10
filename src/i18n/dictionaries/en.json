@@ -13,6 +13,7 @@
   "nav": {
     "home": "Home",
     "listings": "Listings",
+    "agents": "Agents",
     "agentDashboard": "Agent Dashboard",
     "signIn": "Sign In",
     "signOut": "Sign Out"
@@ -85,6 +86,7 @@
     "schoolDistrict": "School District",
     "transitNotes": "Transit Notes",
     "floodZone": "In Flood Zone",
+    "superstore": "Near Superstore",
     "terrainNotes": "Terrain Notes",
     "fengShuiOrientation": "Feng Shui Orientation",
     "orientations": {
@@ -150,7 +152,16 @@
     "apply": "Apply Filters",
     "min": "Min",
     "max": "Max",
-    "any": "Any"
+    "any": "Any",
+    "title": "Filters",
+    "propertyType": "Property Type",
+    "advancedTitle": "Exclusive Filters",
+    "schoolRank": "School Ranking",
+    "builderQuality": "Builder Quality",
+    "materialGrade": "Material Grade",
+    "fengShui": "Feng Shui Orientation",
+    "superstore": "Near Superstore",
+    "reset": "Reset"
   },
   "listings": {
     "noResults": "No listings match your filters.",
@@ -160,7 +171,14 @@
     "next": "Next",
     "newBadge": "NEW",
     "mapView": "Map",
-    "listView": "List"
+    "listView": "List",
+    "sortRecommended": "Recommended",
+    "sortNewest": "Newest",
+    "sortPriceDesc": "Price: High to Low",
+    "sortPriceAsc": "Price: Low to High",
+    "daysBadge": "{days} days on market",
+    "tagTopMaterial": "Premium Materials",
+    "tagTopSchool": "Top School Zone"
   },
   "personas": {
     "first_time_buyer": "First-Time Buyer",
@@ -221,5 +239,25 @@
     "copy": "Copy Link",
     "copied": "Copied!",
     "empty": "No share lists yet."
+  },
+  "agents": {
+    "title": "Find an Agent",
+    "subtitle": "Meet the professional agents on our platform",
+    "listings": "active listings",
+    "focus": "Focus area",
+    "empty": "No agents yet."
+  },
+  "ai": {
+    "title": "AI Quick Listing",
+    "hint": "Paste a listing description (e.g. MLS text) or upload a screenshot — AI fills the form for you",
+    "placeholder": "Paste listing text…",
+    "uploadImage": "Upload Screenshot",
+    "parse": "Parse & Fill",
+    "parsing": "Parsing…",
+    "balance": "Tokens",
+    "cost": "{n} tokens per parse",
+    "insufficient": "Not enough tokens — please top up first",
+    "error": "Parsing failed. Fill in manually or try again later.",
+    "filled": "Auto-filled — please review and complete the blanks"
   }
 }

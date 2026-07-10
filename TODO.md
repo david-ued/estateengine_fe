@@ -36,6 +36,11 @@
 - [x] SEO：robots.txt + sitemap.xml（核心頁）+ 首頁 hreflang alternates
 - [x] 上市 30 天內「新上市」標示（列表卡）
 - [x] 買家權重雲端同步（登入者 debounce 寫入 buyer_weight_profiles，未登入 localStorage）
+- [x] 進階篩選器：價格/坪數雙向滑桿、房衛/類型按鈕選、獨家篩選（學區排名/建商/建材/風水/大賣場）、手機全螢幕彈窗、Tabler Icons
+- [x] 排序系統：系統推薦（權重符合度，預設）/ 最新上架 / 價格高低；>90 天物件前端強制隱藏
+- [x] 物件卡升級：上市天數醒目標示、特色標籤（頂級建材/優質學區）、房仲迷你卡
+- [x] 找房仲 `/agents` + 房仲專屬頁 `/agents/[id]`（介紹 + 代理物件）+ 導覽入口
+- [x] ⚡ AI 快速建檔（Gemini 解析文字/截圖 → 半自動填表 + Token 扣點 + 餘額顯示/不足禁用/失敗退點）
 
 ## 🔜 Phase 1 剩餘（Must Have）
 

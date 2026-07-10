@@ -13,6 +13,7 @@
   "nav": {
     "home": "Accueil",
     "listings": "Annonces",
+    "agents": "Agents",
     "agentDashboard": "Espace agent",
     "signIn": "Se connecter",
     "signOut": "Se déconnecter"
@@ -85,6 +86,7 @@
     "schoolDistrict": "Secteur scolaire",
     "transitNotes": "Notes transports",
     "floodZone": "En zone inondable",
+    "superstore": "Près d'un hypermarché",
     "terrainNotes": "Notes sur le terrain",
     "fengShuiOrientation": "Orientation feng shui",
     "orientations": {
@@ -150,7 +152,16 @@
     "apply": "Appliquer les filtres",
     "min": "Min",
     "max": "Max",
-    "any": "Tous"
+    "any": "Tous",
+    "title": "Filtres",
+    "propertyType": "Type de bien",
+    "advancedTitle": "Filtres exclusifs",
+    "schoolRank": "Classement scolaire",
+    "builderQuality": "Qualité du constructeur",
+    "materialGrade": "Qualité des matériaux",
+    "fengShui": "Orientation feng shui",
+    "superstore": "Près d'un hypermarché",
+    "reset": "Réinitialiser"
   },
   "listings": {
     "noResults": "Aucune annonce ne correspond à vos filtres.",
@@ -160,7 +171,14 @@
     "next": "Suivant",
     "newBadge": "NOUVEAU",
     "mapView": "Carte",
-    "listView": "Liste"
+    "listView": "Liste",
+    "sortRecommended": "Recommandé",
+    "sortNewest": "Plus récent",
+    "sortPriceDesc": "Prix décroissant",
+    "sortPriceAsc": "Prix croissant",
+    "daysBadge": "{days} j sur le marché",
+    "tagTopMaterial": "Matériaux haut de gamme",
+    "tagTopSchool": "Secteur scolaire réputé"
   },
   "personas": {
     "first_time_buyer": "Premier acheteur",
@@ -221,5 +239,25 @@
     "copy": "Copier le lien",
     "copied": "Copié !",
     "empty": "Aucune liste partagée pour le moment."
+  },
+  "agents": {
+    "title": "Trouver un agent",
+    "subtitle": "Rencontrez les agents professionnels de la plateforme",
+    "listings": "annonces actives",
+    "focus": "Secteur principal",
+    "empty": "Aucun agent pour le moment."
+  },
+  "ai": {
+    "title": "Annonce rapide par IA",
+    "hint": "Collez une description (ex. texte MLS) ou téléversez une capture — l'IA remplit le formulaire",
+    "placeholder": "Collez le texte de l'annonce…",
+    "uploadImage": "Téléverser une capture",
+    "parse": "Analyser et remplir",
+    "parsing": "Analyse…",
+    "balance": "Jetons",
+    "cost": "{n} jetons par analyse",
+    "insufficient": "Jetons insuffisants — veuillez recharger",
+    "error": "Échec de l'analyse. Remplissez manuellement ou réessayez.",
+    "filled": "Rempli automatiquement — vérifiez et complétez les champs vides"
   }
 }

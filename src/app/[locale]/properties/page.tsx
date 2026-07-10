@@ -10,7 +10,22 @@ import type { PagedResult, Property } from '@/lib/types';
 // PRD：為避免資訊過載，列表頁一次最多僅顯示 6-7 個物件
 const PAGE_SIZE = 6;
 
-const FILTER_KEYS = ['city', 'minPrice', 'maxPrice', 'minSqft', 'beds', 'baths'] as const;
+const FILTER_KEYS = [
+  'city',
+  'minPrice',
+  'maxPrice',
+  'minSqft',
+  'maxSqft',
+  'beds',
+  'baths',
+  'propertyType',
+  'minSchool',
+  'minBuilder',
+  'minMaterial',
+  'orientation',
+  'superstore',
+  'sort',
+] as const;
 
 type SearchParams = Record<string, string | string[] | undefined>;
 
@@ -81,7 +96,13 @@ export default async function PropertiesPage({
       </div>
 
       <div className="mb-6">
-        <FilterBar locale={locale} labels={dict.filters} defaults={filters} />
+        <FilterBar
+          locale={locale}
+          labels={dict.filters}
+          orientations={dict.agentForm.orientations}
+          propertyTypes={dict.agentForm.propertyTypes}
+          defaults={filters}
+        />
       </div>
 
       {items.length === 0 ? (
@@ -90,6 +111,7 @@ export default async function PropertiesPage({
         <ListingsExplorer
           locale={locale}
           properties={items}
+          sort={filters.sort}
           dict={{
             filters: dict.filters,
             weights: dict.weights,

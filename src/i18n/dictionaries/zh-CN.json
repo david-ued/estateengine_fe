@@ -13,6 +13,7 @@
   "nav": {
     "home": "首页",
     "listings": "房源列表",
+    "agents": "找经纪人",
     "agentDashboard": "经纪人后台",
     "signIn": "登录",
     "signOut": "退出登录"
@@ -85,6 +86,7 @@
     "schoolDistrict": "学区",
     "transitNotes": "交通备注",
     "floodZone": "位于洪水区",
+    "superstore": "邻近大卖场",
     "terrainNotes": "地势备注",
     "fengShuiOrientation": "风水朝向",
     "orientations": {
@@ -150,7 +152,16 @@
     "apply": "应用筛选",
     "min": "最低",
     "max": "最高",
-    "any": "不限"
+    "any": "不限",
+    "title": "筛选",
+    "propertyType": "房屋类型",
+    "advancedTitle": "独家高级筛选",
+    "schoolRank": "学区排名",
+    "builderQuality": "开发商品质",
+    "materialGrade": "建材等级",
+    "fengShui": "风水朝向",
+    "superstore": "邻近大卖场",
+    "reset": "重置"
   },
   "listings": {
     "noResults": "目前没有符合条件的房源。",
@@ -160,7 +171,14 @@
     "next": "下一页",
     "newBadge": "新上市",
     "mapView": "地图",
-    "listView": "列表"
+    "listView": "列表",
+    "sortRecommended": "系统推荐",
+    "sortNewest": "最新上架",
+    "sortPriceDesc": "价格由高至低",
+    "sortPriceAsc": "价格由低至高",
+    "daysBadge": "上市 {days} 天",
+    "tagTopMaterial": "顶级建材",
+    "tagTopSchool": "优质学区"
   },
   "personas": {
     "first_time_buyer": "小资首购族",
@@ -221,5 +239,25 @@
     "copy": "复制链接",
     "copied": "已复制！",
     "empty": "尚未创建任何推荐清单。"
+  },
+  "agents": {
+    "title": "找经纪人",
+    "subtitle": "认识平台上的专业经纪人，从这里建立信任",
+    "listings": "个在售房源",
+    "focus": "主打区域",
+    "empty": "目前没有经纪人。"
+  },
+  "ai": {
+    "title": "AI 快速建档",
+    "hint": "粘贴房源描述（如 MLS 原文）或上传截图，AI 帮你自动填表",
+    "placeholder": "粘贴房源文字描述…",
+    "uploadImage": "上传截图",
+    "parse": "解析并填入",
+    "parsing": "解析中…",
+    "balance": "剩余点数",
+    "cost": "每次扣 {n} 点",
+    "insufficient": "点数不足，请充值后再使用",
+    "error": "解析失败，请改用手动填写或稍后再试",
+    "filled": "已自动填入，请检查并补齐空白字段"
   }
 }

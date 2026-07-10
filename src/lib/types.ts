@@ -61,6 +61,7 @@ export interface Property {
   builder_reputation: number | null;
   material_grade: number | null;
   basement_status: 'none' | 'storage' | 'livable' | 'parking';
+  custom_attributes?: Record<string, unknown> & { superstore?: boolean };
   score_school: number | null;
   score_transit: number | null;
   score_material: number | null;

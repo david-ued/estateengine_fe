@@ -57,6 +57,9 @@ export default async function RootLayout({
             <Link href={`/${locale}/properties`} className="hover:underline">
               {dict.nav.listings}
             </Link>
+            <Link href={`/${locale}/agents`} className="hover:underline">
+              {dict.nav.agents}
+            </Link>
             <LocaleSwitcher current={locale} />
             <Link
               href={`/${locale}/login`}

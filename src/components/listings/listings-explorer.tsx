@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client';
 import type { Property } from '@/lib/types';
 import { ListingCard } from './listing-card';
 import { ListingsMap } from './listings-map';
+import { SortSelect } from './sort-select';
 import { WeightPanel } from './weight-panel';
 
 const STORAGE_KEY = 'estateengine.weights';
@@ -23,10 +24,12 @@ const DEFAULT_WEIGHTS: WeightMap = {
 export function ListingsExplorer({
   locale,
   properties,
+  sort,
   dict,
 }: Readonly<{
   locale: string;
   properties: Property[];
+  sort?: string;
   dict: {
     filters: Dictionary['filters'];
     weights: Dictionary['weights'];
@@ -117,12 +120,13 @@ export function ListingsExplorer({
     persistRemote(next);
   }
 
-  const scored = properties
-    .map((property) => ({
-      property,
-      score: calcMatchScore(toScoreCard(property), weights),
-    }))
-    .sort((a, b) => b.score - a.score);
+  // 系統推薦（預設）＝依買家權重符合度排序；其他排序沿用後端順序
+  const isRecommended = !sort || sort === 'recommended';
+  const scored = properties.map((property) => ({
+    property,
+    score: calcMatchScore(toScoreCard(property), weights),
+  }));
+  if (isRecommended) scored.sort((a, b) => b.score - a.score);
 
   return (
     <div className="flex flex-col gap-4">
@@ -136,7 +140,12 @@ export function ListingsExplorer({
       {/* 桌機：左列表右地圖（Airbnb 式分屏）；手機：列表 + 浮動地圖切換 */}
       <div className="lg:grid lg:grid-cols-[1fr_minmax(360px,42%)] lg:items-start lg:gap-6">
         <div>
-          <p className="mb-3 text-xs text-neutral-500">{dict.listings.sortedByMatch}</p>
+          <div className="mb-3 flex items-center justify-between gap-3">
+            <p className="text-xs text-neutral-500">
+              {isRecommended ? dict.listings.sortedByMatch : ''}
+            </p>
+            <SortSelect locale={locale} labels={dict.listings} />
+          </div>
           <div className="grid grid-cols-1 gap-x-4 gap-y-7 sm:grid-cols-2">
             {scored.map(({ property, score }, index) => (
               <ListingCard
