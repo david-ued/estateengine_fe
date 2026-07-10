@@ -1,6 +1,10 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { FilterBar, type ListingFilters } from '@/components/listings/filter-bar';
+import {
+  FilterBar,
+  FilterSidebar,
+  type ListingFilters,
+} from '@/components/listings/filter-bar';
 import { btn } from '@/components/ui/styles';
 import { ListingsExplorer } from '@/components/listings/listings-explorer';
 import { isLocale } from '@/i18n/config';
@@ -88,7 +92,7 @@ export default async function PropertiesPage({
   const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
 
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 p-4 sm:p-8">
+    <main className="mx-auto w-full max-w-[1500px] flex-1 p-4 sm:p-8">
       <div className="mb-6 flex items-baseline justify-between">
         <h1 className="text-2xl font-bold">{dict.nav.listings}</h1>
         <span className="text-sm text-neutral-500">
@@ -96,7 +100,8 @@ export default async function PropertiesPage({
         </span>
       </div>
 
-      <div className="mb-6">
+      {/* 手機/平板：篩選彈窗觸發列（桌機隱藏，由左側欄接手） */}
+      <div className="mb-6 lg:hidden">
         <FilterBar
           locale={locale}
           labels={dict.filters}
@@ -108,6 +113,18 @@ export default async function PropertiesPage({
         />
       </div>
 
+      {/* 桌機：左側常駐篩選欄 + 右側內容 */}
+      <div className="lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start lg:gap-6">
+        <FilterSidebar
+          locale={locale}
+          labels={dict.filters}
+          orientations={dict.agentForm.orientations}
+          propertyTypes={dict.agentForm.propertyTypes}
+          amenityLabels={dict.agentForm.amenityOptions}
+          defaults={filters}
+        />
+
+        <div>
       {result === null ? (
         <div className="flex flex-col items-center gap-4 py-16 text-center">
           <p className="text-neutral-500">{dict.listings.loadError}</p>
@@ -148,6 +165,8 @@ export default async function PropertiesPage({
           )}
         </nav>
       )}
+        </div>
+      </div>
     </main>
   );
 }

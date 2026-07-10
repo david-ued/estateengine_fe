@@ -142,7 +142,7 @@ export function ListingsExplorer({
       />
 
       {/* 桌機：左列表右地圖（Airbnb 式分屏）；手機：列表 + 浮動地圖切換 */}
-      <div className="lg:grid lg:grid-cols-[1fr_minmax(360px,42%)] lg:items-start lg:gap-6">
+      <div className="xl:grid xl:grid-cols-[1fr_minmax(340px,44%)] xl:items-start xl:gap-6">
         <div>
           <div className="mb-3 flex items-center justify-between gap-3">
             <p className="text-xs text-neutral-500">
@@ -168,7 +168,7 @@ export function ListingsExplorer({
           </div>
         </div>
 
-        <div className="hidden lg:block">
+        <div className="hidden xl:block">
           <div className="sticky top-24 h-[calc(100vh-7.5rem)] overflow-hidden rounded-2xl border border-neutral-200 shadow-sm dark:border-neutral-800">
             <ListingsMap locale={locale} properties={properties} />
           </div>
@@ -179,7 +179,7 @@ export function ListingsExplorer({
       <button
         type="button"
         onClick={() => setShowMap(true)}
-        className="press fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full bg-neutral-900 px-5 py-3 text-sm font-medium text-white shadow-xl lg:hidden dark:bg-white dark:text-neutral-900"
+        className="press fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full bg-neutral-900 px-5 py-3 text-sm font-medium text-white shadow-xl xl:hidden dark:bg-white dark:text-neutral-900"
       >
         <span aria-hidden="true">🗺 </span>
         {dict.listings.mapView}
@@ -187,7 +187,7 @@ export function ListingsExplorer({
 
       {/* 手機全螢幕地圖 */}
       {showMap && (
-        <div className="fixed inset-0 z-[60] bg-background lg:hidden">
+        <div className="fixed inset-0 z-[60] bg-background xl:hidden">
           <ListingsMap locale={locale} properties={properties} />
           <button
             type="button"

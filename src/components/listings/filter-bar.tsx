@@ -121,34 +121,21 @@ const chip = (active: boolean) =>
 const sectionTitle =
   'mb-2 flex items-center gap-1.5 text-sm font-semibold text-neutral-800 dark:text-neutral-100';
 
-export function FilterBar({
-  locale,
-  labels,
-  common,
-  orientations,
-  propertyTypes,
-  amenityLabels,
-  defaults,
-}: Readonly<{
-  locale: string;
+interface FilterLabels {
   labels: Dictionary['filters'];
-  common: Pick<Dictionary['common'], 'close'>;
   orientations: Dictionary['agentForm']['orientations'];
   propertyTypes: Dictionary['agentForm']['propertyTypes'];
   amenityLabels: Dictionary['agentForm']['amenityOptions'];
-  defaults: ListingFilters;
-}>) {
+}
+
+/** 篩選狀態 + 套用/重設（modal 與 sidebar 共用） */
+function useListingFilters(locale: string, defaults: ListingFilters) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [open, setOpen] = useState(false);
   const [state, setState] = useState<FilterState>(() => fromDefaults(defaults));
 
   const patch = (partial: Partial<FilterState>) =>
     setState((prev) => ({ ...prev, ...partial }));
-
-  const fmtPrice = (v: number) =>
-    v >= PRICE_MAX ? `$${PRICE_MAX / 1_000_000}M+` : `$${(v / 1000).toLocaleString(locale)}K`;
-  const fmtSqft = (v: number) => (v >= SQFT_MAX ? `${SQFT_MAX}+` : String(v));
 
   function apply() {
     const params = new URLSearchParams();
@@ -169,14 +156,11 @@ export function FilterBar({
     const sort = searchParams.get('sort');
     if (sort) params.set('sort', sort);
 
-    setOpen(false);
     const query = params.toString();
     router.push(`/${locale}/properties${query ? `?${query}` : ''}`);
   }
 
-  function reset() {
-    setState(fromDefaults({}));
-  }
+  const reset = () => setState(fromDefaults({}));
 
   const activeCount = [
     state.city,
@@ -192,9 +176,355 @@ export function FilterBar({
     state.amenities.length > 0,
   ].filter(Boolean).length;
 
+  return { state, patch, apply, reset, activeCount };
+}
+
+/** 全部篩選區塊（modal 與桌機 sidebar 共用） */
+function FilterSections({
+  locale,
+  state,
+  patch,
+  labels,
+  orientations,
+  propertyTypes,
+  amenityLabels,
+}: Readonly<
+  FilterLabels & {
+    locale: string;
+    state: FilterState;
+    patch: (partial: Partial<FilterState>) => void;
+  }
+>) {
+  const fmtPrice = (v: number) =>
+    v >= PRICE_MAX ? `$${PRICE_MAX / 1_000_000}M+` : `$${(v / 1000).toLocaleString(locale)}K`;
+  const fmtSqft = (v: number) => (v >= SQFT_MAX ? `${SQFT_MAX}+` : String(v));
+
   return (
-    <>
-      {/* 觸發列：城市快選 + 篩選按鈕 */}
+    <div className="flex flex-col gap-6">
+      {/* 城市 */}
+      <section>
+        <h3 className={sectionTitle}>
+          <IconMapPin size={18} className="text-brand" /> {labels.location}
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className={chip(state.city === '')}
+            onClick={() => patch({ city: '' })}
+          >
+            {labels.any}
+          </button>
+          {CITIES.map((city) => (
+            <button
+              key={city}
+              type="button"
+              className={chip(state.city === city)}
+              onClick={() => patch({ city })}
+            >
+              {city}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* 價格區間：快速預設 + 滑桿精調 */}
+      <section>
+        <h3 className={sectionTitle}>
+          <IconCash size={18} className="text-brand" /> {labels.price}
+        </h3>
+        <div className="mb-3 flex flex-wrap gap-2">
+          <button
+            type="button"
+            className={chip(state.priceLow === PRICE_MIN && state.priceHigh === PRICE_MAX)}
+            onClick={() => patch({ priceLow: PRICE_MIN, priceHigh: PRICE_MAX })}
+          >
+            {labels.any}
+          </button>
+          {PRICE_PRESETS.map(([low, high]) => (
+            <button
+              key={`${low}-${high}`}
+              type="button"
+              className={chip(state.priceLow === low && state.priceHigh === high)}
+              onClick={() => patch({ priceLow: low, priceHigh: high })}
+            >
+              {low === PRICE_MIN
+                ? `≤ ${fmtPrice(high)}`
+                : high === PRICE_MAX
+                  ? `${fmtPrice(low)}+`
+                  : `${fmtPrice(low)}–${fmtPrice(high)}`}
+            </button>
+          ))}
+        </div>
+        <DualRange
+          min={PRICE_MIN}
+          max={PRICE_MAX}
+          step={PRICE_STEP}
+          low={state.priceLow}
+          high={state.priceHigh}
+          onChange={(low, high) => patch({ priceLow: low, priceHigh: high })}
+          format={fmtPrice}
+          minLabel={labels.min}
+          maxLabel={labels.max}
+        />
+      </section>
+
+      {/* 坪數區間：快速預設 + 滑桿精調 */}
+      <section>
+        <h3 className={sectionTitle}>
+          <IconRulerMeasure size={18} className="text-brand" /> {labels.sqft}
+        </h3>
+        <div className="mb-3 flex flex-wrap gap-2">
+          <button
+            type="button"
+            className={chip(state.sqftLow === SQFT_MIN && state.sqftHigh === SQFT_MAX)}
+            onClick={() => patch({ sqftLow: SQFT_MIN, sqftHigh: SQFT_MAX })}
+          >
+            {labels.any}
+          </button>
+          {SQFT_PRESETS.map(([low, high]) => (
+            <button
+              key={`${low}-${high}`}
+              type="button"
+              className={chip(state.sqftLow === low && state.sqftHigh === high)}
+              onClick={() => patch({ sqftLow: low, sqftHigh: high })}
+            >
+              {low === SQFT_MIN
+                ? `≤ ${high}`
+                : high === SQFT_MAX
+                  ? `${low.toLocaleString(locale)}+`
+                  : `${low.toLocaleString(locale)}–${high.toLocaleString(locale)}`}
+            </button>
+          ))}
+        </div>
+        <DualRange
+          min={SQFT_MIN}
+          max={SQFT_MAX}
+          step={SQFT_STEP}
+          low={state.sqftLow}
+          high={state.sqftHigh}
+          onChange={(low, high) => patch({ sqftLow: low, sqftHigh: high })}
+          format={fmtSqft}
+          minLabel={labels.min}
+          maxLabel={labels.max}
+        />
+      </section>
+
+      {/* 房 / 衛 */}
+      <section>
+        <h3 className={sectionTitle}>
+          <IconBed size={18} className="text-brand" /> {labels.beds}
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {['', '1', '2', '3', '4', '5'].map((value) => (
+            <button
+              key={value || 'any'}
+              type="button"
+              className={chip(state.beds === value)}
+              onClick={() => patch({ beds: value })}
+            >
+              {value === '' ? labels.any : value === '5' ? '5+' : value}
+            </button>
+          ))}
+        </div>
+      </section>
+      <section>
+        <h3 className={sectionTitle}>
+          <IconBath size={18} className="text-brand" /> {labels.baths}
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          {['', '1', '2', '3', '4'].map((value) => (
+            <button
+              key={value || 'any'}
+              type="button"
+              className={chip(state.baths === value)}
+              onClick={() => patch({ baths: value })}
+            >
+              {value === '' ? labels.any : value === '4' ? '4+' : value}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* 房屋類型 */}
+      <section>
+        <h3 className={sectionTitle}>
+          <IconHome size={18} className="text-brand" /> {labels.propertyType}
+        </h3>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className={chip(state.propertyType === '')}
+            onClick={() => patch({ propertyType: '' })}
+          >
+            {labels.any}
+          </button>
+          {PROPERTY_TYPES.map((type) => (
+            <button
+              key={type}
+              type="button"
+              className={chip(state.propertyType === type)}
+              onClick={() => patch({ propertyType: type })}
+            >
+              {propertyTypes[type]}
+            </button>
+          ))}
+        </div>
+      </section>
+
+      {/* 獨家進階篩選 */}
+      <section className="rounded-xl border border-dashed border-neutral-300 p-4 dark:border-neutral-700">
+        <h3 className="mb-3 text-sm font-semibold text-neutral-800 dark:text-neutral-100">
+          ✨ {labels.advancedTitle}
+        </h3>
+        <div className="flex flex-col gap-4">
+          <div>
+            <h4 className={sectionTitle}>
+              <IconSchool size={18} className="text-accent" /> {labels.schoolRank}
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                className={chip(state.minSchool === 0)}
+                onClick={() => patch({ minSchool: 0 })}
+              >
+                {labels.any}
+              </button>
+              {SCHOOL_TIERS.map((tier) => (
+                <button
+                  key={tier}
+                  type="button"
+                  className={chip(state.minSchool === tier)}
+                  onClick={() => patch({ minSchool: tier })}
+                >
+                  {tier === 80
+                    ? labels.schoolTop
+                    : tier === 60
+                      ? labels.schoolGreat
+                      : labels.schoolMid}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {(
+            [
+              ['minBuilder', labels.builderQuality, IconStar],
+              ['minMaterial', labels.materialGrade, IconWall],
+            ] as const
+          ).map(([key, label, Icon]) => (
+            <div key={key}>
+              <h4 className={sectionTitle}>
+                <Icon size={18} className="text-accent" /> {label}
+              </h4>
+              <div className="flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  className={chip(state[key] === 0)}
+                  onClick={() => patch({ [key]: 0 })}
+                >
+                  {labels.any}
+                </button>
+                {[1, 2, 3, 4, 5].map((grade) => (
+                  <button
+                    key={grade}
+                    type="button"
+                    className={chip(state[key] === grade)}
+                    onClick={() => patch({ [key]: grade })}
+                    aria-label={grade === 5 ? '5 / 5' : `${grade}+ / 5`}
+                  >
+                    <span aria-hidden="true">
+                      {grade}★{grade < 5 ? '+' : ''}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))}
+
+          <div>
+            <h4 className={sectionTitle}>
+              <IconCompass size={18} className="text-accent" /> {labels.fengShui}
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              <button
+                type="button"
+                className={chip(state.orientation === '')}
+                onClick={() => patch({ orientation: '' })}
+              >
+                {labels.any}
+              </button>
+              {ORIENTATIONS.map((orientation) => (
+                <button
+                  key={orientation}
+                  type="button"
+                  className={chip(state.orientation === orientation)}
+                  onClick={() => patch({ orientation })}
+                >
+                  {orientations[orientation]}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* 生活機能：多選 toggle chips */}
+          <div>
+            <h4 className={sectionTitle}>
+              <IconBuildingStore size={18} className="text-accent" /> {labels.amenities}
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              {AMENITIES.map((amenity) => {
+                const Icon = AMENITY_ICONS[amenity];
+                const active = state.amenities.includes(amenity);
+                return (
+                  <button
+                    key={amenity}
+                    type="button"
+                    className={`${chip(active)} inline-flex items-center gap-1.5`}
+                    onClick={() =>
+                      patch({
+                        amenities: active
+                          ? state.amenities.filter((a) => a !== amenity)
+                          : [...state.amenities, amenity],
+                      })
+                    }
+                  >
+                    <Icon size={15} />
+                    {amenityLabels[amenity]}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+/** 手機/平板：城市快選列 + 篩選彈窗（桌機由 FilterSidebar 接手） */
+export function FilterBar({
+  locale,
+  labels,
+  common,
+  orientations,
+  propertyTypes,
+  amenityLabels,
+  defaults,
+}: Readonly<
+  FilterLabels & {
+    locale: string;
+    common: Pick<Dictionary['common'], 'close'>;
+    defaults: ListingFilters;
+  }
+>) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [open, setOpen] = useState(false);
+  const { state, patch, apply, reset, activeCount } = useListingFilters(locale, defaults);
+
+  return (
+    <div className="lg:hidden">
+      {/* 觸發列：城市快選（立即套用）+ 篩選按鈕 */}
       <div className="flex flex-wrap items-center gap-2">
         <IconMapPin size={18} className="text-neutral-400" />
         {CITIES.map((city) => (
@@ -230,7 +560,7 @@ export function FilterBar({
         </button>
       </div>
 
-      {/* 篩選彈窗（手機全螢幕 / 桌機置中卡片） */}
+      {/* 篩選彈窗 */}
       {open && (
         <div className="fixed inset-0 z-[70] flex items-end justify-center bg-black/40 sm:items-center sm:p-6">
           <div className="flex max-h-[92dvh] w-full flex-col overflow-hidden bg-white sm:max-w-xl sm:rounded-2xl sm:shadow-2xl dark:bg-neutral-950">
@@ -246,277 +576,16 @@ export function FilterBar({
               </button>
             </div>
 
-            <div className="flex flex-col gap-6 overflow-y-auto px-5 py-5">
-              {/* 價格區間：快速預設 + 滑桿精調 */}
-              <section>
-                <h3 className={sectionTitle}>
-                  <IconCash size={18} className="text-brand" /> {labels.price}
-                </h3>
-                <div className="mb-3 flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    className={chip(state.priceLow === PRICE_MIN && state.priceHigh === PRICE_MAX)}
-                    onClick={() => patch({ priceLow: PRICE_MIN, priceHigh: PRICE_MAX })}
-                  >
-                    {labels.any}
-                  </button>
-                  {PRICE_PRESETS.map(([low, high]) => (
-                    <button
-                      key={`${low}-${high}`}
-                      type="button"
-                      className={chip(state.priceLow === low && state.priceHigh === high)}
-                      onClick={() => patch({ priceLow: low, priceHigh: high })}
-                    >
-                      {low === PRICE_MIN
-                        ? `≤ ${fmtPrice(high)}`
-                        : high === PRICE_MAX
-                          ? `${fmtPrice(low)}+`
-                          : `${fmtPrice(low)}–${fmtPrice(high)}`}
-                    </button>
-                  ))}
-                </div>
-                <DualRange
-                  min={PRICE_MIN}
-                  max={PRICE_MAX}
-                  step={PRICE_STEP}
-                  low={state.priceLow}
-                  high={state.priceHigh}
-                  onChange={(low, high) => patch({ priceLow: low, priceHigh: high })}
-                  format={fmtPrice}
-                  minLabel={labels.min}
-                  maxLabel={labels.max}
-                />
-              </section>
-
-              {/* 坪數區間：快速預設 + 滑桿精調 */}
-              <section>
-                <h3 className={sectionTitle}>
-                  <IconRulerMeasure size={18} className="text-brand" /> {labels.sqft}
-                </h3>
-                <div className="mb-3 flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    className={chip(state.sqftLow === SQFT_MIN && state.sqftHigh === SQFT_MAX)}
-                    onClick={() => patch({ sqftLow: SQFT_MIN, sqftHigh: SQFT_MAX })}
-                  >
-                    {labels.any}
-                  </button>
-                  {SQFT_PRESETS.map(([low, high]) => (
-                    <button
-                      key={`${low}-${high}`}
-                      type="button"
-                      className={chip(state.sqftLow === low && state.sqftHigh === high)}
-                      onClick={() => patch({ sqftLow: low, sqftHigh: high })}
-                    >
-                      {low === SQFT_MIN
-                        ? `≤ ${high}`
-                        : high === SQFT_MAX
-                          ? `${low.toLocaleString(locale)}+`
-                          : `${low.toLocaleString(locale)}–${high.toLocaleString(locale)}`}
-                    </button>
-                  ))}
-                </div>
-                <DualRange
-                  min={SQFT_MIN}
-                  max={SQFT_MAX}
-                  step={SQFT_STEP}
-                  low={state.sqftLow}
-                  high={state.sqftHigh}
-                  onChange={(low, high) => patch({ sqftLow: low, sqftHigh: high })}
-                  format={fmtSqft}
-                  minLabel={labels.min}
-                  maxLabel={labels.max}
-                />
-              </section>
-
-              {/* 房 / 衛 */}
-              <section>
-                <h3 className={sectionTitle}>
-                  <IconBed size={18} className="text-brand" /> {labels.beds}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {['', '1', '2', '3', '4', '5'].map((value) => (
-                    <button
-                      key={value || 'any'}
-                      type="button"
-                      className={chip(state.beds === value)}
-                      onClick={() => patch({ beds: value })}
-                    >
-                      {value === '' ? labels.any : value === '5' ? '5+' : value}
-                    </button>
-                  ))}
-                </div>
-              </section>
-              <section>
-                <h3 className={sectionTitle}>
-                  <IconBath size={18} className="text-brand" /> {labels.baths}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {['', '1', '2', '3', '4'].map((value) => (
-                    <button
-                      key={value || 'any'}
-                      type="button"
-                      className={chip(state.baths === value)}
-                      onClick={() => patch({ baths: value })}
-                    >
-                      {value === '' ? labels.any : value === '4' ? '4+' : value}
-                    </button>
-                  ))}
-                </div>
-              </section>
-
-              {/* 房屋類型 */}
-              <section>
-                <h3 className={sectionTitle}>
-                  <IconHome size={18} className="text-brand" /> {labels.propertyType}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  <button
-                    type="button"
-                    className={chip(state.propertyType === '')}
-                    onClick={() => patch({ propertyType: '' })}
-                  >
-                    {labels.any}
-                  </button>
-                  {PROPERTY_TYPES.map((type) => (
-                    <button
-                      key={type}
-                      type="button"
-                      className={chip(state.propertyType === type)}
-                      onClick={() => patch({ propertyType: type })}
-                    >
-                      {propertyTypes[type]}
-                    </button>
-                  ))}
-                </div>
-              </section>
-
-              {/* 獨家進階篩選 */}
-              <section className="rounded-xl border border-dashed border-neutral-300 p-4 dark:border-neutral-700">
-                <h3 className="mb-3 text-sm font-semibold text-neutral-800 dark:text-neutral-100">
-                  ✨ {labels.advancedTitle}
-                </h3>
-                <div className="flex flex-col gap-4">
-                  <div>
-                    <h4 className={sectionTitle}>
-                      <IconSchool size={18} className="text-accent" /> {labels.schoolRank}
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        type="button"
-                        className={chip(state.minSchool === 0)}
-                        onClick={() => patch({ minSchool: 0 })}
-                      >
-                        {labels.any}
-                      </button>
-                      {SCHOOL_TIERS.map((tier) => (
-                        <button
-                          key={tier}
-                          type="button"
-                          className={chip(state.minSchool === tier)}
-                          onClick={() => patch({ minSchool: tier })}
-                        >
-                          {tier === 80
-                            ? labels.schoolTop
-                            : tier === 60
-                              ? labels.schoolGreat
-                              : labels.schoolMid}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {(
-                    [
-                      ['minBuilder', labels.builderQuality, IconStar],
-                      ['minMaterial', labels.materialGrade, IconWall],
-                    ] as const
-                  ).map(([key, label, Icon]) => (
-                    <div key={key}>
-                      <h4 className={sectionTitle}>
-                        <Icon size={18} className="text-accent" /> {label}
-                      </h4>
-                      <div className="flex flex-wrap gap-2">
-                        <button
-                          type="button"
-                          className={chip(state[key] === 0)}
-                          onClick={() => patch({ [key]: 0 })}
-                        >
-                          {labels.any}
-                        </button>
-                        {[1, 2, 3, 4, 5].map((grade) => (
-                          <button
-                            key={grade}
-                            type="button"
-                            className={chip(state[key] === grade)}
-                            onClick={() => patch({ [key]: grade })}
-                            aria-label={grade === 5 ? '5 / 5' : `${grade}+ / 5`}
-                          >
-                            <span aria-hidden="true">
-                              {grade}★{grade < 5 ? '+' : ''}
-                            </span>
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
-
-                  <div>
-                    <h4 className={sectionTitle}>
-                      <IconCompass size={18} className="text-accent" /> {labels.fengShui}
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      <button
-                        type="button"
-                        className={chip(state.orientation === '')}
-                        onClick={() => patch({ orientation: '' })}
-                      >
-                        {labels.any}
-                      </button>
-                      {ORIENTATIONS.map((orientation) => (
-                        <button
-                          key={orientation}
-                          type="button"
-                          className={chip(state.orientation === orientation)}
-                          onClick={() => patch({ orientation })}
-                        >
-                          {orientations[orientation]}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* 生活機能：多選 toggle chips */}
-                  <div>
-                    <h4 className={sectionTitle}>
-                      <IconBuildingStore size={18} className="text-accent" /> {labels.amenities}
-                    </h4>
-                    <div className="flex flex-wrap gap-2">
-                      {AMENITIES.map((amenity) => {
-                        const Icon = AMENITY_ICONS[amenity];
-                        const active = state.amenities.includes(amenity);
-                        return (
-                          <button
-                            key={amenity}
-                            type="button"
-                            className={`${chip(active)} inline-flex items-center gap-1.5`}
-                            onClick={() =>
-                              patch({
-                                amenities: active
-                                  ? state.amenities.filter((a) => a !== amenity)
-                                  : [...state.amenities, amenity],
-                              })
-                            }
-                          >
-                            <Icon size={15} />
-                            {amenityLabels[amenity]}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </section>
+            <div className="overflow-y-auto px-5 py-5">
+              <FilterSections
+                locale={locale}
+                state={state}
+                patch={patch}
+                labels={labels}
+                orientations={orientations}
+                propertyTypes={propertyTypes}
+                amenityLabels={amenityLabels}
+              />
             </div>
 
             <div className="flex items-center justify-between border-t border-neutral-200 px-5 py-4 dark:border-neutral-800">
@@ -527,13 +596,78 @@ export function FilterBar({
               >
                 {labels.reset}
               </button>
-              <button type="button" onClick={apply} className={`${btn.primary} px-6`}>
+              <button
+                type="button"
+                onClick={() => {
+                  setOpen(false);
+                  apply();
+                }}
+                className={`${btn.primary} px-6`}
+              >
                 {labels.apply}
               </button>
             </div>
           </div>
         </div>
       )}
-    </>
+    </div>
+  );
+}
+
+/** 桌機（lg+）：常駐左側篩選欄 */
+export function FilterSidebar({
+  locale,
+  labels,
+  orientations,
+  propertyTypes,
+  amenityLabels,
+  defaults,
+}: Readonly<
+  FilterLabels & {
+    locale: string;
+    defaults: ListingFilters;
+  }
+>) {
+  const { state, patch, apply, reset, activeCount } = useListingFilters(locale, defaults);
+
+  return (
+    <aside className="hidden lg:block">
+      <div className="sticky top-24 flex max-h-[calc(100vh-7.5rem)] flex-col overflow-hidden rounded-2xl border border-neutral-200 bg-white shadow-sm dark:border-neutral-800 dark:bg-neutral-950">
+        <div className="flex items-center gap-2 border-b border-neutral-200 px-4 py-3 dark:border-neutral-800">
+          <IconAdjustmentsHorizontal size={18} className="text-brand" />
+          <h2 className="font-semibold">{labels.title}</h2>
+          {activeCount > 0 && (
+            <span className="flex size-5 items-center justify-center rounded-full bg-brand text-xs font-bold text-white">
+              {activeCount}
+            </span>
+          )}
+        </div>
+
+        <div className="overflow-y-auto px-4 py-4">
+          <FilterSections
+            locale={locale}
+            state={state}
+            patch={patch}
+            labels={labels}
+            orientations={orientations}
+            propertyTypes={propertyTypes}
+            amenityLabels={amenityLabels}
+          />
+        </div>
+
+        <div className="flex items-center justify-between gap-3 border-t border-neutral-200 px-4 py-3 dark:border-neutral-800">
+          <button
+            type="button"
+            onClick={reset}
+            className="text-sm font-medium text-neutral-500 underline transition hover:text-neutral-800 dark:hover:text-neutral-200"
+          >
+            {labels.reset}
+          </button>
+          <button type="button" onClick={apply} className={`${btn.primary} flex-1`}>
+            {labels.apply}
+          </button>
+        </div>
+      </div>
+    </aside>
   );
 }
