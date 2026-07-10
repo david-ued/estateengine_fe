@@ -221,7 +221,7 @@
     "title": "自定义条件权重",
     "description": "调整各条件的重要程度，系统将为你计算每个房源的匹配度分数。",
     "personaTitle": "你是哪种买家？",
-    "personaHint": "点一下套用，马上看到最适合你的房源",
+    "personaHint": "选一个身份，筛选条件自动带入，再点「应用筛选」",
     "advanced": "高级微调",
     "levelLow": "不重要",
     "levelMid": "一般",

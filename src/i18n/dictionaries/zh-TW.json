@@ -221,7 +221,7 @@
     "title": "客製化條件權重",
     "description": "調整各條件的重要度，系統將為你計算每個物件的符合度分數。",
     "personaTitle": "你是哪種買家？",
-    "personaHint": "點一下套用，馬上看到最適合你的房子",
+    "personaHint": "選一個身分，篩選條件自動帶入，再按「套用篩選」",
     "advanced": "進階微調",
     "levelLow": "不重要",
     "levelMid": "普通",

@@ -11,33 +11,51 @@ export const PROPERTY_TYPES = ['house', 'condo', 'townhouse', 'apartment'] as co
 export const AMENITIES = ['superstore', 'transit_station', 'park', 'hospital'] as const;
 export type Amenity = (typeof AMENITIES)[number];
 
-// 預設 Persona 範本（與 DB persona_templates 種子一致；名稱走字典 personas.*）
-// TODO：DB 連線後改為讀取 persona_templates 表
+// Persona 範本：選了「你是哪種買家」後，直接帶入對應的篩選檔位
+// （未列出的欄位一律重設為「不限」，使用者可再手動微調）
+export interface PersonaPreset {
+  maxPrice?: number;
+  minSchool?: number;
+  minBuilder?: number;
+  minMaterial?: number;
+  orientation?: string;
+  amenities?: readonly Amenity[];
+}
+
 export const PERSONAS = [
   {
     code: 'first_time_buyer',
     icon: '🌱',
-    weights: { transit: 35, environment: 30, material: 20, school: 15 },
+    // 小資首購：預算優先 + 通勤方便
+    preset: { maxPrice: 750_000, amenities: ['transit_station'] },
   },
   {
     code: 'school_parent',
     icon: '🎓',
-    weights: { school: 50, transit: 20, environment: 20, material: 10 },
+    // 學區家長：學區排名優良以上
+    preset: { minSchool: 60 },
   },
   {
     code: 'quality_seeker',
     icon: '🏗️',
-    weights: { material: 40, environment: 25, transit: 25, school: 10 },
+    // 建商品質控：建商與建材 4 星以上
+    preset: { minBuilder: 4, minMaterial: 4 },
   },
   {
     code: 'feng_shui_believer',
     icon: '🧭',
-    weights: { feng_shui: 40, environment: 20, school: 20, transit: 20 },
+    // 風水優先：預設坐北朝南（南向），可再自行改向
+    preset: { orientation: 'S' },
   },
   {
     code: 'balanced',
     icon: '⚖️',
-    weights: { school: 20, transit: 20, material: 20, feng_shui: 20, environment: 20 },
+    // 均衡型：進階條件全部不限
+    preset: {},
   },
-] as const;
+] as const satisfies readonly {
+  code: string;
+  icon: string;
+  preset: PersonaPreset;
+}[];
 

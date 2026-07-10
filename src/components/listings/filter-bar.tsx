@@ -21,7 +21,15 @@ import {
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 import type { Dictionary } from '@/i18n/get-dictionary';
-import { AMENITIES, CITIES, ORIENTATIONS, PROPERTY_TYPES, type Amenity } from '@/lib/constants';
+import {
+  AMENITIES,
+  CITIES,
+  ORIENTATIONS,
+  PERSONAS,
+  PROPERTY_TYPES,
+  type Amenity,
+  type PersonaPreset,
+} from '@/lib/constants';
 import { DualRange } from '@/components/ui/dual-range';
 import { btn } from '@/components/ui/styles';
 
@@ -126,6 +134,34 @@ interface FilterLabels {
   orientations: Dictionary['agentForm']['orientations'];
   propertyTypes: Dictionary['agentForm']['propertyTypes'];
   amenityLabels: Dictionary['agentForm']['amenityOptions'];
+  personas: Dictionary['personas'];
+  personaCopy: Pick<Dictionary['weights'], 'personaTitle' | 'personaHint'>;
+}
+
+/** Persona 預設 → 篩選檔位（未指定的欄位重設為不限） */
+function personaToState(preset: PersonaPreset): Partial<FilterState> {
+  return {
+    priceLow: PRICE_MIN,
+    priceHigh: preset.maxPrice ?? PRICE_MAX,
+    minSchool: preset.minSchool ?? 0,
+    minBuilder: preset.minBuilder ?? 0,
+    minMaterial: preset.minMaterial ?? 0,
+    orientation: preset.orientation ?? '',
+    amenities: [...(preset.amenities ?? [])],
+  };
+}
+
+function personaActive(state: FilterState, preset: PersonaPreset): boolean {
+  const target = personaToState(preset);
+  return (
+    state.priceHigh === target.priceHigh &&
+    state.minSchool === target.minSchool &&
+    state.minBuilder === target.minBuilder &&
+    state.minMaterial === target.minMaterial &&
+    state.orientation === target.orientation &&
+    state.amenities.length === target.amenities!.length &&
+    state.amenities.every((a) => target.amenities!.includes(a))
+  );
 }
 
 /** 篩選狀態 + 套用/重設（modal 與 sidebar 共用） */
@@ -188,6 +224,8 @@ function FilterSections({
   orientations,
   propertyTypes,
   amenityLabels,
+  personas,
+  personaCopy,
 }: Readonly<
   FilterLabels & {
     locale: string;
@@ -201,6 +239,37 @@ function FilterSections({
 
   return (
     <div className="flex flex-col gap-6">
+      {/* 你是哪種買家：一鍵帶入下方篩選檔位 */}
+      <section className="rounded-xl bg-brand/5 p-3">
+        <h3 className="text-sm font-semibold text-neutral-900 dark:text-neutral-100">
+          {personaCopy.personaTitle}
+        </h3>
+        <p className="mb-2.5 mt-0.5 text-xs text-neutral-500">{personaCopy.personaHint}</p>
+        <div className="grid grid-cols-3 gap-2">
+          {PERSONAS.map((persona) => {
+            const active = personaActive(state, persona.preset);
+            return (
+              <button
+                key={persona.code}
+                type="button"
+                aria-pressed={active}
+                onClick={() => patch(personaToState(persona.preset))}
+                className={`flex min-h-16 flex-col items-center justify-center gap-1 rounded-xl border-2 px-1 py-2 transition ${
+                  active
+                    ? 'border-brand bg-brand text-white shadow-md'
+                    : 'border-neutral-300 bg-white text-neutral-700 hover:border-brand/60 hover:bg-brand/5 dark:border-neutral-600 dark:bg-neutral-950 dark:text-neutral-200'
+                }`}
+              >
+                <span className="text-xl leading-none">{persona.icon}</span>
+                <span className="text-center text-xs font-medium leading-tight">
+                  {personas[persona.code]}
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
       {/* 城市 */}
       <section>
         <h3 className={sectionTitle}>
@@ -509,6 +578,8 @@ export function FilterBar({
   orientations,
   propertyTypes,
   amenityLabels,
+  personas,
+  personaCopy,
   defaults,
 }: Readonly<
   FilterLabels & {
@@ -585,6 +656,8 @@ export function FilterBar({
                 orientations={orientations}
                 propertyTypes={propertyTypes}
                 amenityLabels={amenityLabels}
+                personas={personas}
+                personaCopy={personaCopy}
               />
             </div>
 
@@ -621,6 +694,8 @@ export function FilterSidebar({
   orientations,
   propertyTypes,
   amenityLabels,
+  personas,
+  personaCopy,
   defaults,
 }: Readonly<
   FilterLabels & {
@@ -652,6 +727,8 @@ export function FilterSidebar({
             orientations={orientations}
             propertyTypes={propertyTypes}
             amenityLabels={amenityLabels}
+            personas={personas}
+            personaCopy={personaCopy}
           />
         </div>
 

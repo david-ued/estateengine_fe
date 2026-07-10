@@ -2,13 +2,11 @@
 
 import { IconArrowsSort } from '@tabler/icons-react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { selectClass } from '@/components/ui/styles';
 import type { Dictionary } from '@/i18n/get-dictionary';
 
-const SORT_OPTIONS = ['recommended', 'newest', 'price_desc', 'price_asc'] as const;
+const SORT_OPTIONS = ['newest', 'price_desc', 'price_asc'] as const;
 
 const LABEL_KEYS: Record<(typeof SORT_OPTIONS)[number], keyof Dictionary['listings']> = {
-  recommended: 'sortRecommended',
   newest: 'sortNewest',
   price_desc: 'sortPriceDesc',
   price_asc: 'sortPriceAsc',
@@ -20,11 +18,14 @@ export function SortSelect({
 }: Readonly<{ locale: string; labels: Dictionary['listings'] }>) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const value = searchParams.get('sort') ?? 'recommended';
+  const raw = searchParams.get('sort');
+  const value = SORT_OPTIONS.includes(raw as (typeof SORT_OPTIONS)[number])
+    ? (raw as (typeof SORT_OPTIONS)[number])
+    : 'newest';
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const params = new URLSearchParams(searchParams.toString());
-    if (event.target.value === 'recommended') params.delete('sort');
+    if (event.target.value === 'newest') params.delete('sort');
     else params.set('sort', event.target.value);
     params.delete('page');
     router.push(`/${locale}/properties?${params.toString()}`);
@@ -36,7 +37,7 @@ export function SortSelect({
       <select
         value={value}
         onChange={handleChange}
-        className={selectClass}
+        className="rounded-lg border border-neutral-300 bg-transparent px-2 py-1.5 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900"
       >
         {SORT_OPTIONS.map((option) => (
           <option key={option} value={option}>

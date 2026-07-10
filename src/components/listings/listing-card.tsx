@@ -18,16 +18,13 @@ function daysOnMarket(listedAt: string | null): number | null {
 export function ListingCard({
   locale,
   property,
-  matchScore,
   dict,
   index = 0,
 }: Readonly<{
   locale: string;
   property: Property;
-  matchScore: number | null;
   dict: {
     filters: Dictionary['filters'];
-    weights: Dictionary['weights'];
     listings: Dictionary['listings'];
   };
   index?: number;
@@ -59,11 +56,6 @@ export function ListingCard({
             >
               🏠
             </div>
-          )}
-          {matchScore !== null && (
-            <span className="absolute right-2.5 top-2.5 rounded-full bg-accent px-2.5 py-1 text-xs font-bold text-white shadow-md">
-              {dict.weights.matchScore} {matchScore}
-            </span>
           )}
           {dom !== null && dom <= FRESH_DAYS && (
             <span className="absolute left-2.5 top-2.5 rounded-full bg-brand px-2.5 py-1 text-xs font-semibold text-white shadow-md">

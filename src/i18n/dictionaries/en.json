@@ -221,7 +221,7 @@
     "title": "Custom Criteria Weights",
     "description": "Adjust how much each criterion matters and we will score every listing for you.",
     "personaTitle": "What kind of buyer are you?",
-    "personaHint": "One tap to see the homes that fit you best",
+    "personaHint": "Pick one to preset the filters below, then hit Apply",
     "advanced": "Fine-tune",
     "levelLow": "Not important",
     "levelMid": "Neutral",

@@ -101,11 +101,9 @@ export default async function AgentDetailPage({
               key={property.id}
               locale={locale}
               property={{ ...property, agent: undefined }}
-              matchScore={null}
               index={index}
               dict={{
                 filters: dict.filters,
-                weights: dict.weights,
                 listings: dict.listings,
               }}
             />

@@ -109,6 +109,8 @@ export default async function PropertiesPage({
           orientations={dict.agentForm.orientations}
           propertyTypes={dict.agentForm.propertyTypes}
           amenityLabels={dict.agentForm.amenityOptions}
+          personas={dict.personas}
+          personaCopy={dict.weights}
           defaults={filters}
         />
       </div>
@@ -121,6 +123,8 @@ export default async function PropertiesPage({
           orientations={dict.agentForm.orientations}
           propertyTypes={dict.agentForm.propertyTypes}
           amenityLabels={dict.agentForm.amenityOptions}
+          personas={dict.personas}
+          personaCopy={dict.weights}
           defaults={filters}
         />
 
@@ -138,11 +142,8 @@ export default async function PropertiesPage({
         <ListingsExplorer
           locale={locale}
           properties={items}
-          sort={filters.sort}
           dict={{
             filters: dict.filters,
-            weights: dict.weights,
-            personas: dict.personas,
             listings: dict.listings,
           }}
         />
