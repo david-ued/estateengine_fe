@@ -1,5 +1,10 @@
 'use client';
 
+import {
+  IconAdjustmentsHorizontal,
+  IconCheck,
+  IconChevronDown,
+} from '@tabler/icons-react';
 import type { Dictionary } from '@/i18n/get-dictionary';
 import { PERSONAS } from '@/lib/constants';
 import { SCORE_DIMENSIONS, type ScoreDimension, type WeightMap } from '@/lib/scoring';
@@ -63,7 +68,7 @@ export function WeightPanel({
               }`}
             >
               <span className="text-2xl leading-none">{persona.icon}</span>
-              <span className="whitespace-nowrap text-xs font-medium">
+              <span className="whitespace-nowrap text-sm font-medium">
                 {personaLabels[persona.code]}
               </span>
             </button>
@@ -71,42 +76,50 @@ export function WeightPanel({
         })}
       </div>
 
-      {/* 進階微調：預設收合，避免嚇到新手 */}
-      <details className="mt-3 group">
-        <summary className="cursor-pointer select-none text-sm text-neutral-500 transition hover:text-neutral-800 dark:hover:text-neutral-200">
+      {/* 進階微調：預設收合；大按鈕 + 明顯選中態（高齡友善：≥48px 觸控、粗邊框、勾勾標記） */}
+      <details className="group mt-4">
+        <summary className="flex min-h-12 cursor-pointer select-none list-none items-center justify-center gap-2 rounded-xl border-2 border-neutral-300 px-4 py-3 text-base font-semibold text-neutral-800 transition hover:border-brand hover:bg-brand/5 hover:text-brand dark:border-neutral-600 dark:text-neutral-100 [&::-webkit-details-marker]:hidden">
+          <IconAdjustmentsHorizontal size={20} />
           {labels.advanced}
-          <span className="ml-1 inline-block transition-transform group-open:rotate-180">
-            ⌄
-          </span>
+          <IconChevronDown
+            size={20}
+            className="transition-transform group-open:rotate-180"
+          />
         </summary>
-        <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
+
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
           {SCORE_DIMENSIONS.map((dimension) => {
             const currentLevel = levelOf(weights[dimension] ?? 0);
             return (
               <div
                 key={dimension}
-                className="flex items-center justify-between gap-3 text-sm"
+                className="rounded-xl border border-neutral-200 bg-neutral-50/60 p-3 dark:border-neutral-700 dark:bg-neutral-900/60"
               >
-                <span className="text-neutral-700 dark:text-neutral-300">
+                <p className="mb-2 text-base font-semibold text-neutral-900 dark:text-neutral-100">
                   {labels[DIMENSION_LABEL_KEYS[dimension]]}
-                </span>
-                <div className="flex shrink-0 rounded-full border border-neutral-200 p-0.5 dark:border-neutral-700">
-                  {LEVELS.map((level) => (
-                    <button
-                      key={level.key}
-                      type="button"
-                      onClick={() =>
-                        onChange({ ...weights, [dimension]: level.value })
-                      }
-                      className={`rounded-full px-2.5 py-1 text-xs transition ${
-                        currentLevel === level.key
-                          ? 'bg-brand font-medium text-white'
-                          : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
-                      }`}
-                    >
-                      {labels[level.key]}
-                    </button>
-                  ))}
+                </p>
+                <div className="grid grid-cols-3 gap-2">
+                  {LEVELS.map((level) => {
+                    const active = currentLevel === level.key;
+                    return (
+                      <button
+                        key={level.key}
+                        type="button"
+                        aria-pressed={active}
+                        onClick={() =>
+                          onChange({ ...weights, [dimension]: level.value })
+                        }
+                        className={`flex min-h-12 items-center justify-center gap-1 rounded-lg border-2 px-1 text-center text-[15px] font-medium leading-tight transition ${
+                          active
+                            ? 'border-brand bg-brand text-white shadow-md'
+                            : 'border-neutral-300 bg-white text-neutral-700 hover:border-brand/60 hover:bg-brand/5 dark:border-neutral-600 dark:bg-neutral-950 dark:text-neutral-200'
+                        }`}
+                      >
+                        {active && <IconCheck size={17} stroke={3} className="shrink-0" />}
+                        {labels[level.key]}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             );
