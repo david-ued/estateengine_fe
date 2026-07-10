@@ -2,6 +2,12 @@
 
 import { IconBolt, IconPhoto, IconSparkles } from '@tabler/icons-react';
 import { useEffect, useState } from 'react';
+import {
+  btn,
+  errorTextClass,
+  inputClass,
+  successTextClass,
+} from '@/components/ui/styles';
 import type { Dictionary } from '@/i18n/get-dictionary';
 import { apiFetch, ApiError } from '@/lib/api';
 import { createClient } from '@/lib/supabase/client';
@@ -120,16 +126,19 @@ export function AiQuickFill({
       </div>
       <p className="mb-3 text-xs text-neutral-500">{labels.hint}</p>
 
+      {/* 區塊底色為品牌淡色，輸入框需保持白底以利閱讀 */}
       <textarea
         rows={3}
         value={text}
         onChange={(e) => setText(e.target.value)}
         placeholder={labels.placeholder}
-        className="w-full rounded-lg border border-neutral-300 bg-white px-4 py-2.5 text-sm outline-none focus:border-brand dark:border-neutral-700 dark:bg-neutral-900"
+        className={`${inputClass} bg-white dark:bg-neutral-900`}
       />
 
       <div className="mt-2 flex flex-wrap items-center gap-2">
-        <label className="flex cursor-pointer items-center gap-1.5 rounded-lg border border-neutral-300 bg-white px-3 py-2 text-sm transition hover:border-neutral-500 dark:border-neutral-700 dark:bg-neutral-900">
+        <label
+          className={`${btn.secondary} cursor-pointer bg-white dark:bg-neutral-900`}
+        >
           <IconPhoto size={16} />
           {image ? image.name : labels.uploadImage}
           <input
@@ -143,18 +152,20 @@ export function AiQuickFill({
           type="button"
           disabled={disabled}
           onClick={handleParse}
-          className="btn-primary press ml-auto flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium disabled:cursor-not-allowed"
+          className={`${btn.primary} ml-auto`}
         >
           <IconSparkles size={16} />
           {pending ? labels.parsing : labels.parse}
         </button>
       </div>
 
-      {insufficient && <p className="mt-2 text-xs text-red-600">{labels.insufficient}</p>}
+      {insufficient && (
+        <p className={`mt-2 ${errorTextClass}`}>{labels.insufficient}</p>
+      )}
       {message && (
         <p
-          className={`mt-2 text-xs ${
-            message.kind === 'error' ? 'text-red-600' : 'text-emerald-600'
+          className={`mt-2 ${
+            message.kind === 'error' ? errorTextClass : successTextClass
           }`}
         >
           {message.text}

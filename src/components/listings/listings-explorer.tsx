@@ -44,14 +44,18 @@ export function ListingsExplorer({
 
   // 未登入：localStorage；登入者：讀取/覆寫 buyer_weight_profiles
   useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (saved) setWeights(JSON.parse(saved) as WeightMap);
-    } catch {
-      // ignore malformed storage
-    }
-
     let cancelled = false;
+
+    // 延後到 microtask 讀取，避免 effect 內同步 setState（react-hooks/set-state-in-effect）
+    queueMicrotask(() => {
+      if (cancelled) return;
+      try {
+        const saved = window.localStorage.getItem(STORAGE_KEY);
+        if (saved) setWeights(JSON.parse(saved) as WeightMap);
+      } catch {
+        // ignore malformed storage
+      }
+    });
     (async () => {
       try {
         const supabase = createClient();
@@ -177,7 +181,8 @@ export function ListingsExplorer({
         onClick={() => setShowMap(true)}
         className="press fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full bg-neutral-900 px-5 py-3 text-sm font-medium text-white shadow-xl lg:hidden dark:bg-white dark:text-neutral-900"
       >
-        🗺 {dict.listings.mapView}
+        <span aria-hidden="true">🗺 </span>
+        {dict.listings.mapView}
       </button>
 
       {/* 手機全螢幕地圖 */}
@@ -189,7 +194,8 @@ export function ListingsExplorer({
             onClick={() => setShowMap(false)}
             className="press absolute bottom-6 left-1/2 z-[1000] -translate-x-1/2 rounded-full bg-neutral-900 px-5 py-3 text-sm font-medium text-white shadow-xl dark:bg-white dark:text-neutral-900"
           >
-            ✕ {dict.listings.listView}
+            <span aria-hidden="true">✕ </span>
+            {dict.listings.listView}
           </button>
         </div>
       )}

@@ -31,6 +31,15 @@ body {
 }
 
 /* ---------------------------------------------------------------
+   Focus ring（無障礙）：全站鍵盤焦點一律品牌色 outline。
+   未分層規則優先於 Tailwind utilities，故可蓋過殘留的 outline-none。
+---------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
+
+/* ---------------------------------------------------------------
    Motion system
    進場 / 轉場 / 微互動，一律尊重 prefers-reduced-motion
 ---------------------------------------------------------------- */
@@ -160,7 +169,7 @@ a.press:active {
   transform: scale(0.97);
 }
 
-/* 主要按鈕：藍主色 */
+/* 主要按鈕：藍主色（全站唯一主要動作色） */
 .btn-primary {
   background: var(--color-brand);
   color: #fff;

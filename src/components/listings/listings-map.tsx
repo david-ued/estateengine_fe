@@ -19,7 +19,11 @@ export function ListingsMap({
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const routerRef = useRef(router);
-  routerRef.current = router;
+
+  // render 期間不可寫 ref（react-hooks/refs），改在 effect 內同步
+  useEffect(() => {
+    routerRef.current = router;
+  }, [router]);
 
   useEffect(() => {
     const container = containerRef.current;

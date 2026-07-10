@@ -1,24 +1,33 @@
+import { IconChevronLeft } from '@tabler/icons-react';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { EmbedFrame } from '@/components/property/embed-frame';
 import { MortgageCalculator } from '@/components/property/mortgage-calculator';
 import { ViewTracker } from '@/components/property/view-tracker';
 import { Reveal } from '@/components/reveal';
+import { btn } from '@/components/ui/styles';
 import { isLocale } from '@/i18n/config';
 import { getDictionary, type Dictionary } from '@/i18n/get-dictionary';
-import { apiFetch } from '@/lib/api';
+import { ApiError, apiFetch } from '@/lib/api';
 import { externalMedia, storagePublicUrl } from '@/lib/media';
 import type { Property } from '@/lib/types';
 
 async function fetchProperty(id: string): Promise<Property | null> {
   try {
     return await apiFetch<Property>(`/properties/${id}`, { cache: 'no-store' });
-  } catch {
-    return null;
+  } catch (error) {
+    // 404 → notFound；其餘（後端未啟動等）拋出交給 error boundary
+    if (error instanceof ApiError && error.status === 404) return null;
+    throw error;
   }
 }
 
 function Stars({ count }: Readonly<{ count: number }>) {
-  return <span className="text-amber-500">{'★'.repeat(count)}</span>;
+  return (
+    <span className="text-amber-500" aria-label={`${count} / 5`}>
+      <span aria-hidden="true">{'★'.repeat(count)}</span>
+    </span>
+  );
 }
 
 export default async function PropertyDetailPage({
@@ -47,7 +56,15 @@ export default async function PropertyDetailPage({
   if (property.transit_notes)
     exclusiveRows.push({ label: form.transitNotes, value: property.transit_notes });
   if (property.flood_zone)
-    exclusiveRows.push({ label: form.floodZone, value: '⚠️' });
+    exclusiveRows.push({
+      label: form.floodZone,
+      value: (
+        <span>
+          <span aria-hidden="true">⚠️ </span>
+          {dict.property.floodYes}
+        </span>
+      ),
+    });
   if (property.terrain_notes)
     exclusiveRows.push({ label: form.terrainNotes, value: property.terrain_notes });
   if (property.feng_shui_orientation)
@@ -82,11 +99,18 @@ export default async function PropertyDetailPage({
     <main className="mx-auto w-full max-w-4xl flex-1 p-4 sm:p-8">
       <ViewTracker propertyId={property.id} />
 
+      <Link
+        href={`/${locale}/properties`}
+        className="mb-4 inline-flex items-center gap-1 text-sm text-neutral-500 transition hover:text-neutral-800 hover:underline dark:hover:text-neutral-200"
+      >
+        <IconChevronLeft size={16} /> {dict.property.backToListings}
+      </Link>
+
       <header className="mb-6">
         <div className="flex flex-wrap items-baseline justify-between gap-3">
           <h1 className="text-2xl font-bold">{property.title}</h1>
           <span className="font-mono text-xl">
-            ${Number(property.price).toLocaleString()} {property.currency}
+            ${Number(property.price).toLocaleString(locale)} {property.currency}
           </span>
         </div>
         <p className="mt-1 text-neutral-500">
@@ -95,7 +119,7 @@ export default async function PropertyDetailPage({
           {property.address ? ` · ${property.address}` : ''}
         </p>
         <p className="mt-2 text-sm text-neutral-500">
-          {Number(property.area_sqft).toLocaleString()} {dict.filters.sqft} ·{' '}
+          {Number(property.area_sqft).toLocaleString(locale)} {dict.filters.sqft} ·{' '}
           {property.beds} {dict.filters.beds} / {property.baths} {dict.filters.baths}
         </p>
       </header>
@@ -114,7 +138,9 @@ export default async function PropertyDetailPage({
               {/* eslint-disable-next-line @next/next/no-img-element -- Supabase Storage 遠端圖 */}
               <img
                 src={storagePublicUrl(image.storage_path!)}
-                alt={property.title}
+                alt={dict.property.photoAlt
+                  .replace('{title}', property.title)
+                  .replace('{index}', String(index + 1))}
                 className={`size-full object-cover transition duration-500 ease-out hover:scale-[1.04] ${
                   index === 0 ? 'aspect-square sm:aspect-[4/3]' : 'aspect-[4/3]'
                 }`}
@@ -200,10 +226,7 @@ export default async function PropertyDetailPage({
               </p>
             )}
             {agent.phone && (
-              <a
-                href={`tel:${agent.phone}`}
-                className="btn-primary press mt-4 inline-block rounded-lg px-4 py-2 text-sm"
-              >
+              <a href={`tel:${agent.phone}`} className={`${btn.primary} mt-4`}>
                 {dict.common.contactAgent}
               </a>
             )}
@@ -211,6 +234,7 @@ export default async function PropertyDetailPage({
         )}
 
         <MortgageCalculator
+          locale={locale}
           initialPrice={Number(property.price)}
           labels={dict.property}
         />

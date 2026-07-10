@@ -41,6 +41,7 @@
 - [x] 物件卡升級：上市天數醒目標示、特色標籤（頂級建材/優質學區）、房仲迷你卡
 - [x] 找房仲 `/agents` + 房仲專屬頁 `/agents/[id]`（介紹 + 代理物件）+ 導覽入口
 - [x] ⚡ AI 快速建檔（Gemini 解析文字/截圖 → 半自動填表 + Token 扣點 + 餘額顯示/不足禁用/失敗退點）
+- [x] 全站 UI/UX 硬化（2026-07）：共用樣式 `src/components/ui/styles.ts`（按鈕/輸入框/卡片/表格唯一來源，主要動作統一品牌藍）、全域 `:focus-visible` 焦點環、`error.tsx`/`not-found.tsx` + locale catch-all 404、補 7 個路由 loading 骨架、API 失敗與空結果分離顯示、async 操作失敗回饋（status/role/delist）、登入狀態感知導覽列 + active nav、login/signup pending 標籤、a11y（stars/emoji aria、每張照片獨立 alt、i18n aria-label、DualRange aria-valuetext）、數字格式帶 locale、內頁返回連結、照片多選上傳
 
 ## 🔜 Phase 1 剩餘（Must Have）
 

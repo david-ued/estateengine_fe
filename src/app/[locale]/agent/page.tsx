@@ -1,6 +1,15 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { StatusActions } from '@/components/agent/status-actions';
+import {
+  btn,
+  tableClass,
+  tableWrapClass,
+  tdClass,
+  thClass,
+  theadClass,
+  trClass,
+} from '@/components/ui/styles';
 import { isLocale } from '@/i18n/config';
 import { getDictionary, type Dictionary } from '@/i18n/get-dictionary';
 import { requireRole } from '@/lib/auth';
@@ -85,10 +94,7 @@ export default async function AgentDashboardPage({
     <main className="mx-auto w-full max-w-5xl flex-1 p-8">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-xl font-bold">{dict.agent.myListings}</h2>
-        <Link
-          href={`/${locale}/agent/properties/new`}
-          className="rounded-lg bg-neutral-900 px-4 py-2 text-sm text-white transition hover:bg-neutral-700 dark:bg-white dark:text-neutral-900"
-        >
+        <Link href={`/${locale}/agent/properties/new`} className={btn.primary}>
           + {dict.agent.newListing}
         </Link>
       </div>
@@ -96,46 +102,45 @@ export default async function AgentDashboardPage({
       {!listings || listings.length === 0 ? (
         <p className="text-neutral-500">{dict.agent.noListings}</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-800">
-          <table className="w-full text-sm">
-            <thead className="bg-neutral-50 text-left dark:bg-neutral-900">
+        <div className={tableWrapClass}>
+          <table className={tableClass}>
+            <thead className={theadClass}>
               <tr>
-                <th className="px-4 py-3">{dict.agent.myListings}</th>
-                <th className="px-4 py-3">{dict.agent.status}</th>
-                <th className="px-4 py-3">{dict.agent.price}</th>
-                <th className="px-4 py-3">{dict.agent.daysOnMarket}</th>
-                <th className="px-4 py-3">{dict.agent.views}</th>
-                <th className="px-4 py-3">{dict.agent.avgDwell}</th>
-                <th className="px-4 py-3">{dict.agent.videoClicks}</th>
-                <th className="px-4 py-3" />
+                <th scope="col" className={thClass}>{dict.agent.myListings}</th>
+                <th scope="col" className={thClass}>{dict.agent.status}</th>
+                <th scope="col" className={thClass}>{dict.agent.price}</th>
+                <th scope="col" className={thClass}>{dict.agent.daysOnMarket}</th>
+                <th scope="col" className={thClass}>{dict.agent.views}</th>
+                <th scope="col" className={thClass}>{dict.agent.avgDwell}</th>
+                <th scope="col" className={thClass}>{dict.agent.videoClicks}</th>
+                <th scope="col" className={thClass}>
+                  <span className="sr-only">{dict.agent.edit}</span>
+                </th>
               </tr>
             </thead>
             <tbody>
               {listings.map((listing) => (
-                <tr
-                  key={listing.id}
-                  className="border-t border-neutral-200 dark:border-neutral-800"
-                >
-                  <td className="px-4 py-3">
+                <tr key={listing.id} className={trClass}>
+                  <td className={tdClass}>
                     <div className="font-medium">{listing.title}</div>
                     <div className="text-neutral-500">
                       {listing.city}
                       {listing.district ? ` · ${listing.district}` : ''}
                     </div>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className={tdClass}>
                     {dict.agent.statusLabels[listing.status]}
                   </td>
-                  <td className="px-4 py-3">{listing.price.toLocaleString()}</td>
-                  <td className="px-4 py-3">{daysOnMarket(listing.listed_at) ?? '—'}</td>
-                  <td className="px-4 py-3">{listing.view_count}</td>
-                  <td className="px-4 py-3">{avgDwellOf(listing.id) ?? '—'}</td>
-                  <td className="px-4 py-3">{videoClicks.get(listing.id) ?? 0}</td>
-                  <td className="px-4 py-3">
+                  <td className={tdClass}>{listing.price.toLocaleString()}</td>
+                  <td className={tdClass}>{daysOnMarket(listing.listed_at) ?? '—'}</td>
+                  <td className={tdClass}>{listing.view_count}</td>
+                  <td className={tdClass}>{avgDwellOf(listing.id) ?? '—'}</td>
+                  <td className={tdClass}>{videoClicks.get(listing.id) ?? 0}</td>
+                  <td className={tdClass}>
                     <span className="flex flex-col items-end gap-1.5">
                       <Link
                         href={`/${locale}/agent/properties/${listing.id}/edit`}
-                        className="rounded-md border border-neutral-300 px-2 py-1 text-xs transition hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
+                        className={btn.quiet}
                       >
                         {dict.agent.edit}
                       </Link>
@@ -143,6 +148,7 @@ export default async function AgentDashboardPage({
                         propertyId={listing.id}
                         status={listing.status as PropertyStatus}
                         labels={dict.agent.actions}
+                        errorText={dict.agent.actionError}
                       />
                     </span>
                   </td>

@@ -2,6 +2,7 @@
 
 import { IconArrowsSort } from '@tabler/icons-react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { selectClass } from '@/components/ui/styles';
 import type { Dictionary } from '@/i18n/get-dictionary';
 
 const SORT_OPTIONS = ['recommended', 'newest', 'price_desc', 'price_asc'] as const;
@@ -35,7 +36,7 @@ export function SortSelect({
       <select
         value={value}
         onChange={handleChange}
-        className="rounded-lg border border-neutral-300 bg-transparent px-2 py-1.5 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900"
+        className={selectClass}
       >
         {SORT_OPTIONS.map((option) => (
           <option key={option} value={option}>

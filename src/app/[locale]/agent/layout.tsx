@@ -1,6 +1,6 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { SignOutButton } from '@/components/auth/sign-out-button';
+import { NavLinks } from '@/components/nav-links';
 import { isLocale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { requireRole } from '@/lib/auth';
@@ -25,12 +25,15 @@ export default async function AgentLayout({
         <div className="flex items-center gap-6">
           <h1 className="font-semibold">{dict.agent.dashboardTitle}</h1>
           <nav className="flex items-center gap-4 text-sm">
-            <Link href={`/${locale}/agent`} className="hover:underline">
-              {dict.agent.myListings}
-            </Link>
-            <Link href={`/${locale}/agent/share-links`} className="hover:underline">
-              {dict.agent.shareLinksNav}
-            </Link>
+            <NavLinks
+              links={[
+                { href: `/${locale}/agent`, label: dict.agent.myListings },
+                {
+                  href: `/${locale}/agent/share-links`,
+                  label: dict.agent.shareLinksNav,
+                },
+              ]}
+            />
           </nav>
         </div>
         <div className="flex items-center gap-4 text-sm">

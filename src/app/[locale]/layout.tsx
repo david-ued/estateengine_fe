@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { NavAuth } from '@/components/auth/nav-auth';
 import { LocaleSwitcher } from '@/components/locale-switcher';
+import { NavLinks } from '@/components/nav-links';
 import { isLocale, locales } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
 import '../globals.css';
@@ -46,27 +48,30 @@ export default async function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-neutral-200/70 bg-white/75 px-4 py-4 backdrop-blur-md sm:px-8 dark:border-neutral-800/70 dark:bg-neutral-950/75">
+        <nav className="sticky top-0 z-50 flex items-center justify-between gap-3 border-b border-neutral-200/70 bg-white/75 px-4 py-4 backdrop-blur-md sm:px-8 dark:border-neutral-800/70 dark:bg-neutral-950/75">
           <Link
             href={`/${locale}`}
-            className="font-bold tracking-tight text-brand transition-opacity hover:opacity-70"
+            className="shrink-0 font-bold tracking-tight text-brand transition-opacity hover:opacity-70"
           >
             {dict.common.appName}
           </Link>
-          <div className="flex items-center gap-4 text-sm sm:gap-6">
-            <Link href={`/${locale}/properties`} className="hover:underline">
-              {dict.nav.listings}
-            </Link>
-            <Link href={`/${locale}/agents`} className="hover:underline">
-              {dict.nav.agents}
-            </Link>
-            <LocaleSwitcher current={locale} />
-            <Link
-              href={`/${locale}/login`}
-              className="press btn-primary rounded-full px-4 py-1.5"
-            >
-              {dict.nav.signIn}
-            </Link>
+          <div className="flex min-w-0 items-center gap-3 text-sm sm:gap-6">
+            <NavLinks
+              links={[
+                { href: `/${locale}/properties`, label: dict.nav.listings },
+                { href: `/${locale}/agents`, label: dict.nav.agents },
+              ]}
+            />
+            <LocaleSwitcher current={locale} label={dict.nav.language} />
+            <NavAuth
+              locale={locale}
+              labels={{
+                signIn: dict.nav.signIn,
+                signOut: dict.nav.signOut,
+                agentDashboard: dict.nav.agentDashboard,
+                adminDashboard: dict.nav.adminDashboard,
+              }}
+            />
           </div>
         </nav>
         {children}

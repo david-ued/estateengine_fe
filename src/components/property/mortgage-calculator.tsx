@@ -1,18 +1,20 @@
 'use client';
 
 import { useState } from 'react';
+import { inputClass } from '@/components/ui/styles';
 import type { Dictionary } from '@/i18n/get-dictionary';
 import { calcMortgage } from '@/lib/mortgage';
 
 /** 房貸試算：頭期 20% / 貸款 80% / 30 年（PRD 寫死參數） */
 export function MortgageCalculator({
+  locale,
   initialPrice,
   labels,
-}: Readonly<{ initialPrice: number; labels: Dictionary['property'] }>) {
+}: Readonly<{ locale: string; initialPrice: number; labels: Dictionary['property'] }>) {
   const [price, setPrice] = useState(initialPrice);
   const quote = calcMortgage(price || 0);
 
-  const fmt = (value: number) => `$${Math.round(value).toLocaleString()}`;
+  const fmt = (value: number) => `$${Math.round(value).toLocaleString(locale)}`;
 
   return (
     <section className="card-lift rounded-xl border border-neutral-200 p-5 dark:border-neutral-800">
@@ -26,7 +28,7 @@ export function MortgageCalculator({
           min="0"
           value={price || ''}
           onChange={(e) => setPrice(Number(e.target.value))}
-          className="w-full rounded-lg border border-neutral-300 px-4 py-2.5 outline-none focus:border-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:focus:border-white"
+          className={inputClass}
         />
       </label>
 

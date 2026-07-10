@@ -40,7 +40,10 @@ export function EmbedFrame({
       onClick={handlePlay}
       className="flex aspect-video w-full items-center justify-center gap-3 rounded-xl border border-neutral-200 bg-neutral-50 transition hover:bg-neutral-100 dark:border-neutral-800 dark:bg-neutral-900 dark:hover:bg-neutral-800"
     >
-      <span className="flex size-12 items-center justify-center rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900">
+      <span
+        aria-hidden="true"
+        className="flex size-12 items-center justify-center rounded-full bg-neutral-900 text-white dark:bg-white dark:text-neutral-900"
+      >
         ▶
       </span>
       <span className="font-medium">{label}</span>

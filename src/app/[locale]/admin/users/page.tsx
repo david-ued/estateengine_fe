@@ -1,5 +1,13 @@
 import { notFound } from 'next/navigation';
 import { RoleActions } from '@/components/admin/role-actions';
+import {
+  tableClass,
+  tableWrapClass,
+  tdClass,
+  thClass,
+  theadClass,
+  trClass,
+} from '@/components/ui/styles';
 import { isLocale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { requireRole } from '@/lib/auth';
@@ -39,23 +47,22 @@ export default async function AdminUsersPage({
       {!users || users.length === 0 ? (
         <p className="text-neutral-500">{dict.admin.usersEmpty}</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-800">
-          <table className="w-full text-sm">
-            <thead className="bg-neutral-50 text-left dark:bg-neutral-900">
+        <div className={tableWrapClass}>
+          <table className={tableClass}>
+            <thead className={theadClass}>
               <tr>
-                <th className="px-4 py-3">{dict.auth.fullName}</th>
-                <th className="px-4 py-3">{dict.admin.email}</th>
-                <th className="px-4 py-3">{dict.admin.role}</th>
-                <th className="px-4 py-3" />
+                <th scope="col" className={thClass}>{dict.auth.fullName}</th>
+                <th scope="col" className={thClass}>{dict.admin.email}</th>
+                <th scope="col" className={thClass}>{dict.admin.role}</th>
+                <th scope="col" className={thClass}>
+                  <span className="sr-only">{dict.admin.role}</span>
+                </th>
               </tr>
             </thead>
             <tbody>
               {users.map((user) => (
-                <tr
-                  key={user.id}
-                  className="border-t border-neutral-200 dark:border-neutral-800"
-                >
-                  <td className="px-4 py-3">
+                <tr key={user.id} className={trClass}>
+                  <td className={tdClass}>
                     <div className="font-medium">
                       {user.display_name ?? user.full_name ?? '—'}
                     </div>
@@ -63,9 +70,9 @@ export default async function AdminUsersPage({
                       <div className="text-neutral-500">{user.agency_name}</div>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-neutral-500">{user.email ?? '—'}</td>
-                  <td className="px-4 py-3">{dict.admin.roleLabels[user.role]}</td>
-                  <td className="px-4 py-3 text-right">
+                  <td className={`${tdClass} text-neutral-500`}>{user.email ?? '—'}</td>
+                  <td className={tdClass}>{dict.admin.roleLabels[user.role]}</td>
+                  <td className={`${tdClass} text-right`}>
                     {user.role !== 'super_admin' && (
                       <RoleActions
                         userId={user.id}
@@ -73,6 +80,7 @@ export default async function AdminUsersPage({
                         labels={{
                           makeAgent: dict.admin.makeAgent,
                           makeBuyer: dict.admin.makeBuyer,
+                          actionError: dict.admin.actionError,
                         }}
                       />
                     )}

@@ -8,7 +8,14 @@
     "viewDetails": "Voir les détails",
     "save": "Enregistrer",
     "cancel": "Annuler",
-    "back": "Retour"
+    "back": "Retour",
+    "errorTitle": "Une erreur est survenue",
+    "errorBody": "Le chargement de la page a échoué. Veuillez réessayer plus tard.",
+    "retry": "Réessayer",
+    "notFoundTitle": "Page introuvable",
+    "notFoundBody": "Cette page n'existe pas ou a été supprimée.",
+    "backHome": "Retour à l'accueil",
+    "close": "Fermer"
   },
   "nav": {
     "home": "Accueil",
@@ -16,7 +23,9 @@
     "agents": "Agents",
     "agentDashboard": "Espace agent",
     "signIn": "Se connecter",
-    "signOut": "Se déconnecter"
+    "signOut": "Se déconnecter",
+    "adminDashboard": "Administration",
+    "language": "Langue"
   },
   "auth": {
     "signIn": "Se connecter",
@@ -30,7 +39,9 @@
     "noAccount": "Pas encore de compte ?",
     "haveAccount": "Vous avez déjà un compte ?",
     "loginTitle": "Connexion à EstateEngine",
-    "loginSubtitle": "Acheteurs, agents et administrateurs se connectent ici — vous serez redirigé selon votre rôle."
+    "loginSubtitle": "Acheteurs, agents et administrateurs se connectent ici — vous serez redirigé selon votre rôle.",
+    "signingIn": "Connexion…",
+    "signingUp": "Inscription…"
   },
   "agent": {
     "dashboardTitle": "Espace agent",
@@ -57,7 +68,8 @@
       "hidden": "Masquée",
       "delisted": "Retirée",
       "sold": "Vendue"
-    }
+    },
+    "actionError": "L'action a échoué. Veuillez réessayer."
   },
   "agentForm": {
     "pageTitle": "Nouvelle annonce",
@@ -90,8 +102,14 @@
     "terrainNotes": "Notes sur le terrain",
     "fengShuiOrientation": "Orientation feng shui",
     "orientations": {
-      "N": "Nord", "NE": "Nord-Est", "E": "Est", "SE": "Sud-Est",
-      "S": "Sud", "SW": "Sud-Ouest", "W": "Ouest", "NW": "Nord-Ouest"
+      "N": "Nord",
+      "NE": "Nord-Est",
+      "E": "Est",
+      "SE": "Sud-Est",
+      "S": "Sud",
+      "SW": "Sud-Ouest",
+      "W": "Ouest",
+      "NW": "Nord-Ouest"
     },
     "fengShuiNotes": "Notes feng shui",
     "builderName": "Constructeur",
@@ -141,7 +159,8 @@
       "buyer": "Acheteur",
       "agent": "Agent",
       "super_admin": "Super admin"
-    }
+    },
+    "actionError": "L'action a échoué. Veuillez réessayer."
   },
   "filters": {
     "location": "Emplacement",
@@ -178,7 +197,8 @@
     "sortPriceAsc": "Prix croissant",
     "daysBadge": "{days} j sur le marché",
     "tagTopMaterial": "Matériaux haut de gamme",
-    "tagTopSchool": "Secteur scolaire réputé"
+    "tagTopSchool": "Secteur scolaire réputé",
+    "loadError": "Échec du chargement des annonces. Veuillez réessayer plus tard."
   },
   "personas": {
     "first_time_buyer": "Premier acheteur",
@@ -216,7 +236,10 @@
     "videoTour": "Visite vidéo",
     "tour3d": "Visite 3D",
     "exclusiveTitle": "Données exclusives",
-    "listedBy": "Annonce de"
+    "listedBy": "Annonce de",
+    "backToListings": "Retour aux annonces",
+    "floodYes": "Oui",
+    "photoAlt": "{title} photo {index}"
   },
   "share": {
     "curatedTitle": "Sélection personnalisée",
@@ -245,7 +268,8 @@
     "subtitle": "Rencontrez les agents professionnels de la plateforme",
     "listings": "annonces actives",
     "focus": "Secteur principal",
-    "empty": "Aucun agent pour le moment."
+    "empty": "Aucun agent pour le moment.",
+    "backToAgents": "Retour aux agents"
   },
   "ai": {
     "title": "Annonce rapide par IA",

@@ -8,7 +8,14 @@
     "viewDetails": "查看詳情",
     "save": "儲存",
     "cancel": "取消",
-    "back": "返回"
+    "back": "返回",
+    "errorTitle": "發生錯誤",
+    "errorBody": "頁面載入失敗，請稍後再試。",
+    "retry": "重試",
+    "notFoundTitle": "找不到頁面",
+    "notFoundBody": "這個頁面不存在或已被移除。",
+    "backHome": "回首頁",
+    "close": "關閉"
   },
   "nav": {
     "home": "首頁",
@@ -16,7 +23,9 @@
     "agents": "找房仲",
     "agentDashboard": "房仲後台",
     "signIn": "登入",
-    "signOut": "登出"
+    "signOut": "登出",
+    "adminDashboard": "管理後台",
+    "language": "語言"
   },
   "auth": {
     "signIn": "登入",
@@ -30,7 +39,9 @@
     "noAccount": "還沒有帳號？",
     "haveAccount": "已經有帳號？",
     "loginTitle": "登入 EstateEngine",
-    "loginSubtitle": "買家、房仲與管理員皆由此登入，系統將依角色導向對應介面。"
+    "loginSubtitle": "買家、房仲與管理員皆由此登入，系統將依角色導向對應介面。",
+    "signingIn": "登入中…",
+    "signingUp": "註冊中…"
   },
   "agent": {
     "dashboardTitle": "房仲後台",
@@ -57,7 +68,8 @@
       "hidden": "已隱藏",
       "delisted": "已下架",
       "sold": "已成交"
-    }
+    },
+    "actionError": "操作失敗，請稍後再試"
   },
   "agentForm": {
     "pageTitle": "新增物件",
@@ -90,8 +102,14 @@
     "terrainNotes": "地勢備註",
     "fengShuiOrientation": "風水座向",
     "orientations": {
-      "N": "北", "NE": "東北", "E": "東", "SE": "東南",
-      "S": "南", "SW": "西南", "W": "西", "NW": "西北"
+      "N": "北",
+      "NE": "東北",
+      "E": "東",
+      "SE": "東南",
+      "S": "南",
+      "SW": "西南",
+      "W": "西",
+      "NW": "西北"
     },
     "fengShuiNotes": "風水備註",
     "builderName": "建商名稱",
@@ -141,7 +159,8 @@
       "buyer": "買家",
       "agent": "房仲",
       "super_admin": "總管理員"
-    }
+    },
+    "actionError": "操作失敗，請稍後再試"
   },
   "filters": {
     "location": "地區",
@@ -178,7 +197,8 @@
     "sortPriceAsc": "價格由低至高",
     "daysBadge": "上市 {days} 天",
     "tagTopMaterial": "頂級建材",
-    "tagTopSchool": "優質學區"
+    "tagTopSchool": "優質學區",
+    "loadError": "物件載入失敗，請稍後重試。"
   },
   "personas": {
     "first_time_buyer": "小資首購族",
@@ -216,7 +236,10 @@
     "videoTour": "影片導覽",
     "tour3d": "3D 導覽",
     "exclusiveTitle": "獨家數據",
-    "listedBy": "專屬房仲"
+    "listedBy": "專屬房仲",
+    "backToListings": "返回物件列表",
+    "floodYes": "是",
+    "photoAlt": "{title} 照片 {index}"
   },
   "share": {
     "curatedTitle": "專屬推薦清單",
@@ -245,7 +268,8 @@
     "subtitle": "認識平台上的專業房仲，建立信任從這裡開始",
     "listings": "個上架物件",
     "focus": "主打區域",
-    "empty": "目前沒有房仲。"
+    "empty": "目前沒有房仲。",
+    "backToAgents": "返回找房仲"
   },
   "ai": {
     "title": "AI 快速建檔",

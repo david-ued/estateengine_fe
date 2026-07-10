@@ -1,6 +1,8 @@
-import { IconPhone } from '@tabler/icons-react';
+import { IconChevronLeft, IconPhone } from '@tabler/icons-react';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ListingCard } from '@/components/listings/listing-card';
+import { btn } from '@/components/ui/styles';
 import { isLocale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { createClient } from '@/lib/supabase/server';
@@ -46,6 +48,13 @@ export default async function AgentDetailPage({
 
   return (
     <main className="mx-auto w-full max-w-5xl flex-1 p-4 sm:p-8">
+      <Link
+        href={`/${locale}/agents`}
+        className="mb-4 inline-flex items-center gap-1 text-sm text-neutral-500 transition hover:text-neutral-800 hover:underline dark:hover:text-neutral-200"
+      >
+        <IconChevronLeft size={16} /> {dict.agents.backToAgents}
+      </Link>
+
       {/* 房仲個人介紹 */}
       <header className="mb-8 flex flex-col items-start gap-4 rounded-2xl border border-neutral-200 bg-white p-6 sm:flex-row sm:items-center dark:border-neutral-800 dark:bg-neutral-950">
         {agent.avatar_url ? (
@@ -56,7 +65,10 @@ export default async function AgentDetailPage({
             className="size-24 rounded-full object-cover shadow-md"
           />
         ) : (
-          <span className="flex size-24 items-center justify-center rounded-full bg-neutral-100 text-4xl dark:bg-neutral-800">
+          <span
+            aria-hidden="true"
+            className="flex size-24 items-center justify-center rounded-full bg-neutral-100 text-4xl dark:bg-neutral-800"
+          >
             👤
           </span>
         )}
@@ -70,10 +82,7 @@ export default async function AgentDetailPage({
           )}
         </div>
         {agent.phone && (
-          <a
-            href={`tel:${agent.phone}`}
-            className="btn-primary press flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm"
-          >
+          <a href={`tel:${agent.phone}`} className={btn.primary}>
             <IconPhone size={16} /> {dict.common.contactAgent}
           </a>
         )}

@@ -1,5 +1,13 @@
 import { notFound } from 'next/navigation';
 import { ForceDelistButton } from '@/components/admin/force-delist-button';
+import {
+  tableClass,
+  tableWrapClass,
+  tdClass,
+  thClass,
+  theadClass,
+  trClass,
+} from '@/components/ui/styles';
 import { isLocale } from '@/i18n/config';
 import { getDictionary, type Dictionary } from '@/i18n/get-dictionary';
 import { requireRole } from '@/lib/auth';
@@ -42,40 +50,40 @@ export default async function AdminDashboardPage({
       {!listings || listings.length === 0 ? (
         <p className="text-neutral-500">{dict.admin.empty}</p>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-neutral-200 dark:border-neutral-800">
-          <table className="w-full text-sm">
-            <thead className="bg-neutral-50 text-left dark:bg-neutral-900">
+        <div className={tableWrapClass}>
+          <table className={tableClass}>
+            <thead className={theadClass}>
               <tr>
-                <th className="px-4 py-3">{dict.nav.listings}</th>
-                <th className="px-4 py-3">{dict.admin.agentColumn}</th>
-                <th className="px-4 py-3">{dict.agent.status}</th>
-                <th className="px-4 py-3">{dict.agent.price}</th>
-                <th className="px-4 py-3" />
+                <th scope="col" className={thClass}>{dict.nav.listings}</th>
+                <th scope="col" className={thClass}>{dict.admin.agentColumn}</th>
+                <th scope="col" className={thClass}>{dict.agent.status}</th>
+                <th scope="col" className={thClass}>{dict.agent.price}</th>
+                <th scope="col" className={thClass}>
+                  <span className="sr-only">{dict.admin.forceDelist}</span>
+                </th>
               </tr>
             </thead>
             <tbody>
               {listings.map((listing) => (
-                <tr
-                  key={listing.id}
-                  className="border-t border-neutral-200 dark:border-neutral-800"
-                >
-                  <td className="px-4 py-3">
+                <tr key={listing.id} className={trClass}>
+                  <td className={tdClass}>
                     <div className="font-medium">{listing.title}</div>
                     <div className="text-neutral-500">{listing.city}</div>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className={tdClass}>
                     {listing.agent?.display_name ?? listing.agent?.full_name ?? '—'}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className={tdClass}>
                     {dict.agent.statusLabels[listing.status]}
                   </td>
-                  <td className="px-4 py-3">{listing.price.toLocaleString()}</td>
-                  <td className="px-4 py-3 text-right">
+                  <td className={tdClass}>{listing.price.toLocaleString()}</td>
+                  <td className={`${tdClass} text-right`}>
                     {listing.status !== 'delisted' && (
                       <ForceDelistButton
                         propertyId={listing.id}
                         label={dict.admin.forceDelist}
                         confirmText={dict.admin.delistConfirm}
+                        errorText={dict.admin.actionError}
                       />
                     )}
                   </td>

@@ -3,6 +3,13 @@
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { AiQuickFill } from '@/components/agent/ai-quick-fill';
+import {
+  btn,
+  cardClass,
+  errorTextClass,
+  inputClass,
+  selectClass,
+} from '@/components/ui/styles';
 import type { Dictionary } from '@/i18n/get-dictionary';
 import { apiFetch } from '@/lib/api';
 import {
@@ -17,10 +24,7 @@ import type { Property } from '@/lib/types';
 
 type Labels = Dictionary['agentForm'];
 
-const inputClass =
-  'w-full rounded-lg border border-neutral-300 px-4 py-2.5 outline-none focus:border-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:focus:border-white';
-const sectionClass =
-  'flex flex-col gap-4 rounded-xl border border-neutral-200 p-4 sm:p-6 dark:border-neutral-800';
+const sectionClass = `${cardClass} flex flex-col gap-4`;
 const labelClass = 'flex flex-col gap-1 text-sm';
 
 const SCORE_LABEL_KEYS: Record<ScoreDimension, keyof Labels> = {
@@ -241,7 +245,7 @@ export function PropertyForm({
               name="city"
               required
               defaultValue={property?.city ?? ''}
-              className={inputClass}
+              className={selectClass}
             >
               <option value="" disabled>
                 {labels.selectPlaceholder}
@@ -296,7 +300,7 @@ export function PropertyForm({
             <select
               name="propertyType"
               defaultValue={property?.property_type ?? ''}
-              className={inputClass}
+              className={selectClass}
             >
               <option value="">{labels.selectPlaceholder}</option>
               {PROPERTY_TYPES.map((type) => (
@@ -352,7 +356,7 @@ export function PropertyForm({
             <select
               name="fengShuiOrientation"
               defaultValue={property?.feng_shui_orientation ?? ''}
-              className={inputClass}
+              className={selectClass}
             >
               <option value="">{labels.selectPlaceholder}</option>
               {ORIENTATIONS.map((orientation) => (
@@ -383,12 +387,12 @@ export function PropertyForm({
             <select
               name="builderReputation"
               defaultValue={property?.builder_reputation ?? ''}
-              className={inputClass}
+              className={selectClass}
             >
               <option value="">{labels.selectPlaceholder}</option>
               {[1, 2, 3, 4, 5].map((grade) => (
                 <option key={grade} value={grade}>
-                  {'★'.repeat(grade)}
+                  {grade} ★
                 </option>
               ))}
             </select>
@@ -398,12 +402,12 @@ export function PropertyForm({
             <select
               name="materialGrade"
               defaultValue={property?.material_grade ?? ''}
-              className={inputClass}
+              className={selectClass}
             >
               <option value="">{labels.selectPlaceholder}</option>
               {[1, 2, 3, 4, 5].map((grade) => (
                 <option key={grade} value={grade}>
-                  {'★'.repeat(grade)}
+                  {grade} ★
                 </option>
               ))}
             </select>
@@ -413,7 +417,7 @@ export function PropertyForm({
             <select
               name="basementStatus"
               defaultValue={property?.basement_status ?? 'none'}
-              className={inputClass}
+              className={selectClass}
             >
               {BASEMENT_STATUSES.map((status) => (
                 <option key={status} value={status}>
@@ -463,7 +467,7 @@ export function PropertyForm({
                   [dimension]: Number(e.target.value),
                 }))
               }
-              className="accent-neutral-900 dark:accent-white"
+              className="accent-brand"
             />
           </label>
         ))}
@@ -486,12 +490,8 @@ export function PropertyForm({
         </section>
       )}
 
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <button
-        type="submit"
-        disabled={pending}
-        className="rounded-lg bg-neutral-900 py-3 font-medium text-white transition hover:bg-neutral-700 disabled:opacity-50 dark:bg-white dark:text-neutral-900"
-      >
+      {error && <p className={errorTextClass}>{error}</p>}
+      <button type="submit" disabled={pending} className={btn.primary}>
         {pending ? labels.submitting : isEdit ? labels.saveChanges : labels.submit}
       </button>
     </form>

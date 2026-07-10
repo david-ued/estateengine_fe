@@ -20,6 +20,7 @@ import { useState } from 'react';
 import type { Dictionary } from '@/i18n/get-dictionary';
 import { CITIES, ORIENTATIONS, PROPERTY_TYPES } from '@/lib/constants';
 import { DualRange } from '@/components/ui/dual-range';
+import { btn } from '@/components/ui/styles';
 
 const PRICE_MIN = 0;
 const PRICE_MAX = 3_000_000;
@@ -92,12 +93,14 @@ const sectionTitle =
 export function FilterBar({
   locale,
   labels,
+  common,
   orientations,
   propertyTypes,
   defaults,
 }: Readonly<{
   locale: string;
   labels: Dictionary['filters'];
+  common: Pick<Dictionary['common'], 'close'>;
   orientations: Dictionary['agentForm']['orientations'];
   propertyTypes: Dictionary['agentForm']['propertyTypes'];
   defaults: ListingFilters;
@@ -111,7 +114,7 @@ export function FilterBar({
     setState((prev) => ({ ...prev, ...partial }));
 
   const fmtPrice = (v: number) =>
-    v >= PRICE_MAX ? `$${PRICE_MAX / 1_000_000}M+` : `$${(v / 1000).toLocaleString()}K`;
+    v >= PRICE_MAX ? `$${PRICE_MAX / 1_000_000}M+` : `$${(v / 1000).toLocaleString(locale)}K`;
   const fmtSqft = (v: number) => (v >= SQFT_MAX ? `${SQFT_MAX}+` : String(v));
 
   function apply() {
@@ -203,7 +206,7 @@ export function FilterBar({
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                aria-label="close"
+                aria-label={common.close}
                 className="rounded-full p-1.5 transition hover:bg-neutral-100 dark:hover:bg-neutral-800"
               >
                 <IconX size={18} />
@@ -224,6 +227,8 @@ export function FilterBar({
                   high={state.priceHigh}
                   onChange={(low, high) => patch({ priceLow: low, priceHigh: high })}
                   format={fmtPrice}
+                  minLabel={labels.min}
+                  maxLabel={labels.max}
                 />
               </section>
 
@@ -240,6 +245,8 @@ export function FilterBar({
                   high={state.sqftHigh}
                   onChange={(low, high) => patch({ sqftLow: low, sqftHigh: high })}
                   format={fmtSqft}
+                  minLabel={labels.min}
+                  maxLabel={labels.max}
                 />
               </section>
 
@@ -353,8 +360,9 @@ export function FilterBar({
                             type="button"
                             className={chip(state[key] === grade)}
                             onClick={() => patch({ [key]: grade })}
+                            aria-label={`${grade}+ / 5`}
                           >
-                            {'★'.repeat(grade)}+
+                            <span aria-hidden="true">{'★'.repeat(grade)}+</span>
                           </button>
                         ))}
                       </div>
@@ -408,11 +416,7 @@ export function FilterBar({
               >
                 {labels.reset}
               </button>
-              <button
-                type="button"
-                onClick={apply}
-                className="btn-primary press rounded-xl px-6 py-2.5 text-sm font-medium"
-              >
+              <button type="button" onClick={apply} className={`${btn.primary} px-6`}>
                 {labels.apply}
               </button>
             </div>

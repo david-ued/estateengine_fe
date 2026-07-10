@@ -76,7 +76,10 @@ export default async function AgentsPage({
                     className="size-16 rounded-full object-cover shadow-sm"
                   />
                 ) : (
-                  <span className="flex size-16 items-center justify-center rounded-full bg-neutral-100 text-2xl dark:bg-neutral-800">
+                  <span
+                    aria-hidden="true"
+                    className="flex size-16 items-center justify-center rounded-full bg-neutral-100 text-2xl dark:bg-neutral-800"
+                  >
                     👤
                   </span>
                 )}

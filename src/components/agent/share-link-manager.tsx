@@ -2,12 +2,10 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { btn, cardClass, errorTextClass, inputClass } from '@/components/ui/styles';
 import type { Dictionary } from '@/i18n/get-dictionary';
 import { apiFetch } from '@/lib/api';
 import { createClient } from '@/lib/supabase/client';
-
-const inputClass =
-  'w-full rounded-lg border border-neutral-300 px-4 py-2.5 outline-none focus:border-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:focus:border-white';
 
 export interface ShareLinkListing {
   id: string;
@@ -39,6 +37,8 @@ export function ShareLinkManager({
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  // clipboard API 不可用時，改顯示唯讀輸入框讓使用者手動複製
+  const [manualCopyId, setManualCopyId] = useState<string | null>(null);
 
   function toggle(id: string) {
     setSelected((prev) => {
@@ -93,25 +93,26 @@ export function ShareLinkManager({
     }
   }
 
+  function shareUrl(link: ExistingShareLink) {
+    return `${window.location.origin}/${locale}/share/${link.slug}`;
+  }
+
   async function copyLink(link: ExistingShareLink) {
-    const url = `${window.location.origin}/${locale}/share/${link.slug}`;
     try {
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(shareUrl(link));
       setCopiedId(link.id);
+      setManualCopyId(null);
       setTimeout(() => setCopiedId(null), 2000);
     } catch {
-      // clipboard 不可用時退回 prompt
-      window.prompt(labels.copy, url);
+      // clipboard 不可用時顯示行內唯讀輸入框（不使用原生對話框）
+      setManualCopyId(link.id);
     }
   }
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       {/* 建立推薦清單 */}
-      <form
-        onSubmit={handleCreate}
-        className="flex flex-col gap-4 rounded-xl border border-neutral-200 p-5 dark:border-neutral-800"
-      >
+      <form onSubmit={handleCreate} className={`${cardClass} flex flex-col gap-4`}>
         <h2 className="font-semibold">{labels.createTitle}</h2>
 
         <fieldset className="flex flex-col gap-2">
@@ -146,18 +147,14 @@ export function ShareLinkManager({
           <textarea name="ogDescription" rows={2} className={inputClass} />
         </label>
 
-        {error && <p className="text-sm text-red-600">{error}</p>}
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-lg bg-neutral-900 py-2.5 font-medium text-white transition hover:bg-neutral-700 disabled:opacity-50 dark:bg-white dark:text-neutral-900"
-        >
+        {error && <p className={errorTextClass}>{error}</p>}
+        <button type="submit" disabled={pending} className={btn.primary}>
           {pending ? labels.creating : labels.create}
         </button>
       </form>
 
       {/* 既有連結 */}
-      <section className="rounded-xl border border-neutral-200 p-5 dark:border-neutral-800">
+      <section className={cardClass}>
         <h2 className="mb-3 font-semibold">{labels.myLinks}</h2>
         {links.length === 0 ? (
           <p className="text-sm text-neutral-500">{labels.empty}</p>
@@ -166,21 +163,34 @@ export function ShareLinkManager({
             {links.map((link) => (
               <li
                 key={link.id}
-                className="flex items-center gap-3 rounded-lg border border-neutral-200 px-3 py-2 text-sm dark:border-neutral-800"
+                className="flex flex-col gap-2 rounded-lg border border-neutral-200 px-3 py-2 text-sm dark:border-neutral-800"
               >
-                <span className="flex-1 truncate">
-                  {link.title ?? `/share/${link.slug}`}
-                </span>
-                <span className="text-xs text-neutral-500">
-                  {labels.clicks}: {link.click_count}
-                </span>
-                <button
-                  type="button"
-                  onClick={() => copyLink(link)}
-                  className="rounded-md border border-neutral-300 px-2.5 py-1 text-xs transition hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
-                >
-                  {copiedId === link.id ? labels.copied : labels.copy}
-                </button>
+                <div className="flex items-center gap-3">
+                  <span className="flex-1 truncate">
+                    {link.title ?? `/share/${link.slug}`}
+                  </span>
+                  <span className="text-xs text-neutral-500">
+                    {labels.clicks}: {link.click_count}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => copyLink(link)}
+                    className={btn.quiet}
+                  >
+                    {copiedId === link.id ? labels.copied : labels.copy}
+                  </button>
+                </div>
+                {/* 聚焦即全選，使用者按複製快捷鍵即可 */}
+                {manualCopyId === link.id && (
+                  <input
+                    readOnly
+                    value={shareUrl(link)}
+                    aria-label={labels.copy}
+                    onFocus={(e) => e.currentTarget.select()}
+                    autoFocus
+                    className={`${inputClass} text-xs`}
+                  />
+                )}
               </li>
             ))}
           </ul>

@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { btn, errorTextClass } from '@/components/ui/styles';
 import { createClient } from '@/lib/supabase/client';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:3001';
@@ -10,40 +11,56 @@ export function ForceDelistButton({
   propertyId,
   label,
   confirmText,
-}: Readonly<{ propertyId: string; label: string; confirmText: string }>) {
+  errorText,
+}: Readonly<{
+  propertyId: string;
+  label: string;
+  confirmText: string;
+  errorText: string;
+}>) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function handleClick() {
     if (!window.confirm(confirmText)) return;
     setPending(true);
+    setError(null);
 
-    const supabase = createClient();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) {
+    try {
+      const supabase = createClient();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      if (!session) throw new Error('no session');
+
+      const res = await fetch(
+        `${API_BASE_URL}/properties/${propertyId}/force-delist`,
+        {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        },
+      );
+      if (!res.ok) throw new Error(`force-delist failed: ${res.status}`);
+      router.refresh();
+    } catch {
+      setError(errorText);
+    } finally {
       setPending(false);
-      return;
     }
-
-    const res = await fetch(`${API_BASE_URL}/properties/${propertyId}/force-delist`, {
-      method: 'POST',
-      headers: { Authorization: `Bearer ${session.access_token}` },
-    });
-
-    setPending(false);
-    if (res.ok) router.refresh();
   }
 
   return (
-    <button
-      type="button"
-      onClick={handleClick}
-      disabled={pending}
-      className="rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white transition hover:bg-red-700 disabled:opacity-50"
-    >
-      {label}
-    </button>
+    <span className="flex flex-col items-end gap-1.5">
+      <button
+        type="button"
+        onClick={handleClick}
+        disabled={pending}
+        className={btn.danger}
+      >
+        {label}
+      </button>
+      {error && <span className={errorTextClass}>{error}</span>}
+    </span>
   );
 }

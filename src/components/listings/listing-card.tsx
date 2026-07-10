@@ -53,7 +53,10 @@ export function ListingCard({
               className="size-full object-cover transition duration-500 ease-out group-hover:scale-105"
             />
           ) : (
-            <div className="flex size-full items-center justify-center text-3xl text-neutral-300 dark:text-neutral-700">
+            <div
+              aria-hidden="true"
+              className="flex size-full items-center justify-center text-3xl text-neutral-300 dark:text-neutral-700"
+            >
               🏠
             </div>
           )}
@@ -80,7 +83,7 @@ export function ListingCard({
           <div className="flex items-baseline justify-between gap-3">
             <h3 className="truncate font-medium">{property.title}</h3>
             <span className="whitespace-nowrap font-semibold">
-              ${Number(property.price).toLocaleString()}
+              ${Number(property.price).toLocaleString(locale)}
             </span>
           </div>
           <p className="mt-0.5 text-sm text-neutral-500">
@@ -96,7 +99,7 @@ export function ListingCard({
             </span>
             <span className="flex items-center gap-1">
               <IconRulerMeasure size={15} />
-              {Number(property.area_sqft).toLocaleString()} {dict.filters.sqft}
+              {Number(property.area_sqft).toLocaleString(locale)} {dict.filters.sqft}
             </span>
           </div>
           {tags.length > 0 && (
@@ -128,7 +131,10 @@ export function ListingCard({
               className="size-6 rounded-full object-cover"
             />
           ) : (
-            <span className="flex size-6 items-center justify-center rounded-full bg-neutral-200 text-xs dark:bg-neutral-700">
+            <span
+              aria-hidden="true"
+              className="flex size-6 items-center justify-center rounded-full bg-neutral-200 text-xs dark:bg-neutral-700"
+            >
               👤
             </span>
           )}

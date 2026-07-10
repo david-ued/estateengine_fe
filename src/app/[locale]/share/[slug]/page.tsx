@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { isLocale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
-import { apiFetch } from '@/lib/api';
+import { ApiError, apiFetch } from '@/lib/api';
 
 interface ShareLinkProperty {
   id: string;
@@ -37,8 +37,10 @@ async function fetchShareLink(slug: string): Promise<ShareLinkPayload | null> {
   try {
     // 公開端點；同一次 render 中 generateMetadata 與頁面共用（fetch 去重）
     return await apiFetch<ShareLinkPayload>(`/share-links/${encodeURIComponent(slug)}`);
-  } catch {
-    return null;
+  } catch (error) {
+    // 404 → notFound；其餘（後端未啟動等）拋出交給 error boundary
+    if (error instanceof ApiError && error.status === 404) return null;
+    throw error;
   }
 }
 
@@ -123,13 +125,13 @@ export default async function SharePage({
             <div className="flex items-baseline justify-between gap-4">
               <h2 className="font-semibold">{property.title}</h2>
               <span className="whitespace-nowrap font-mono">
-                ${property.price.toLocaleString()} {property.currency}
+                ${property.price.toLocaleString(locale)} {property.currency}
               </span>
             </div>
             <p className="mt-1 text-sm text-neutral-500">
               {property.city}
               {property.district ? ` · ${property.district}` : ''} ·{' '}
-              {Number(property.area_sqft).toLocaleString()} {dict.filters.sqft} ·{' '}
+              {Number(property.area_sqft).toLocaleString(locale)} {dict.filters.sqft} ·{' '}
               {property.beds} {dict.filters.beds} / {property.baths} {dict.filters.baths}
             </p>
           </a>

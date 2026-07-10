@@ -8,7 +8,14 @@
     "viewDetails": "查看详情",
     "save": "保存",
     "cancel": "取消",
-    "back": "返回"
+    "back": "返回",
+    "errorTitle": "发生错误",
+    "errorBody": "页面加载失败，请稍后再试。",
+    "retry": "重试",
+    "notFoundTitle": "找不到页面",
+    "notFoundBody": "该页面不存在或已被移除。",
+    "backHome": "回首页",
+    "close": "关闭"
   },
   "nav": {
     "home": "首页",
@@ -16,7 +23,9 @@
     "agents": "找经纪人",
     "agentDashboard": "经纪人后台",
     "signIn": "登录",
-    "signOut": "退出登录"
+    "signOut": "退出登录",
+    "adminDashboard": "管理后台",
+    "language": "语言"
   },
   "auth": {
     "signIn": "登录",
@@ -30,7 +39,9 @@
     "noAccount": "还没有账号？",
     "haveAccount": "已经有账号？",
     "loginTitle": "登录 EstateEngine",
-    "loginSubtitle": "买家、经纪人与管理员均由此登录，系统将按角色跳转对应界面。"
+    "loginSubtitle": "买家、经纪人与管理员均由此登录，系统将按角色跳转对应界面。",
+    "signingIn": "登录中…",
+    "signingUp": "注册中…"
   },
   "agent": {
     "dashboardTitle": "经纪人后台",
@@ -57,7 +68,8 @@
       "hidden": "已隐藏",
       "delisted": "已下架",
       "sold": "已成交"
-    }
+    },
+    "actionError": "操作失败，请稍后再试"
   },
   "agentForm": {
     "pageTitle": "新增房源",
@@ -90,8 +102,14 @@
     "terrainNotes": "地势备注",
     "fengShuiOrientation": "风水朝向",
     "orientations": {
-      "N": "北", "NE": "东北", "E": "东", "SE": "东南",
-      "S": "南", "SW": "西南", "W": "西", "NW": "西北"
+      "N": "北",
+      "NE": "东北",
+      "E": "东",
+      "SE": "东南",
+      "S": "南",
+      "SW": "西南",
+      "W": "西",
+      "NW": "西北"
     },
     "fengShuiNotes": "风水备注",
     "builderName": "开发商名称",
@@ -141,7 +159,8 @@
       "buyer": "买家",
       "agent": "经纪人",
       "super_admin": "总管理员"
-    }
+    },
+    "actionError": "操作失败，请稍后再试"
   },
   "filters": {
     "location": "地区",
@@ -178,7 +197,8 @@
     "sortPriceAsc": "价格由低至高",
     "daysBadge": "上市 {days} 天",
     "tagTopMaterial": "顶级建材",
-    "tagTopSchool": "优质学区"
+    "tagTopSchool": "优质学区",
+    "loadError": "房源加载失败，请稍后重试。"
   },
   "personas": {
     "first_time_buyer": "小资首购族",
@@ -216,7 +236,10 @@
     "videoTour": "视频导览",
     "tour3d": "3D 导览",
     "exclusiveTitle": "独家数据",
-    "listedBy": "专属经纪人"
+    "listedBy": "专属经纪人",
+    "backToListings": "返回房源列表",
+    "floodYes": "是",
+    "photoAlt": "{title} 照片 {index}"
   },
   "share": {
     "curatedTitle": "专属推荐清单",
@@ -245,7 +268,8 @@
     "subtitle": "认识平台上的专业经纪人，从这里建立信任",
     "listings": "个在售房源",
     "focus": "主打区域",
-    "empty": "目前没有经纪人。"
+    "empty": "目前没有经纪人。",
+    "backToAgents": "返回找经纪人"
   },
   "ai": {
     "title": "AI 快速建档",

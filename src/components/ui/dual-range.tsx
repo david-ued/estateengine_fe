@@ -12,6 +12,8 @@ export function DualRange({
   high,
   onChange,
   format,
+  minLabel,
+  maxLabel,
 }: Readonly<{
   min: number;
   max: number;
@@ -20,6 +22,9 @@ export function DualRange({
   high: number;
   onChange: (low: number, high: number) => void;
   format: (value: number) => string;
+  /** 螢幕閱讀器用的滑桿名稱（如「最低」/「最高」） */
+  minLabel: string;
+  maxLabel: string;
 }>) {
   const lowPct = ((low - min) / (max - min)) * 100;
   const highPct = ((high - min) / (max - min)) * 100;
@@ -43,7 +48,8 @@ export function DualRange({
           step={step}
           value={low}
           onChange={(e) => onChange(Math.min(Number(e.target.value), high - step), high)}
-          aria-label="min"
+          aria-label={minLabel}
+          aria-valuetext={format(low)}
         />
         <input
           type="range"
@@ -52,7 +58,8 @@ export function DualRange({
           step={step}
           value={high}
           onChange={(e) => onChange(low, Math.max(Number(e.target.value), low + step))}
-          aria-label="max"
+          aria-label={maxLabel}
+          aria-valuetext={format(high)}
         />
       </div>
     </div>

@@ -1,11 +1,9 @@
 'use client';
 
 import { useState } from 'react';
+import { btn, errorTextClass, inputClass, successTextClass } from '@/components/ui/styles';
 import type { Dictionary } from '@/i18n/get-dictionary';
 import { createClient } from '@/lib/supabase/client';
-
-const inputClass =
-  'w-full rounded-lg border border-neutral-300 px-4 py-2.5 outline-none focus:border-neutral-900 dark:border-neutral-700 dark:bg-neutral-900 dark:focus:border-white';
 
 export function SignupForm({
   labels,
@@ -41,7 +39,7 @@ export function SignupForm({
   }
 
   if (success) {
-    return <p className="text-sm text-green-700 dark:text-green-400">{labels.signUpSuccess}</p>;
+    return <p className={successTextClass}>{labels.signUpSuccess}</p>;
   }
 
   return (
@@ -80,13 +78,9 @@ export function SignupForm({
           className={inputClass}
         />
       </label>
-      {error && <p className="text-sm text-red-600">{error}</p>}
-      <button
-        type="submit"
-        disabled={pending}
-        className="btn-primary rounded-lg py-2.5 font-medium"
-      >
-        {labels.signUp}
+      {error && <p className={errorTextClass}>{error}</p>}
+      <button type="submit" disabled={pending} className={`${btn.primary} w-full`}>
+        {pending ? labels.signingUp : labels.signUp}
       </button>
     </form>
   );

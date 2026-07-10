@@ -8,7 +8,14 @@
     "viewDetails": "View Details",
     "save": "Save",
     "cancel": "Cancel",
-    "back": "Back"
+    "back": "Back",
+    "errorTitle": "Something went wrong",
+    "errorBody": "The page failed to load. Please try again later.",
+    "retry": "Retry",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "This page does not exist or has been removed.",
+    "backHome": "Back to home",
+    "close": "Close"
   },
   "nav": {
     "home": "Home",
@@ -16,7 +23,9 @@
     "agents": "Agents",
     "agentDashboard": "Agent Dashboard",
     "signIn": "Sign In",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "adminDashboard": "Admin",
+    "language": "Language"
   },
   "auth": {
     "signIn": "Sign In",
@@ -30,7 +39,9 @@
     "noAccount": "No account yet?",
     "haveAccount": "Already have an account?",
     "loginTitle": "Sign in to EstateEngine",
-    "loginSubtitle": "Buyers, agents and admins all sign in here — you will be routed to your workspace by role."
+    "loginSubtitle": "Buyers, agents and admins all sign in here — you will be routed to your workspace by role.",
+    "signingIn": "Signing in…",
+    "signingUp": "Signing up…"
   },
   "agent": {
     "dashboardTitle": "Agent Dashboard",
@@ -57,7 +68,8 @@
       "hidden": "Hidden",
       "delisted": "Delisted",
       "sold": "Sold"
-    }
+    },
+    "actionError": "Action failed. Please try again."
   },
   "agentForm": {
     "pageTitle": "New Listing",
@@ -90,8 +102,14 @@
     "terrainNotes": "Terrain Notes",
     "fengShuiOrientation": "Feng Shui Orientation",
     "orientations": {
-      "N": "North", "NE": "Northeast", "E": "East", "SE": "Southeast",
-      "S": "South", "SW": "Southwest", "W": "West", "NW": "Northwest"
+      "N": "North",
+      "NE": "Northeast",
+      "E": "East",
+      "SE": "Southeast",
+      "S": "South",
+      "SW": "Southwest",
+      "W": "West",
+      "NW": "Northwest"
     },
     "fengShuiNotes": "Feng Shui Notes",
     "builderName": "Builder Name",
@@ -141,7 +159,8 @@
       "buyer": "Buyer",
       "agent": "Agent",
       "super_admin": "Super Admin"
-    }
+    },
+    "actionError": "Action failed. Please try again."
   },
   "filters": {
     "location": "Location",
@@ -178,7 +197,8 @@
     "sortPriceAsc": "Price: Low to High",
     "daysBadge": "{days} days on market",
     "tagTopMaterial": "Premium Materials",
-    "tagTopSchool": "Top School Zone"
+    "tagTopSchool": "Top School Zone",
+    "loadError": "Failed to load listings. Please try again later."
   },
   "personas": {
     "first_time_buyer": "First-Time Buyer",
@@ -216,7 +236,10 @@
     "videoTour": "Video Tour",
     "tour3d": "3D Tour",
     "exclusiveTitle": "Exclusive Data",
-    "listedBy": "Listed by"
+    "listedBy": "Listed by",
+    "backToListings": "Back to listings",
+    "floodYes": "Yes",
+    "photoAlt": "{title} photo {index}"
   },
   "share": {
     "curatedTitle": "Curated Listing Collection",
@@ -245,7 +268,8 @@
     "subtitle": "Meet the professional agents on our platform",
     "listings": "active listings",
     "focus": "Focus area",
-    "empty": "No agents yet."
+    "empty": "No agents yet.",
+    "backToAgents": "Back to agents"
   },
   "ai": {
     "title": "AI Quick Listing",

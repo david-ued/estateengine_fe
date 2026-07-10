@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { btn, errorTextClass } from '@/components/ui/styles';
 import type { Dictionary } from '@/i18n/get-dictionary';
 import { apiFetch } from '@/lib/api';
 import { createClient } from '@/lib/supabase/client';
@@ -29,22 +30,26 @@ export function StatusActions({
   propertyId,
   status,
   labels,
+  errorText,
 }: Readonly<{
   propertyId: string;
   status: PropertyStatus;
   labels: Dictionary['agent']['actions'];
+  errorText: string;
 }>) {
   const router = useRouter();
   const [pending, setPending] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function changeStatus(to: PropertyStatus) {
     setPending(true);
+    setError(null);
     try {
       const supabase = createClient();
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!session) throw new Error('no session');
 
       await apiFetch(`/properties/${propertyId}/status`, {
         method: 'POST',
@@ -53,25 +58,28 @@ export function StatusActions({
       });
       router.refresh();
     } catch {
-      // 操作失敗維持原狀態，重新整理由使用者重試
+      setError(errorText);
     } finally {
       setPending(false);
     }
   }
 
   return (
-    <span className="flex flex-wrap justify-end gap-1.5">
-      {TRANSITIONS[status].map(({ key, to }) => (
-        <button
-          key={key}
-          type="button"
-          disabled={pending}
-          onClick={() => changeStatus(to)}
-          className="rounded-md border border-neutral-300 px-2 py-1 text-xs transition hover:bg-neutral-100 disabled:opacity-50 dark:border-neutral-700 dark:hover:bg-neutral-800"
-        >
-          {labels[key]}
-        </button>
-      ))}
+    <span className="flex flex-col items-end gap-1.5">
+      <span className="flex flex-wrap justify-end gap-1.5">
+        {TRANSITIONS[status].map(({ key, to }) => (
+          <button
+            key={key}
+            type="button"
+            disabled={pending}
+            onClick={() => changeStatus(to)}
+            className={key === 'delist' ? btn.danger : btn.quiet}
+          >
+            {labels[key]}
+          </button>
+        ))}
+      </span>
+      {error && <span className={errorTextClass}>{error}</span>}
     </span>
   );
 }

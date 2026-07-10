@@ -1,6 +1,7 @@
 'use client';
 
 import { usePathname, useRouter } from 'next/navigation';
+import { selectClass } from '@/components/ui/styles';
 import { locales, type Locale } from '@/i18n/config';
 
 const LOCALE_NAMES: Record<Locale, string> = {
@@ -10,7 +11,10 @@ const LOCALE_NAMES: Record<Locale, string> = {
   'zh-CN': '简体中文',
 };
 
-export function LocaleSwitcher({ current }: Readonly<{ current: Locale }>) {
+export function LocaleSwitcher({
+  current,
+  label,
+}: Readonly<{ current: Locale; label: string }>) {
   const router = useRouter();
   const pathname = usePathname();
 
@@ -25,8 +29,8 @@ export function LocaleSwitcher({ current }: Readonly<{ current: Locale }>) {
     <select
       value={current}
       onChange={handleChange}
-      aria-label="Language"
-      className="rounded-lg border border-neutral-300 bg-transparent px-2 py-1.5 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900"
+      aria-label={label}
+      className={selectClass}
     >
       {locales.map((locale) => (
         <option key={locale} value={locale}>

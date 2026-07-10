@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { FilterBar, type ListingFilters } from '@/components/listings/filter-bar';
+import { btn } from '@/components/ui/styles';
 import { ListingsExplorer } from '@/components/listings/listings-explorer';
 import { isLocale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
@@ -51,7 +52,7 @@ async function fetchListings(
       cache: 'no-store',
     });
   } catch {
-    // 後端未啟動 / DB 未連線時優雅降級為空列表
+    // 後端未啟動 / DB 未連線 → null 代表載入失敗（與「查無結果」區分）
     return null;
   }
 }
@@ -99,13 +100,21 @@ export default async function PropertiesPage({
         <FilterBar
           locale={locale}
           labels={dict.filters}
+          common={dict.common}
           orientations={dict.agentForm.orientations}
           propertyTypes={dict.agentForm.propertyTypes}
           defaults={filters}
         />
       </div>
 
-      {items.length === 0 ? (
+      {result === null ? (
+        <div className="flex flex-col items-center gap-4 py-16 text-center">
+          <p className="text-neutral-500">{dict.listings.loadError}</p>
+          <Link href={pageHref(locale, filters, page)} className={btn.secondary}>
+            {dict.common.retry}
+          </Link>
+        </div>
+      ) : items.length === 0 ? (
         <p className="py-16 text-center text-neutral-500">{dict.listings.noResults}</p>
       ) : (
         <ListingsExplorer
