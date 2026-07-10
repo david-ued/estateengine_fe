@@ -49,7 +49,7 @@ export default async function RootLayout({
         <nav className="sticky top-0 z-50 flex items-center justify-between border-b border-neutral-200/70 bg-white/75 px-4 py-4 backdrop-blur-md sm:px-8 dark:border-neutral-800/70 dark:bg-neutral-950/75">
           <Link
             href={`/${locale}`}
-            className="font-bold tracking-tight transition-opacity hover:opacity-70"
+            className="font-bold tracking-tight text-brand transition-opacity hover:opacity-70"
           >
             {dict.common.appName}
           </Link>
@@ -60,7 +60,7 @@ export default async function RootLayout({
             <LocaleSwitcher current={locale} />
             <Link
               href={`/${locale}/login`}
-              className="press rounded-full bg-neutral-900 px-4 py-1.5 text-white transition hover:-translate-y-0.5 hover:shadow-lg dark:bg-white dark:text-neutral-900"
+              className="press btn-primary rounded-full px-4 py-1.5"
             >
               {dict.nav.signIn}
             </Link>

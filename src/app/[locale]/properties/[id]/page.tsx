@@ -175,12 +175,22 @@ export default async function PropertyDetailPage({
             <h2 className="text-xs uppercase tracking-wide text-neutral-500">
               {dict.property.listedBy}
             </h2>
-            <p className="mt-2 font-semibold">
-              {agent.display_name ?? agent.full_name}
-            </p>
-            {agent.agency_name && (
-              <p className="text-sm text-neutral-500">{agent.agency_name}</p>
-            )}
+            <div className="mt-3 flex items-center gap-3">
+              {agent.avatar_url && (
+                // eslint-disable-next-line @next/next/no-img-element -- Supabase Storage 遠端圖
+                <img
+                  src={agent.avatar_url}
+                  alt={agent.display_name ?? agent.full_name ?? ''}
+                  className="size-14 rounded-full object-cover shadow-sm"
+                />
+              )}
+              <div>
+                <p className="font-semibold">{agent.display_name ?? agent.full_name}</p>
+                {agent.agency_name && (
+                  <p className="text-sm text-neutral-500">{agent.agency_name}</p>
+                )}
+              </div>
+            </div>
             {agent.bio && (
               <p className="mt-2 text-sm text-neutral-600 dark:text-neutral-300">
                 {agent.bio}
@@ -189,7 +199,7 @@ export default async function PropertyDetailPage({
             {agent.phone && (
               <a
                 href={`tel:${agent.phone}`}
-                className="mt-4 inline-block rounded-lg bg-neutral-900 px-4 py-2 text-sm text-white transition hover:bg-neutral-700 dark:bg-white dark:text-neutral-900"
+                className="btn-primary press mt-4 inline-block rounded-lg px-4 py-2 text-sm"
               >
                 {dict.common.contactAgent}
               </a>

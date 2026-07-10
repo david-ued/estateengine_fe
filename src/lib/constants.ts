@@ -12,22 +12,27 @@ export const PROPERTY_TYPES = ['house', 'condo', 'townhouse', 'apartment'] as co
 export const PERSONAS = [
   {
     code: 'first_time_buyer',
+    icon: '🌱',
     weights: { transit: 35, environment: 30, material: 20, school: 15 },
   },
   {
     code: 'school_parent',
+    icon: '🎓',
     weights: { school: 50, transit: 20, environment: 20, material: 10 },
   },
   {
     code: 'quality_seeker',
+    icon: '🏗️',
     weights: { material: 40, environment: 25, transit: 25, school: 10 },
   },
   {
     code: 'feng_shui_believer',
+    icon: '🧭',
     weights: { feng_shui: 40, environment: 20, school: 20, transit: 20 },
   },
   {
     code: 'balanced',
+    icon: '⚖️',
     weights: { school: 20, transit: 20, material: 20, feng_shui: 20, environment: 20 },
   },
 ] as const;

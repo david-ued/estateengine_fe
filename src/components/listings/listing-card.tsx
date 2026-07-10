@@ -14,6 +14,7 @@ function freshDays(listedAt: string | null): number | null {
   return days <= FRESH_DAYS ? days : null;
 }
 
+/** Airbnb 式卡片：無框、圖片大圓角、文字直接落在背景上 */
 export function ListingCard({
   locale,
   property,
@@ -37,10 +38,10 @@ export function ListingCard({
   return (
     <Link
       href={`/${locale}/properties/${property.id}`}
-      className="card-lift fade-up group overflow-hidden rounded-xl border border-neutral-200 bg-white dark:border-neutral-800 dark:bg-neutral-950"
+      className="fade-up group block"
       style={{ animationDelay: `${index * 70}ms` }}
     >
-      <div className="relative aspect-[4/3] overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-neutral-100 shadow-sm transition-shadow duration-300 group-hover:shadow-xl dark:bg-neutral-900">
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element -- Supabase Storage 遠端圖，avoid next/image remotePatterns 設定
           <img
@@ -54,28 +55,28 @@ export function ListingCard({
           </div>
         )}
         {matchScore !== null && (
-          <span className="absolute right-2 top-2 rounded-full bg-neutral-900/80 px-2.5 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+          <span className="absolute right-2.5 top-2.5 rounded-full bg-accent px-2.5 py-1 text-xs font-bold text-white shadow-md">
             {dict.weights.matchScore} {matchScore}
           </span>
         )}
         {fresh !== null && (
-          <span className="absolute left-2 top-2 rounded-full bg-emerald-600/90 px-2.5 py-1 text-xs font-semibold text-white">
+          <span className="absolute left-2.5 top-2.5 rounded-full bg-brand px-2.5 py-1 text-xs font-semibold text-white shadow-md">
             {dict.listings.newBadge}
           </span>
         )}
       </div>
-      <div className="p-4">
+      <div className="pt-3">
         <div className="flex items-baseline justify-between gap-3">
-          <h3 className="truncate font-semibold">{property.title}</h3>
-          <span className="whitespace-nowrap font-mono text-sm">
+          <h3 className="truncate font-medium">{property.title}</h3>
+          <span className="whitespace-nowrap font-semibold">
             ${Number(property.price).toLocaleString()}
           </span>
         </div>
-        <p className="mt-1 text-sm text-neutral-500">
+        <p className="mt-0.5 text-sm text-neutral-500">
           {property.city}
           {property.district ? ` · ${property.district}` : ''}
         </p>
-        <p className="mt-2 text-xs text-neutral-500">
+        <p className="mt-0.5 text-sm text-neutral-500">
           {Number(property.area_sqft).toLocaleString()} {dict.filters.sqft} ·{' '}
           {property.beds} {dict.filters.beds} / {property.baths} {dict.filters.baths}
         </p>

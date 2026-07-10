@@ -158,7 +158,9 @@
     "results": "個物件",
     "prev": "上一頁",
     "next": "下一頁",
-    "newBadge": "新上市"
+    "newBadge": "新上市",
+    "mapView": "地圖",
+    "listView": "列表"
   },
   "personas": {
     "first_time_buyer": "小資首購族",
@@ -170,6 +172,12 @@
   "weights": {
     "title": "客製化條件權重",
     "description": "調整各條件的重要度，系統將為你計算每個物件的符合度分數。",
+    "personaTitle": "你是哪種買家？",
+    "personaHint": "點一下套用，馬上看到最適合你的房子",
+    "advanced": "進階微調",
+    "levelLow": "不重要",
+    "levelMid": "普通",
+    "levelHigh": "很重要",
     "school": "學區",
     "transit": "交通",
     "material": "建材",

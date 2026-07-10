@@ -111,7 +111,7 @@ export function FilterBar({
       </label>
       <button
         type="submit"
-        className="self-end rounded-lg bg-neutral-900 px-4 py-2 text-sm text-white transition hover:bg-neutral-700 dark:bg-white dark:text-neutral-900"
+        className="btn-primary self-end rounded-xl px-4 py-2 text-sm font-medium"
       >
         {labels.apply}
       </button>

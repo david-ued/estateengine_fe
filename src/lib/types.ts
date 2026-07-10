@@ -44,6 +44,8 @@ export interface Property {
   city: string;
   district: string | null;
   address: string | null;
+  lat: number | null;
+  lng: number | null;
   area_sqft: number;
   beds: number;
   baths: number;

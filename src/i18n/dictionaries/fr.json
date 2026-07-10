@@ -158,7 +158,9 @@
     "results": "annonces",
     "prev": "Précédent",
     "next": "Suivant",
-    "newBadge": "NOUVEAU"
+    "newBadge": "NOUVEAU",
+    "mapView": "Carte",
+    "listView": "Liste"
   },
   "personas": {
     "first_time_buyer": "Premier acheteur",
@@ -170,6 +172,12 @@
   "weights": {
     "title": "Pondération personnalisée",
     "description": "Ajustez l'importance de chaque critère et nous noterons chaque annonce pour vous.",
+    "personaTitle": "Quel type d'acheteur êtes-vous ?",
+    "personaHint": "Un geste et voyez les biens faits pour vous",
+    "advanced": "Réglages avancés",
+    "levelLow": "Peu important",
+    "levelMid": "Neutre",
+    "levelHigh": "Très important",
     "school": "Secteur scolaire",
     "transit": "Transports",
     "material": "Matériaux",

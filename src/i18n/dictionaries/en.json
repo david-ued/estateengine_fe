@@ -158,7 +158,9 @@
     "results": "listings",
     "prev": "Previous",
     "next": "Next",
-    "newBadge": "NEW"
+    "newBadge": "NEW",
+    "mapView": "Map",
+    "listView": "List"
   },
   "personas": {
     "first_time_buyer": "First-Time Buyer",
@@ -170,6 +172,12 @@
   "weights": {
     "title": "Custom Criteria Weights",
     "description": "Adjust how much each criterion matters and we will score every listing for you.",
+    "personaTitle": "What kind of buyer are you?",
+    "personaHint": "One tap to see the homes that fit you best",
+    "advanced": "Fine-tune",
+    "levelLow": "Not important",
+    "levelMid": "Neutral",
+    "levelHigh": "Very important",
     "school": "School District",
     "transit": "Transit",
     "material": "Build Materials",

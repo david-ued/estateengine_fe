@@ -88,7 +88,16 @@ export default async function SharePage({
           {dict.share.curatedTitle}
         </p>
         <h1 className="mt-1 text-2xl font-bold">{link.title ?? agentName}</h1>
-        <div className="mt-4 text-sm text-neutral-600 dark:text-neutral-300">
+        <div className="mt-4 flex items-start gap-3 text-sm text-neutral-600 dark:text-neutral-300">
+          {link.agent?.avatar_url && (
+            // eslint-disable-next-line @next/next/no-img-element -- Supabase Storage 遠端圖
+            <img
+              src={link.agent.avatar_url}
+              alt={agentName}
+              className="size-12 rounded-full object-cover shadow-sm"
+            />
+          )}
+          <div>
           <p className="font-medium">
             {dict.share.curatedBy}: {agentName}
             {link.agent?.agency_name ? ` · ${link.agent.agency_name}` : ''}
@@ -99,6 +108,7 @@ export default async function SharePage({
               {dict.common.contactAgent}: {link.agent.phone}
             </p>
           )}
+          </div>
         </div>
       </header>
 

@@ -7,6 +7,7 @@ import { calcMatchScore, type WeightMap } from '@/lib/scoring';
 import { createClient } from '@/lib/supabase/client';
 import type { Property } from '@/lib/types';
 import { ListingCard } from './listing-card';
+import { ListingsMap } from './listings-map';
 import { WeightPanel } from './weight-panel';
 
 const STORAGE_KEY = 'estateengine.weights';
@@ -34,6 +35,7 @@ export function ListingsExplorer({
   };
 }>) {
   const [weights, setWeights] = useState<WeightMap>(DEFAULT_WEIGHTS);
+  const [showMap, setShowMap] = useState(false);
   const remoteProfileId = useRef<string | null>(null);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -123,32 +125,65 @@ export function ListingsExplorer({
     .sort((a, b) => b.score - a.score);
 
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
+    <div className="flex flex-col gap-4">
       <WeightPanel
         weights={weights}
         onChange={handleWeightsChange}
         labels={dict.weights}
         personaLabels={dict.personas}
       />
-      <div>
-        <p className="mb-3 text-xs text-neutral-500">{dict.listings.sortedByMatch}</p>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
-          {scored.map(({ property, score }, index) => (
-            <ListingCard
-              key={property.id}
-              locale={locale}
-              property={property}
-              matchScore={score}
-              index={index}
-              dict={{
-                filters: dict.filters,
-                weights: dict.weights,
-                listings: dict.listings,
-              }}
-            />
-          ))}
+
+      {/* 桌機：左列表右地圖（Airbnb 式分屏）；手機：列表 + 浮動地圖切換 */}
+      <div className="lg:grid lg:grid-cols-[1fr_minmax(360px,42%)] lg:items-start lg:gap-6">
+        <div>
+          <p className="mb-3 text-xs text-neutral-500">{dict.listings.sortedByMatch}</p>
+          <div className="grid grid-cols-1 gap-x-4 gap-y-7 sm:grid-cols-2">
+            {scored.map(({ property, score }, index) => (
+              <ListingCard
+                key={property.id}
+                locale={locale}
+                property={property}
+                matchScore={score}
+                index={index}
+                dict={{
+                  filters: dict.filters,
+                  weights: dict.weights,
+                  listings: dict.listings,
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="hidden lg:block">
+          <div className="sticky top-24 h-[calc(100vh-7.5rem)] overflow-hidden rounded-2xl border border-neutral-200 shadow-sm dark:border-neutral-800">
+            <ListingsMap locale={locale} properties={properties} />
+          </div>
         </div>
       </div>
+
+      {/* 手機浮動切換鈕 */}
+      <button
+        type="button"
+        onClick={() => setShowMap(true)}
+        className="press fixed bottom-6 left-1/2 z-40 -translate-x-1/2 rounded-full bg-neutral-900 px-5 py-3 text-sm font-medium text-white shadow-xl lg:hidden dark:bg-white dark:text-neutral-900"
+      >
+        🗺 {dict.listings.mapView}
+      </button>
+
+      {/* 手機全螢幕地圖 */}
+      {showMap && (
+        <div className="fixed inset-0 z-[60] bg-background lg:hidden">
+          <ListingsMap locale={locale} properties={properties} />
+          <button
+            type="button"
+            onClick={() => setShowMap(false)}
+            className="press absolute bottom-6 left-1/2 z-[1000] -translate-x-1/2 rounded-full bg-neutral-900 px-5 py-3 text-sm font-medium text-white shadow-xl dark:bg-white dark:text-neutral-900"
+          >
+            ✕ {dict.listings.listView}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

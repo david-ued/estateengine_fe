@@ -158,7 +158,9 @@
     "results": "个房源",
     "prev": "上一页",
     "next": "下一页",
-    "newBadge": "新上市"
+    "newBadge": "新上市",
+    "mapView": "地图",
+    "listView": "列表"
   },
   "personas": {
     "first_time_buyer": "小资首购族",
@@ -170,6 +172,12 @@
   "weights": {
     "title": "自定义条件权重",
     "description": "调整各条件的重要程度，系统将为你计算每个房源的匹配度分数。",
+    "personaTitle": "你是哪种买家？",
+    "personaHint": "点一下套用，马上看到最适合你的房源",
+    "advanced": "高级微调",
+    "levelLow": "不重要",
+    "levelMid": "一般",
+    "levelHigh": "很重要",
     "school": "学区",
     "transit": "交通",
     "material": "建材",

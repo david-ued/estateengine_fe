@@ -81,7 +81,7 @@ export function LoginForm({
       <button
         type="submit"
         disabled={pending}
-        className="rounded-lg bg-neutral-900 py-2.5 font-medium text-white transition hover:bg-neutral-700 disabled:opacity-50 dark:bg-white dark:text-neutral-900"
+        className="btn-primary rounded-lg py-2.5 font-medium"
       >
         {labels.signIn}
       </button>

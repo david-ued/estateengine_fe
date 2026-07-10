@@ -12,6 +12,23 @@ const DIMENSION_LABEL_KEYS: Record<ScoreDimension, keyof Dictionary['weights']> 
   environment: 'environment',
 };
 
+// 小白友善三段式：不重要 / 普通 / 很重要（取代 0-100 滑桿）
+const LEVELS = [
+  { key: 'levelLow', value: 0 },
+  { key: 'levelMid', value: 20 },
+  { key: 'levelHigh', value: 45 },
+] as const;
+
+function levelOf(weight: number): (typeof LEVELS)[number]['key'] {
+  if (weight <= 0) return 'levelLow';
+  if (weight <= 25) return 'levelMid';
+  return 'levelHigh';
+}
+
+function sameWeights(a: WeightMap, b: WeightMap): boolean {
+  return SCORE_DIMENSIONS.every((d) => (a[d] ?? 0) === (b[d] ?? 0));
+}
+
 export function WeightPanel({
   weights,
   onChange,
@@ -24,50 +41,78 @@ export function WeightPanel({
   personaLabels: Dictionary['personas'];
 }>) {
   return (
-    <aside className="flex flex-col gap-4 rounded-xl border border-neutral-200 bg-white/60 p-4 backdrop-blur-sm lg:sticky lg:top-24 lg:self-start dark:border-neutral-800 dark:bg-neutral-950/60">
-      <div>
-        <h2 className="font-semibold">{labels.title}</h2>
-        <p className="mt-1 text-xs text-neutral-500">{labels.description}</p>
+    <section className="rounded-2xl border border-neutral-200 bg-white p-4 shadow-sm dark:border-neutral-800 dark:bg-neutral-950">
+      <div className="mb-3">
+        <h2 className="font-semibold">{labels.personaTitle}</h2>
+        <p className="mt-0.5 text-xs text-neutral-500">{labels.personaHint}</p>
       </div>
 
-      {/* Persona 範本一鍵套用 */}
-      <div className="flex flex-wrap gap-2">
-        {PERSONAS.map((persona) => (
-          <button
-            key={persona.code}
-            type="button"
-            onClick={() => onChange({ ...persona.weights })}
-            className="rounded-full border border-neutral-300 px-3 py-1 text-xs transition hover:-translate-y-0.5 hover:bg-neutral-100 hover:shadow-sm dark:border-neutral-700 dark:hover:bg-neutral-800"
-          >
-            {personaLabels[persona.code]}
-          </button>
-        ))}
-      </div>
-
-      {/* 權重滑桿 */}
-      <div className="flex flex-col gap-3">
-        {SCORE_DIMENSIONS.map((dimension) => (
-          <label key={dimension} className="flex flex-col gap-1 text-sm">
-            <span className="flex justify-between">
-              {labels[DIMENSION_LABEL_KEYS[dimension]]}
-              <span className="font-mono text-neutral-500">
-                {weights[dimension] ?? 0}%
+      {/* Persona 卡片：一鍵套用（手機橫向滑動） */}
+      <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1">
+        {PERSONAS.map((persona) => {
+          const active = sameWeights(weights, persona.weights);
+          return (
+            <button
+              key={persona.code}
+              type="button"
+              onClick={() => onChange({ ...persona.weights })}
+              className={`flex min-w-[92px] snap-start flex-col items-center gap-1 rounded-xl border px-3 py-2.5 transition ${
+                active
+                  ? 'border-brand bg-brand/5 text-brand shadow-sm'
+                  : 'border-neutral-200 text-neutral-600 hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-sm dark:border-neutral-800 dark:text-neutral-300'
+              }`}
+            >
+              <span className="text-2xl leading-none">{persona.icon}</span>
+              <span className="whitespace-nowrap text-xs font-medium">
+                {personaLabels[persona.code]}
               </span>
-            </span>
-            <input
-              type="range"
-              min="0"
-              max="100"
-              step="5"
-              value={weights[dimension] ?? 0}
-              onChange={(e) =>
-                onChange({ ...weights, [dimension]: Number(e.target.value) })
-              }
-              className="accent-neutral-900 dark:accent-white"
-            />
-          </label>
-        ))}
+            </button>
+          );
+        })}
       </div>
-    </aside>
+
+      {/* 進階微調：預設收合，避免嚇到新手 */}
+      <details className="mt-3 group">
+        <summary className="cursor-pointer select-none text-sm text-neutral-500 transition hover:text-neutral-800 dark:hover:text-neutral-200">
+          {labels.advanced}
+          <span className="ml-1 inline-block transition-transform group-open:rotate-180">
+            ⌄
+          </span>
+        </summary>
+        <div className="mt-3 grid gap-2.5 sm:grid-cols-2">
+          {SCORE_DIMENSIONS.map((dimension) => {
+            const currentLevel = levelOf(weights[dimension] ?? 0);
+            return (
+              <div
+                key={dimension}
+                className="flex items-center justify-between gap-3 text-sm"
+              >
+                <span className="text-neutral-700 dark:text-neutral-300">
+                  {labels[DIMENSION_LABEL_KEYS[dimension]]}
+                </span>
+                <div className="flex shrink-0 rounded-full border border-neutral-200 p-0.5 dark:border-neutral-700">
+                  {LEVELS.map((level) => (
+                    <button
+                      key={level.key}
+                      type="button"
+                      onClick={() =>
+                        onChange({ ...weights, [dimension]: level.value })
+                      }
+                      className={`rounded-full px-2.5 py-1 text-xs transition ${
+                        currentLevel === level.key
+                          ? 'bg-brand font-medium text-white'
+                          : 'text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-200'
+                      }`}
+                    >
+                      {labels[level.key]}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </details>
+    </section>
   );
 }
