@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ForceDelistButton } from '@/components/admin/force-delist-button';
 import {
@@ -67,7 +68,13 @@ export default async function AdminDashboardPage({
               {listings.map((listing) => (
                 <tr key={listing.id} className={trClass}>
                   <td className={tdClass}>
-                    <div className="font-medium">{listing.title}</div>
+                    {/* 點標題進公開詳細頁檢視內容 */}
+                    <Link
+                      href={`/${locale}/properties/${listing.id}`}
+                      className="font-medium text-brand hover:underline"
+                    >
+                      {listing.title}
+                    </Link>
                     <div className="text-neutral-500">{listing.city}</div>
                   </td>
                   <td className={tdClass}>

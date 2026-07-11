@@ -1,4 +1,6 @@
 import { notFound } from 'next/navigation';
+import { CreateUserForm } from '@/components/admin/create-user-form';
+import { DeleteUserButton } from '@/components/admin/delete-user-button';
 import { RoleSelect } from '@/components/admin/role-select';
 import {
   tableClass,
@@ -44,6 +46,19 @@ export default async function AdminUsersPage({
     <main className="mx-auto w-full max-w-5xl flex-1 p-8">
       <h2 className="mb-6 text-xl font-bold">{dict.admin.usersNav}</h2>
 
+      <CreateUserForm
+        labels={{
+          createUser: dict.admin.createUser,
+          creating: dict.admin.creating,
+          email: dict.admin.email,
+          password: dict.auth.password,
+          fullName: dict.auth.fullName,
+          role: dict.admin.role,
+          roleLabels: dict.admin.roleLabels,
+          actionError: dict.admin.actionError,
+        }}
+      />
+
       {!users || users.length === 0 ? (
         <p className="text-neutral-500">{dict.admin.usersEmpty}</p>
       ) : (
@@ -73,15 +88,28 @@ export default async function AdminUsersPage({
                   <td className={`${tdClass} text-neutral-500`}>{user.email ?? '—'}</td>
                   <td className={tdClass}>{dict.admin.roleLabels[user.role]}</td>
                   <td className={`${tdClass} text-right`}>
-                    <RoleSelect
-                      userId={user.id}
-                      role={user.role}
-                      disabled={user.id === admin.id}
-                      labels={{
-                        roleLabels: dict.admin.roleLabels,
-                        actionError: dict.admin.actionError,
-                      }}
-                    />
+                    <span className="flex items-start justify-end gap-2">
+                      <RoleSelect
+                        userId={user.id}
+                        role={user.role}
+                        disabled={user.id === admin.id}
+                        labels={{
+                          roleLabels: dict.admin.roleLabels,
+                          actionError: dict.admin.actionError,
+                        }}
+                      />
+                      {user.id !== admin.id && (
+                        <DeleteUserButton
+                          userId={user.id}
+                          labels={{
+                            delete: dict.admin.delete,
+                            deleteConfirm: dict.admin.deleteConfirm,
+                            deleteBlocked: dict.admin.deleteBlocked,
+                            actionError: dict.admin.actionError,
+                          }}
+                        />
+                      )}
+                    </span>
                     {user.id === admin.id && (
                       <div className="mt-1 text-xs text-neutral-400">
                         {dict.admin.selfNote}

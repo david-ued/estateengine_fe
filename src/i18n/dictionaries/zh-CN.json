@@ -162,6 +162,11 @@
     "makeBuyer": "降为买家",
     "usersEmpty": "没有用户。",
     "selfNote": "本人账号无法变更角色",
+    "createUser": "新增用户",
+    "creating": "创建中…",
+    "delete": "删除",
+    "deleteConfirm": "确定要删除这个用户吗？此操作无法恢复。",
+    "deleteBlocked": "该用户名下还有房源，请先删除或转移房源",
     "roleLabels": {
       "buyer": "买家",
       "agent": "经纪人",

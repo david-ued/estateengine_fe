@@ -162,6 +162,11 @@
     "makeBuyer": "Demote to Buyer",
     "usersEmpty": "No users.",
     "selfNote": "You can't change your own role",
+    "createUser": "Add User",
+    "creating": "Creating…",
+    "delete": "Delete",
+    "deleteConfirm": "Delete this user? This cannot be undone.",
+    "deleteBlocked": "This user still owns listings — delete or reassign them first",
     "roleLabels": {
       "buyer": "Buyer",
       "agent": "Agent",

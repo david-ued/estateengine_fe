@@ -162,6 +162,11 @@
     "makeBuyer": "Rétrograder acheteur",
     "usersEmpty": "Aucun utilisateur.",
     "selfNote": "Impossible de modifier votre propre rôle",
+    "createUser": "Ajouter un utilisateur",
+    "creating": "Création…",
+    "delete": "Supprimer",
+    "deleteConfirm": "Supprimer cet utilisateur ? Cette action est irréversible.",
+    "deleteBlocked": "Cet utilisateur possède encore des annonces — supprimez-les ou réattribuez-les d'abord",
     "roleLabels": {
       "buyer": "Acheteur",
       "agent": "Agent",
