@@ -161,6 +161,7 @@
     "makeAgent": "Promote to Agent",
     "makeBuyer": "Demote to Buyer",
     "usersEmpty": "No users.",
+    "selfNote": "You can't change your own role",
     "roleLabels": {
       "buyer": "Buyer",
       "agent": "Agent",

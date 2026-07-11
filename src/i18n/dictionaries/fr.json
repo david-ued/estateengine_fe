@@ -161,6 +161,7 @@
     "makeAgent": "Promouvoir agent",
     "makeBuyer": "Rétrograder acheteur",
     "usersEmpty": "Aucun utilisateur.",
+    "selfNote": "Impossible de modifier votre propre rôle",
     "roleLabels": {
       "buyer": "Acheteur",
       "agent": "Agent",

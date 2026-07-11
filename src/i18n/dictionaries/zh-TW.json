@@ -161,6 +161,7 @@
     "makeAgent": "升級為房仲",
     "makeBuyer": "降為買家",
     "usersEmpty": "沒有使用者。",
+    "selfNote": "本人帳號無法變更角色",
     "roleLabels": {
       "buyer": "買家",
       "agent": "房仲",

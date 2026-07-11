@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { RoleActions } from '@/components/admin/role-actions';
+import { RoleSelect } from '@/components/admin/role-select';
 import {
   tableClass,
   tableWrapClass,
@@ -22,14 +22,14 @@ interface UserRow {
   agency_name: string | null;
 }
 
-/** Admin：使用者管理（升級房仲 / 降級買家） */
+/** Admin：使用者管理（可設定所有用戶的角色） */
 export default async function AdminUsersPage({
   params,
 }: Readonly<{ params: Promise<{ locale: string }> }>) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  await requireRole(locale, ['super_admin']);
+  const { user: admin } = await requireRole(locale, ['super_admin']);
   const dict = await getDictionary(locale);
 
   const supabase = await createClient();
@@ -73,16 +73,19 @@ export default async function AdminUsersPage({
                   <td className={`${tdClass} text-neutral-500`}>{user.email ?? '—'}</td>
                   <td className={tdClass}>{dict.admin.roleLabels[user.role]}</td>
                   <td className={`${tdClass} text-right`}>
-                    {user.role !== 'super_admin' && (
-                      <RoleActions
-                        userId={user.id}
-                        role={user.role}
-                        labels={{
-                          makeAgent: dict.admin.makeAgent,
-                          makeBuyer: dict.admin.makeBuyer,
-                          actionError: dict.admin.actionError,
-                        }}
-                      />
+                    <RoleSelect
+                      userId={user.id}
+                      role={user.role}
+                      disabled={user.id === admin.id}
+                      labels={{
+                        roleLabels: dict.admin.roleLabels,
+                        actionError: dict.admin.actionError,
+                      }}
+                    />
+                    {user.id === admin.id && (
+                      <div className="mt-1 text-xs text-neutral-400">
+                        {dict.admin.selfNote}
+                      </div>
                     )}
                   </td>
                 </tr>

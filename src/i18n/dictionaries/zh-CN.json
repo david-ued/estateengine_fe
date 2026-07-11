@@ -161,6 +161,7 @@
     "makeAgent": "升级为经纪人",
     "makeBuyer": "降为买家",
     "usersEmpty": "没有用户。",
+    "selfNote": "本人账号无法变更角色",
     "roleLabels": {
       "buyer": "买家",
       "agent": "经纪人",
