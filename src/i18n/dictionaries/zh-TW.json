@@ -253,6 +253,7 @@
     "tour3d": "3D 導覽",
     "exclusiveTitle": "獨家數據",
     "listedBy": "專屬房仲",
+    "statusBanner": "此物件尚未公開（{status}），只有管理員與物件擁有者看得到",
     "backToListings": "返回物件列表",
     "floodYes": "是",
     "photoAlt": "{title} 照片 {index}"

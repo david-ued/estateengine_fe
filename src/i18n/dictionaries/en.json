@@ -253,6 +253,7 @@
     "tour3d": "3D Tour",
     "exclusiveTitle": "Exclusive Data",
     "listedBy": "Listed by",
+    "statusBanner": "This listing is not public ({status}) — only admins and the owning agent can see it",
     "backToListings": "Back to listings",
     "floodYes": "Yes",
     "photoAlt": "{title} photo {index}"

@@ -253,6 +253,7 @@
     "tour3d": "Visite 3D",
     "exclusiveTitle": "Données exclusives",
     "listedBy": "Annonce de",
+    "statusBanner": "Cette annonce n'est pas publique ({status}) — visible uniquement par les admins et l'agent propriétaire",
     "backToListings": "Retour aux annonces",
     "floodYes": "Oui",
     "photoAlt": "{title} photo {index}"

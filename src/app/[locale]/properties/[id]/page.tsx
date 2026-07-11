@@ -9,7 +9,9 @@ import { btn } from '@/components/ui/styles';
 import { isLocale } from '@/i18n/config';
 import { getDictionary, type Dictionary } from '@/i18n/get-dictionary';
 import { ApiError, apiFetch } from '@/lib/api';
+import { getUserProfile } from '@/lib/auth';
 import { externalMedia, storagePublicUrl } from '@/lib/media';
+import { createClient } from '@/lib/supabase/server';
 import type { Property } from '@/lib/types';
 
 async function fetchProperty(id: string): Promise<Property | null> {
@@ -36,7 +38,31 @@ export default async function PropertyDetailPage({
   const { locale, id } = await params;
   if (!isLocale(locale)) notFound();
 
-  const [dict, property] = await Promise.all([getDictionary(locale), fetchProperty(id)]);
+  const [dict, publicProperty] = await Promise.all([
+    getDictionary(locale),
+    fetchProperty(id),
+  ]);
+
+  // 公開 API 只回 published；未公開物件由 RLS 決定誰能看（管理員 / 擁有者）
+  let property = publicProperty;
+  let isPrivateView = false;
+  if (!property) {
+    const session = await getUserProfile();
+    if (session) {
+      const supabase = await createClient();
+      const { data } = await supabase
+        .from('properties')
+        .select(
+          '*, media(*), agent:profiles(id, display_name, full_name, avatar_url, agency_name, bio, phone, social_links)',
+        )
+        .eq('id', id)
+        .maybeSingle<Property>();
+      if (data) {
+        property = data;
+        isPrivateView = data.status !== 'published';
+      }
+    }
+  }
   if (!property) notFound();
 
   const form = dict.agentForm;
@@ -105,6 +131,15 @@ export default async function PropertyDetailPage({
       >
         <IconChevronLeft size={16} /> {dict.property.backToListings}
       </Link>
+
+      {isPrivateView && (
+        <p className="mb-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800 dark:border-amber-700 dark:bg-amber-950 dark:text-amber-200">
+          {dict.property.statusBanner.replace(
+            '{status}',
+            dict.agent.statusLabels[property.status],
+          )}
+        </p>
+      )}
 
       <header className="mb-6">
         <div className="flex flex-wrap items-baseline justify-between gap-3">

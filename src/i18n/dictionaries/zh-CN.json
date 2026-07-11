@@ -253,6 +253,7 @@
     "tour3d": "3D 导览",
     "exclusiveTitle": "独家数据",
     "listedBy": "专属经纪人",
+    "statusBanner": "该房源尚未公开（{status}），只有管理员与房源所有者可见",
     "backToListings": "返回房源列表",
     "floodYes": "是",
     "photoAlt": "{title} 照片 {index}"
