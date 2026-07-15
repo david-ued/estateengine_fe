@@ -102,7 +102,6 @@ export default async function SharePage({
           <div>
           <p className="font-medium">
             {dict.share.curatedBy}: {agentName}
-            {link.agent?.agency_name ? ` · ${link.agent.agency_name}` : ''}
           </p>
           {link.agent?.bio && <p className="mt-1 text-neutral-500">{link.agent.bio}</p>}
           {link.agent?.phone && (

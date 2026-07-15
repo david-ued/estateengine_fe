@@ -20,8 +20,8 @@ export default async function LoginPage({
   return (
     <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 p-8">
       <div className="text-center">
-        <h1 className="text-2xl font-bold">{dict.auth.loginTitle}</h1>
-        <p className="mt-2 text-sm text-neutral-500">{dict.auth.loginSubtitle}</p>
+        <h1 className="font-display text-3xl">{dict.auth.loginTitle}</h1>
+        <p className="mt-3 text-sm text-neutral-500">{dict.auth.loginSubtitle}</p>
       </div>
       <LoginForm locale={locale} labels={dict.auth} />
       <p className="text-center text-sm text-neutral-500">

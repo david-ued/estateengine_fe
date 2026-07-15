@@ -33,7 +33,7 @@ export function LoginForm({
       return;
     }
 
-    // 依角色導向：super_admin → /admin、agent → /agent、buyer → 首頁
+    // 依角色導向（雙角色，PIVOT.md）：agent → 後台、buyer → 首頁
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
@@ -41,11 +41,7 @@ export function LoginForm({
       .single();
 
     const destination =
-      profile?.role === 'super_admin'
-        ? `/${locale}/admin`
-        : profile?.role === 'agent'
-          ? `/${locale}/agent`
-          : `/${locale}`;
+      profile?.role === 'agent' ? `/${locale}/agent` : `/${locale}`;
 
     router.push(destination);
     router.refresh();

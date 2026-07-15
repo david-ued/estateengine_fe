@@ -6,7 +6,7 @@ import { SignOutButton } from '@/components/auth/sign-out-button';
 import { createClient } from '@/lib/supabase/client';
 
 /**
- * 公開導覽列的登入狀態區塊。
+ * 公開導覽列的登入狀態區塊（深色導覽列配色）。
  * 根 layout 必須保持靜態（不可用 cookies() / server Supabase），
  * 故登入偵測僅在瀏覽器端進行；SSR 與未解析前一律顯示登入按鈕。
  */
@@ -19,7 +19,7 @@ export function NavAuth({
     signIn: string;
     signOut: string;
     agentDashboard: string;
-    adminDashboard: string;
+    favorites: string;
   }>;
 }>) {
   const [account, setAccount] = useState<{
@@ -63,7 +63,7 @@ export function NavAuth({
     return (
       <Link
         href={`/${locale}/login`}
-        className="press btn-primary rounded-full px-4 py-1.5"
+        className="press btn-ondark px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.14em]"
       >
         {labels.signIn}
       </Link>
@@ -72,26 +72,25 @@ export function NavAuth({
 
   return (
     <div className="flex items-center gap-3 sm:gap-4">
-      {account.role === 'agent' && (
+      {account.role === 'agent' ? (
         <Link
           href={`/${locale}/agent`}
-          className="whitespace-nowrap text-neutral-600 transition-colors hover:text-foreground dark:text-neutral-400"
+          className="whitespace-nowrap text-xs uppercase tracking-[0.14em] text-white/75 transition-colors hover:text-gold-soft"
         >
           {labels.agentDashboard}
         </Link>
-      )}
-      {account.role === 'super_admin' && (
+      ) : (
         <Link
-          href={`/${locale}/admin`}
-          className="whitespace-nowrap text-neutral-600 transition-colors hover:text-foreground dark:text-neutral-400"
+          href={`/${locale}/account`}
+          className="whitespace-nowrap text-xs uppercase tracking-[0.14em] text-white/75 transition-colors hover:text-gold-soft"
         >
-          {labels.adminDashboard}
+          {labels.favorites}
         </Link>
       )}
       <SignOutButton
         locale={locale}
         label={labels.signOut}
-        className="press whitespace-nowrap rounded-full border border-neutral-300 px-4 py-1.5 text-sm transition-colors hover:bg-neutral-100 dark:border-neutral-700 dark:hover:bg-neutral-800"
+        className="press whitespace-nowrap border border-white/40 px-4 py-1.5 text-xs uppercase tracking-[0.14em] text-white/85 transition-colors hover:border-gold hover:text-gold-soft"
       />
     </div>
   );

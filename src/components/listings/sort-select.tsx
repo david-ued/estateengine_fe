@@ -1,47 +1,53 @@
 'use client';
 
-import { IconArrowsSort } from '@tabler/icons-react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { selectClass } from '@/components/ui/styles';
 import type { Dictionary } from '@/i18n/get-dictionary';
 
+// 權重/符合度排序已退場（PIVOT.md）：僅保留最新上架 / 價格
 const SORT_OPTIONS = ['newest', 'price_desc', 'price_asc'] as const;
 
-const LABEL_KEYS: Record<(typeof SORT_OPTIONS)[number], keyof Dictionary['listings']> = {
-  newest: 'sortNewest',
-  price_desc: 'sortPriceDesc',
-  price_asc: 'sortPriceAsc',
-};
+type SortOption = (typeof SORT_OPTIONS)[number];
 
 export function SortSelect({
   locale,
   labels,
-}: Readonly<{ locale: string; labels: Dictionary['listings'] }>) {
+}: Readonly<{
+  locale: string;
+  labels: Pick<
+    Dictionary['listings'],
+    'sortLabel' | 'sortNewest' | 'sortPriceDesc' | 'sortPriceAsc'
+  >;
+}>) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const raw = searchParams.get('sort');
-  const value = SORT_OPTIONS.includes(raw as (typeof SORT_OPTIONS)[number])
-    ? (raw as (typeof SORT_OPTIONS)[number])
+  const value: SortOption = SORT_OPTIONS.includes(raw as SortOption)
+    ? (raw as SortOption)
     : 'newest';
+
+  const optionLabels: Record<SortOption, string> = {
+    newest: labels.sortNewest,
+    price_desc: labels.sortPriceDesc,
+    price_asc: labels.sortPriceAsc,
+  };
 
   function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
     const params = new URLSearchParams(searchParams.toString());
     if (event.target.value === 'newest') params.delete('sort');
     else params.set('sort', event.target.value);
     params.delete('page');
-    router.push(`/${locale}/properties?${params.toString()}`);
+    const query = params.toString();
+    router.push(`/${locale}/search${query ? `?${query}` : ''}`);
   }
 
   return (
-    <label className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-300">
-      <IconArrowsSort size={16} className="text-neutral-400" />
-      <select
-        value={value}
-        onChange={handleChange}
-        className="rounded-lg border border-neutral-300 bg-transparent px-2 py-1.5 text-sm outline-none dark:border-neutral-700 dark:bg-neutral-900"
-      >
+    <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-neutral-500 dark:text-neutral-400">
+      {labels.sortLabel}
+      <select value={value} onChange={handleChange} className={selectClass}>
         {SORT_OPTIONS.map((option) => (
           <option key={option} value={option}>
-            {labels[LABEL_KEYS[option]]}
+            {optionLabels[option]}
           </option>
         ))}
       </select>

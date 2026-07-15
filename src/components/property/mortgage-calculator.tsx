@@ -17,11 +17,12 @@ export function MortgageCalculator({
   const fmt = (value: number) => `$${Math.round(value).toLocaleString(locale)}`;
 
   return (
-    <section className="card-lift rounded-xl border border-neutral-200 p-5 dark:border-neutral-800">
-      <h2 className="font-semibold">{labels.mortgageTitle}</h2>
-      <p className="mt-1 text-xs text-neutral-500">{labels.mortgageHint}</p>
+    <section className="border border-neutral-200 bg-white p-6 sm:p-8 dark:border-neutral-800 dark:bg-neutral-950">
+      <h2 className="font-display text-2xl sm:text-3xl">{labels.mortgageTitle}</h2>
+      <div className="gold-rule mt-4" />
+      <p className="mt-4 text-xs text-neutral-500">{labels.mortgageHint}</p>
 
-      <label className="mt-4 flex flex-col gap-1 text-sm">
+      <label className="mt-5 flex flex-col gap-1 text-sm">
         {labels.totalPrice}
         <input
           type="number"

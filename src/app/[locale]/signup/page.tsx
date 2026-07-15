@@ -18,7 +18,10 @@ export default async function SignupPage({
 
   return (
     <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 p-8">
-      <h1 className="text-center text-2xl font-bold">{dict.auth.signUp}</h1>
+      <div className="text-center">
+        <h1 className="font-display text-3xl">{dict.auth.signupTitle}</h1>
+        <p className="mt-3 text-sm text-neutral-500">{dict.auth.signupSubtitle}</p>
+      </div>
       <SignupForm labels={dict.auth} />
       <p className="text-center text-sm text-neutral-500">
         {dict.auth.haveAccount}{' '}

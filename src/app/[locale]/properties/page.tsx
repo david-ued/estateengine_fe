@@ -1,173 +1,27 @@
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
-import {
-  FilterBar,
-  FilterSidebar,
-  type ListingFilters,
-} from '@/components/listings/filter-bar';
-import { btn } from '@/components/ui/styles';
-import { ListingsExplorer } from '@/components/listings/listings-explorer';
+import { notFound, redirect } from 'next/navigation';
 import { isLocale } from '@/i18n/config';
-import { getDictionary } from '@/i18n/get-dictionary';
-import { apiFetch } from '@/lib/api';
-import type { PagedResult, Property } from '@/lib/types';
 
-// PRD：為避免資訊過載，列表頁一次最多僅顯示 6-7 個物件
-const PAGE_SIZE = 6;
-
-const FILTER_KEYS = [
-  'city',
-  'minPrice',
-  'maxPrice',
-  'minSqft',
-  'maxSqft',
-  'beds',
-  'baths',
-  'propertyType',
-  'minSchool',
-  'minBuilder',
-  'minMaterial',
-  'orientation',
-  'amenities',
-  'sort',
-] as const;
-
-type SearchParams = Record<string, string | string[] | undefined>;
-
-function pickFilters(searchParams: SearchParams): ListingFilters {
-  const filters: Record<string, string> = {};
-  for (const key of FILTER_KEYS) {
-    const value = searchParams[key];
-    if (typeof value === 'string' && value !== '') filters[key] = value;
-  }
-  return filters;
-}
-
-async function fetchListings(
-  filters: ListingFilters,
-  page: number,
-): Promise<PagedResult<Property> | null> {
-  const params = new URLSearchParams(filters as Record<string, string>);
-  params.set('page', String(page));
-  params.set('pageSize', String(PAGE_SIZE));
-
-  try {
-    return await apiFetch<PagedResult<Property>>(`/properties?${params}`, {
-      cache: 'no-store',
-    });
-  } catch {
-    // 後端未啟動 / DB 未連線 → null 代表載入失敗（與「查無結果」區分）
-    return null;
-  }
-}
-
-function pageHref(locale: string, filters: ListingFilters, page: number): string {
-  const params = new URLSearchParams(filters as Record<string, string>);
-  if (page > 1) params.set('page', String(page));
-  const query = params.toString();
-  return `/${locale}/properties${query ? `?${query}` : ''}`;
-}
-
-export default async function PropertiesPage({
+/**
+ * 列表頁已搬到 /search（PIVOT.md sitemap）：
+ * /[locale]/properties 一律轉址並保留 query string；
+ * 物件內頁 /[locale]/properties/[id] 不受影響。
+ */
+export default async function PropertiesRedirect({
   params,
   searchParams,
 }: Readonly<{
   params: Promise<{ locale: string }>;
-  searchParams: Promise<SearchParams>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }>) {
-  const { locale } = await params;
+  const [{ locale }, sp] = await Promise.all([params, searchParams]);
   if (!isLocale(locale)) notFound();
 
-  const sp = await searchParams;
-  const filters = pickFilters(sp);
-  const page = Math.max(1, Number(sp.page) || 1);
+  const query = new URLSearchParams();
+  for (const [key, value] of Object.entries(sp)) {
+    if (typeof value === 'string') query.set(key, value);
+    else if (Array.isArray(value)) for (const item of value) query.append(key, item);
+  }
 
-  const [dict, result] = await Promise.all([
-    getDictionary(locale),
-    fetchListings(filters, page),
-  ]);
-
-  const items = result?.items ?? [];
-  const total = result?.total ?? 0;
-  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
-
-  return (
-    <main className="mx-auto w-full max-w-[1500px] flex-1 p-4 sm:p-8">
-      <div className="mb-6 flex items-baseline justify-between">
-        <h1 className="text-2xl font-bold">{dict.nav.listings}</h1>
-        <span className="text-sm text-neutral-500">
-          {total} {dict.listings.results}
-        </span>
-      </div>
-
-      {/* 手機/平板：篩選彈窗觸發列（桌機隱藏，由左側欄接手） */}
-      <div className="mb-6 lg:hidden">
-        <FilterBar
-          locale={locale}
-          labels={dict.filters}
-          common={dict.common}
-          orientations={dict.agentForm.orientations}
-          propertyTypes={dict.agentForm.propertyTypes}
-          amenityLabels={dict.agentForm.amenityOptions}
-          personas={dict.personas}
-          personaCopy={dict.weights}
-          defaults={filters}
-        />
-      </div>
-
-      {/* 桌機：左側常駐篩選欄 + 右側內容 */}
-      <div className="lg:grid lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start lg:gap-6">
-        <FilterSidebar
-          locale={locale}
-          labels={dict.filters}
-          orientations={dict.agentForm.orientations}
-          propertyTypes={dict.agentForm.propertyTypes}
-          amenityLabels={dict.agentForm.amenityOptions}
-          personas={dict.personas}
-          personaCopy={dict.weights}
-          defaults={filters}
-        />
-
-        <div>
-      {result === null ? (
-        <div className="flex flex-col items-center gap-4 py-16 text-center">
-          <p className="text-neutral-500">{dict.listings.loadError}</p>
-          <Link href={pageHref(locale, filters, page)} className={btn.secondary}>
-            {dict.common.retry}
-          </Link>
-        </div>
-      ) : items.length === 0 ? (
-        <p className="py-16 text-center text-neutral-500">{dict.listings.noResults}</p>
-      ) : (
-        <ListingsExplorer
-          locale={locale}
-          properties={items}
-          dict={{
-            filters: dict.filters,
-            listings: dict.listings,
-          }}
-        />
-      )}
-
-      {totalPages > 1 && (
-        <nav className="mt-8 flex items-center justify-center gap-4 text-sm">
-          {page > 1 && (
-            <Link href={pageHref(locale, filters, page - 1)} className="hover:underline">
-              ← {dict.listings.prev}
-            </Link>
-          )}
-          <span className="text-neutral-500">
-            {page} / {totalPages}
-          </span>
-          {page < totalPages && (
-            <Link href={pageHref(locale, filters, page + 1)} className="hover:underline">
-              {dict.listings.next} →
-            </Link>
-          )}
-        </nav>
-      )}
-        </div>
-      </div>
-    </main>
-  );
+  const qs = query.toString();
+  redirect(`/${locale}/search${qs ? `?${qs}` : ''}`);
 }

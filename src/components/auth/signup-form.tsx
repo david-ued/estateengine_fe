@@ -20,7 +20,7 @@ export function SignupForm({
     setPending(true);
     setError(null);
 
-    // 註冊一律建立 buyer；升級為 agent 由 Admin 後台審核（見 TODO：users module）
+    // 註冊一律建立 buyer；agent 帳號由 DB 手動指定（PIVOT.md 單一 agent 不變量）
     const supabase = createClient();
     const { error: signUpError } = await supabase.auth.signUp({
       email,

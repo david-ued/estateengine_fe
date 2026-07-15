@@ -8,10 +8,10 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      // 後台不進索引
+      // agent 後台與買家帳號區不進索引（/admin 已隨 super_admin 移除）
       disallow: locales.flatMap((locale) => [
-        `/${locale}/admin`,
         `/${locale}/agent`,
+        `/${locale}/account`,
         `/${locale}/login`,
         `/${locale}/signup`,
       ]),

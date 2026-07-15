@@ -23,14 +23,6 @@ const COPY: Record<Locale, FallbackCopy> = {
     notFoundBody: '這個頁面不存在或已被移除。',
     backHome: '回首頁',
   },
-  'zh-CN': {
-    errorTitle: '发生错误',
-    errorBody: '页面加载失败，请稍后再试。',
-    retry: '重试',
-    notFoundTitle: '找不到页面',
-    notFoundBody: '该页面不存在或已被移除。',
-    backHome: '回首页',
-  },
   en: {
     errorTitle: 'Something went wrong',
     errorBody: 'The page failed to load. Please try again later.',
@@ -38,14 +30,6 @@ const COPY: Record<Locale, FallbackCopy> = {
     notFoundTitle: 'Page not found',
     notFoundBody: 'This page does not exist or has been removed.',
     backHome: 'Back to home',
-  },
-  fr: {
-    errorTitle: 'Une erreur est survenue',
-    errorBody: 'Le chargement de la page a échoué. Veuillez réessayer plus tard.',
-    retry: 'Réessayer',
-    notFoundTitle: 'Page introuvable',
-    notFoundBody: "Cette page n'existe pas ou a été supprimée.",
-    backHome: "Retour à l'accueil",
   },
 };
 

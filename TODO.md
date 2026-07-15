@@ -1,80 +1,50 @@
 # EstateEngine 前端 TODO / Roadmap
 
-> SaaS 房仲客製化看房平台。角色：買家（Buyer）/ 房仲（Agent 專用介面）/ 總管理員（Super Admin 專屬後台）。
-> 目標市場：加拿大 Edmonton / Vancouver / Toronto（CAD、sqft、預設語系 en）。
-> 後端 roadmap 見 `estateengine_be/TODO.md`。
+> **單一 Agent 品牌看房網站**（2026-07-16 轉向，決策與 sitemap 對照見 `PIVOT.md`）。
+> 風格參考 thebrandrealestategroup.com（黑白金奢華風）。
+> 語系：zh-TW（預設）+ en，華人買家優先。後端 roadmap 見 `estateengine_be/TODO.md`。
 
 ## ✅ 已完成
 
-### Phase 0 — Infra
-- [x] Next.js 16（App Router + Tailwind + TS）scaffold
-- [x] i18n 四語系路由（en / fr / zh-TW / zh-CN），`src/proxy.ts` 語系偵測轉址
-- [x] 字典檔架構 `src/i18n/dictionaries/*`（zh-TW 為權威型別）
-- [x] Supabase client（browser / server component，`@supabase/ssr`）
-- [x] `.env.example`（Supabase + NestJS API base URL）
+### 多 agent SaaS 時期（2026-07-10 前後，架構沿用）
+- [x] Next.js 16（App Router + Tailwind v4 + TS）scaffold、i18n 路由、`src/proxy.ts` 語系偵測 + Supabase session 刷新
+- [x] Supabase Auth（登入/註冊、角色導向）、`@supabase/ssr`
+- [x] 房貸試算 `src/lib/mortgage.ts`、物件建檔/編輯表單（獨家數據 + 評分滑桿）、照片上傳流程
+- [x] 推薦清單管理 + 公開分享頁（自訂 OG）、瀏覽/停留/影片點擊上報
+- [x] 進階篩選（雙向滑桿、獨家條件、persona preset）、AI 快速建檔（Gemini + token 點數）
+- [x] 全站 a11y / loading 骨架 / error 邊界 / SEO 基礎
 
-### Phase 1 — 核心功能（部分）
-- [x] 房貸試算 `src/lib/mortgage.ts`（寫死：頭期 20% / 貸款 80% / 30 年）
-- [x] 權重評分 `src/lib/scoring.ts`（5 維度加權平均，對應 DB score_* 欄位）
-- [x] 列表 / 內頁路由骨架（`PAGE_SIZE = 6`）
-- [x] 登入 / 註冊頁（Supabase Auth，登入後依角色導向）
-- [x] proxy 整合 Supabase session 自動刷新
-- [x] 房仲專用介面 `/[locale]/agent`（角色守衛 + 我的物件列表 + 瀏覽量欄位）
-- [x] Admin 專屬後台 `/[locale]/admin`（角色守衛 + 全物件巡邏 + 強制下架）
-- [x] 行動端優先建檔表單 `/agent/properties/new`（獨家數據手動標籤：學區/交通/淹水區/地勢/風水/建商評價/建材/地下室 + 5 維度評分滑桿 + 外部影片連結）
-- [x] 公開推薦清單頁 `/[locale]/share/[slug]`（房仲自訂 OG 標籤 via generateMetadata + 房仲名片）
-- [x] 買家列表頁：串 BE API、filter（城市/價格/sqft/房衛）、每頁 6 筆分頁
-- [x] 權重面板：5 維度滑桿 + Persona 一鍵套用 + 符合度徽章排序 + localStorage 記憶
-- [x] 物件內頁：照片格、外部影片/3D 導覽嵌入（點擊計數）、獨家數據區塊、房仲名片、互動房貸試算
-- [x] 瀏覽數 + 停留時間上報（進頁 pageview、離頁 keepalive fetch 回報秒數）
-- [x] 推薦清單管理 `/agent/share-links`（勾選物件 → 一鍵生成 + 自訂 OG + 複製連結 + 點擊數）
-- [x] 房仲數據面板欄位（每物件：瀏覽量 / 平均停留 / 影片點擊）
-- [x] 物件編輯頁 `/agent/properties/[id]/edit`（複用建檔表單）+ 上架/隱藏/下架/成交狀態操作
-- [x] 照片上傳流程（sign-upload → 直傳 Storage → 登記 media row，首張自動設封面）
-- [x] Admin 使用者管理 `/admin/users`（升級房仲 / 降級買家）
-- [x] 語系切換器（導覽列，四語系）
-- [x] SEO：robots.txt + sitemap.xml（核心頁）+ 首頁 hreflang alternates
-- [x] 上市 30 天內「新上市」標示（列表卡）
-- [x] 買家權重雲端同步（登入者 debounce 寫入 buyer_weight_profiles，未登入 localStorage）
-- [x] 進階篩選器：價格/坪數雙向滑桿、房衛/類型按鈕選、獨家篩選（學區排名/建商/建材/風水/大賣場）、手機全螢幕彈窗、Tabler Icons
-- [x] 排序系統：系統推薦（權重符合度，預設）/ 最新上架 / 價格高低；>90 天物件前端強制隱藏
-- [x] 物件卡升級：上市天數醒目標示、特色標籤（頂級建材/優質學區）、房仲迷你卡
-- [x] 找房仲 `/agents` + 房仲專屬頁 `/agents/[id]`（介紹 + 代理物件）+ 導覽入口
-- [x] ⚡ AI 快速建檔（Gemini 解析文字/截圖 → 半自動填表 + Token 扣點 + 餘額顯示/不足禁用/失敗退點）
-- [x] 全站 UI/UX 硬化（2026-07）：共用樣式 `src/components/ui/styles.ts`（按鈕/輸入框/卡片/表格唯一來源，主要動作統一品牌藍）、全域 `:focus-visible` 焦點環、`error.tsx`/`not-found.tsx` + locale catch-all 404、補 7 個路由 loading 骨架、API 失敗與空結果分離顯示、async 操作失敗回饋（status/role/delist）、登入狀態感知導覽列 + active nav、login/signup pending 標籤、a11y（stars/emoji aria、每張照片獨立 alt、i18n aria-label、DualRange aria-valuetext）、數字格式帶 locale、內頁返回連結、照片多選上傳
+### 2026-07-16 — 單一 Agent 轉向（PIVOT.md）
+- [x] i18n 縮為 zh-TW（預設）+ en；字典全面重寫（home/search/property/about/contact/account/inbox/brand）
+- [x] 黑白金奢華主題：globals.css tokens（ink/gold/cream）、Playfair Display + Jost 字體、styles.ts 方角細框重寫
+- [x] 深色導覽列 + 品牌 footer（讀 GET /site 的 agent 名片）
+- [x] 移除 /admin、/agents 全部路由與 components/admin；角色剩 buyer/agent
+- [x] 新首頁：Hero / Meet Your Agent / Stats band / Core values / 精選物件 / 聯絡 CTA
+- [x] /search 搜尋體驗：頂部橫向篩選列、List/Map 切換、排序、Save Search；/properties 轉址保留 query
+- [x] 物件內頁重排：anchor tabs、大圖 gallery、統計列、About This Property、Property Features 兩欄格、獨家數據區、房貸試算、詢問此物件
+- [x] /about（單一 agent 品牌頁）、/contact（聯絡表單 → contact_messages）
+- [x] 買家收藏（全站愛心 + FavoritesProvider 樂觀更新）、/account（收藏 + 儲存搜尋管理）
+- [x] agent 後台新增：/agent/inbox（聯絡訊息收件匣）、/agent/brand（名片 + 首頁內容 + 實績數字編輯）
+- [x] sitemap / robots 對齊新 sitemap
 
-## 🔜 Phase 1 剩餘（Must Have）
+## 🔜 立即待辦
 
-### 買家介面
-- [x] 2026-07-11 方向調整：權重/符合度排序系統退場，Persona 改為直接連動篩選檔位（卡片移入篩選面板頂部；排序剩最新上架/價格）
+- [ ] ⚠️ 後端 migration 套用 + `pivot-single-agent.mjs` 跑完後，端到端再走一輪（收藏/儲存搜尋/聯絡表單/品牌設定）
+- [ ] 列表卡片資訊密度與字級對照參考站再細修（含 Open House 標籤概念）
 - [ ] Persona 範本與篩選 preset 改讀 DB（目前為前端常數）
-- [ ] 列表 UI 對照 REW 風格細修（卡片資訊密度、字級、留白）
-
-### 房仲介面（/agent）
 - [ ] 照片刪除 / 排序 / 換封面；短影音（reel_video）上傳
-- [ ] 推薦清單：OG 預覽圖上傳（og_image_path）、刪除連結、清單排序
-- [ ] 房仲個人名片編輯（bio、社群連結、頭像）
-
-### Admin 後台（/admin）
-- [ ] 巡邏列表：狀態 / 房仲 filter、異常物件標記
-- [ ] 使用者停權（需 profiles 加 is_suspended + 登入攔截）
-- [ ] 基礎數據總覽（總瀏覽量）
-
-### 行銷 / SEO
-- [ ] sitemap 補已上架物件動態 URL（待 DB）
+- [ ] 推薦清單：OG 預覽圖上傳、刪除連結、清單排序
+- [ ] sitemap 補已上架物件動態 URL
 - [ ] 內頁 / 列表頁 per-page hreflang alternates
 
-### Phase 2 前置（PRD 降級方案）
-- [ ] 虛擬家具：聯盟行銷連結 / 輕量 iframe Widget 欄位（media 已支援 `virtual_staging_image`）
+## 📦 之後再補（參考站 sitemap 的延伸頁）
+- Sold Properties（已成交作品集）
+- Testimonials（客戶見證）
+- Blog / 市場分析
+- 社區導覽頁（Downtown / Yaletown / West End…）
+- Saved search 新物件通知（email）
+- 虛擬家具：聯盟行銷連結 / 輕量 iframe Widget 欄位（media 已支援 `virtual_staging_image`）
 
-## 🧭 SaaS 化（架構預留，勿在 Phase 1 實作）
-- [ ] 多租戶：房仲隸屬仲介公司（agencies），介面依 agency 品牌化（logo / 主色 / 自訂網域）
-- [ ] 訂閱方案 UI（方案比較、用量顯示；金流 Phase 2 才接 Stripe）
-- [ ] Onboarding flow：房仲註冊 → 審核 → 開通
-- [ ] 通知系統（物件即將到期 90 天提醒）
-
-## 📦 Phase 2（Nice to Have，非本期範圍）
-- 虛擬家具 AR 擺放與電商串接（本期僅 `virtual_staging_image` 照片降級方案）
-- 臨近成交行情
-- 進階 Analytics（漏斗、停留時間）
-- 金流串接（Stripe）
+## 📦 Phase 2（非本期範圍）
+- 臨近成交行情、進階 Analytics（漏斗、停留時間）
+- 金流串接（Stripe，token 儲值）

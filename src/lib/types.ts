@@ -30,6 +30,9 @@ export interface AgentCard {
   agency_name: string | null;
   bio?: string | null;
   phone?: string | null;
+  email?: string | null;
+  license_no?: string | null;
+  contact_line_id?: string | null;
   social_links?: Record<string, string>;
 }
 
@@ -78,4 +81,51 @@ export interface PagedResult<T> {
   total: number;
   page: number;
   pageSize: number;
+}
+
+// ---------- 單一 agent 品牌站（PIVOT.md） ----------
+
+/** site_settings.data 內的單語系品牌文案 */
+export interface SiteLocaleCopy {
+  heroTitle?: string;
+  heroSubtitle?: string;
+  story?: string;
+  values?: { title: string; body: string }[];
+}
+
+/** site_settings.data 結構（agent 於品牌設定頁編輯） */
+export interface SiteSettingsData {
+  stats?: { sold?: number; volume?: string; years?: number };
+  locales?: Partial<Record<'zh-TW' | 'en', SiteLocaleCopy>>;
+}
+
+/** GET /site 回傳 */
+export interface SiteInfo {
+  settings: SiteSettingsData;
+  agent: AgentCard | null;
+}
+
+export interface SavedSearch {
+  id: string;
+  name: string;
+  params: Record<string, string>;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FavoriteEntry {
+  created_at: string;
+  property: Property;
+}
+
+export interface ContactMessage {
+  id: string;
+  name: string;
+  email: string;
+  phone: string | null;
+  message: string;
+  locale: string | null;
+  is_read: boolean;
+  created_at: string;
+  property?: { id: string; title: string } | null;
 }

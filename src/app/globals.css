@@ -6,20 +6,27 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #141414;
   color-scheme: light; /* 原生控件（select / scrollbar）也保持亮色 */
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-heading);
   --font-mono: var(--font-geist-mono);
-  /* 品牌色：白底 + 藍主色 + 橘強調（Airbnb-like 空間感） */
-  --color-brand: #2563eb;
-  --color-brand-dark: #1d4ed8;
-  --color-accent: #f97316;
-  --color-accent-dark: #ea580c;
+  /* 黑白金奢華風（參考 The BRAND，見 PIVOT.md）：
+     ink 近黑做主色，champagne gold 做強調；不再使用品牌藍 */
+  --color-brand: #ad8a3b;
+  --color-brand-dark: #8f7130;
+  --color-accent: #ad8a3b;
+  --color-accent-dark: #8f7130;
+  --color-ink: #141414;
+  --color-ink-soft: #2a2a2a;
+  --color-gold: #ad8a3b;
+  --color-gold-soft: #c8a961;
+  --color-cream: #faf8f4;
 }
 
 .dark {
@@ -31,7 +38,29 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-body), 'Helvetica Neue', Arial, sans-serif;
+}
+
+/* 奢華排版工具 */
+.font-display {
+  font-family: var(--font-heading), Georgia, serif;
+}
+
+/* 全大寫小標（gold eyebrow） */
+.eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+/* 標題下的金色細線 */
+.gold-rule {
+  width: 3.5rem;
+  height: 1px;
+  background: var(--color-gold);
 }
 
 /* ---------------------------------------------------------------
@@ -171,23 +200,39 @@ a.press:active {
   transform: scale(0.97);
 }
 
-/* 主要按鈕：藍主色（全站唯一主要動作色） */
+/* 主要按鈕：近黑底、hover 轉金（全站唯一主要動作色） */
 .btn-primary {
-  background: var(--color-brand);
+  background: var(--color-ink);
   color: #fff;
   transition:
-    background-color 0.2s ease,
+    background-color 0.25s ease,
     transform 0.15s ease,
-    box-shadow 0.2s ease;
+    box-shadow 0.25s ease;
 }
 
 .btn-primary:hover {
-  background: var(--color-brand-dark);
-  box-shadow: 0 8px 20px -8px rgb(37 99 235 / 0.5);
+  background: var(--color-gold);
+  box-shadow: 0 8px 20px -8px rgb(173 138 59 / 0.55);
 }
 
 .btn-primary:disabled {
   opacity: 0.5;
+}
+
+/* 深色區塊（hero / footer / CTA band）上的反白按鈕 */
+.btn-ondark {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgb(255 255 255 / 0.55);
+  transition:
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.btn-ondark:hover {
+  background: var(--color-gold);
+  border-color: var(--color-gold);
 }
 
 /* 地圖價格 pill（Airbnb 式標記） */
@@ -219,7 +264,7 @@ a.press:active {
 
 .map-pill:hover {
   transform: translate(-50%, -50%) scale(1.12);
-  background: var(--color-accent);
+  background: var(--color-gold);
   color: #fff;
 }
 

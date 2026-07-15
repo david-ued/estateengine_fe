@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import { createClient } from './supabase/server';
 
-export type UserRole = 'buyer' | 'agent' | 'super_admin';
+export type UserRole = 'buyer' | 'agent';
 
 export interface Profile {
   id: string;
@@ -38,28 +38,20 @@ export async function getUserProfile() {
   return { user, profile };
 }
 
-/** 依角色決定登入後的首頁 */
+/** 依角色決定登入後的首頁（agent 進後台，買家回首頁） */
 export function homePathForRole(locale: string, role: UserRole): string {
-  switch (role) {
-    case 'super_admin':
-      return `/${locale}/admin`;
-    case 'agent':
-      return `/${locale}/agent`;
-    default:
-      return `/${locale}`;
-  }
+  return role === 'agent' ? `/${locale}/agent` : `/${locale}`;
 }
 
 /**
- * 保護 agent / admin 介面：未登入導向登入頁，
- * 角色不符導回買家首頁。super_admin 可進入所有介面。
+ * 保護需登入的介面：未登入導向登入頁，角色不符導回首頁。
  */
 export async function requireRole(locale: string, roles: UserRole[]) {
   const session = await getUserProfile();
   if (!session) redirect(`/${locale}/login`);
 
   const { role } = session.profile;
-  if (role !== 'super_admin' && !roles.includes(role)) {
+  if (!roles.includes(role)) {
     redirect(`/${locale}`);
   }
 
