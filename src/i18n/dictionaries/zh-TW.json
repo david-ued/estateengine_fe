@@ -254,6 +254,25 @@
     "unavailable": "已下架",
     "actionError": "操作失敗，請稍後再試"
   },
+  "admin": {
+    "usersTitle": "會員管理",
+    "usersSubtitle": "管理註冊會員：新增帳號、指派角色、刪除。",
+    "usersEmpty": "尚無會員。",
+    "loadError": "會員資料載入失敗，請稍後再試。",
+    "createUser": "新增會員",
+    "creating": "建立中…",
+    "email": "電子郵件",
+    "role": "角色",
+    "roleLabels": {
+      "buyer": "買家",
+      "agent": "管理者"
+    },
+    "delete": "刪除",
+    "deleteConfirm": "確定要刪除這位會員嗎？此動作無法復原。",
+    "deleteBlocked": "此帳號名下仍有物件，請先處理物件再刪除。",
+    "selfNote": "（目前登入帳號）",
+    "actionError": "操作失敗，請稍後再試"
+  },
   "agent": {
     "dashboardTitle": "管理後台",
     "myListings": "我的物件",
@@ -268,6 +287,7 @@
     "shareLinksNav": "推薦清單",
     "inboxNav": "聯絡訊息",
     "brandNav": "品牌設定",
+    "usersNav": "會員管理",
     "edit": "編輯",
     "actions": {
       "publish": "上架",

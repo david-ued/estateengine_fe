@@ -40,6 +40,10 @@ export default async function AgentLayout({
                   href: `/${locale}/agent/brand`,
                   label: dict.agent.brandNav,
                 },
+                {
+                  href: `/${locale}/agent/users`,
+                  label: dict.agent.usersNav,
+                },
               ]}
             />
           </nav>

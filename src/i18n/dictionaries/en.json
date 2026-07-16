@@ -254,6 +254,25 @@
     "unavailable": "Off market",
     "actionError": "Action failed. Please try again."
   },
+  "admin": {
+    "usersTitle": "Members",
+    "usersSubtitle": "Manage registered members: create accounts, assign roles, delete.",
+    "usersEmpty": "No members yet.",
+    "loadError": "Failed to load members. Please try again.",
+    "createUser": "Add Member",
+    "creating": "Creating…",
+    "email": "Email",
+    "role": "Role",
+    "roleLabels": {
+      "buyer": "Buyer",
+      "agent": "Admin"
+    },
+    "delete": "Delete",
+    "deleteConfirm": "Delete this member? This cannot be undone.",
+    "deleteBlocked": "This account still owns listings — handle them first.",
+    "selfNote": "(signed-in account)",
+    "actionError": "Action failed. Please try again."
+  },
   "agent": {
     "dashboardTitle": "Dashboard",
     "myListings": "My Listings",
@@ -268,6 +287,7 @@
     "shareLinksNav": "Curated Lists",
     "inboxNav": "Messages",
     "brandNav": "Brand Settings",
+    "usersNav": "Members",
     "edit": "Edit",
     "actions": {
       "publish": "Publish",
