@@ -29,7 +29,9 @@
     "agentDashboard": "管理後台",
     "signIn": "登入",
     "signOut": "登出",
-    "language": "語言"
+    "language": "語言",
+    "menu": "選單",
+    "closeMenu": "關閉選單"
   },
   "footer": {
     "tagline": "以在地專業與獨家數據，陪你找到理想的家。",

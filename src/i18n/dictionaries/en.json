@@ -29,7 +29,9 @@
     "agentDashboard": "Dashboard",
     "signIn": "Sign In",
     "signOut": "Sign Out",
-    "language": "Language"
+    "language": "Language",
+    "menu": "Menu",
+    "closeMenu": "Close menu"
   },
   "footer": {
     "tagline": "Local expertise and exclusive insights to help you find the perfect home.",

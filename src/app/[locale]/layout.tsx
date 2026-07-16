@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { NavAuth } from '@/components/auth/nav-auth';
 import { FavoritesProvider } from '@/components/favorites/favorites-provider';
 import { LocaleSwitcher } from '@/components/locale-switcher';
+import { MobileNav } from '@/components/mobile-nav';
 import { NavLinks } from '@/components/nav-links';
 import { isLocale, locales } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
@@ -54,6 +55,19 @@ export default async function RootLayout({
   // 品牌只呈現 agent 本人名字，不註明所屬仲介公司（PIVOT.md 2026-07-16 第二輪）
   const brand = agentName(site, dict.common.appName);
 
+  // 桌機與手機導覽共用同一份連結與登入標籤
+  const navLinks = [
+    { href: `/${locale}/search`, label: dict.nav.search },
+    { href: `/${locale}/about`, label: dict.nav.about },
+    { href: `/${locale}/contact`, label: dict.nav.contact },
+  ];
+  const authLabels = {
+    signIn: dict.nav.signIn,
+    signOut: dict.nav.signOut,
+    agentDashboard: dict.nav.agentDashboard,
+    favorites: dict.nav.favorites,
+  };
+
   return (
     <html
       lang={locale}
@@ -71,27 +85,26 @@ export default async function RootLayout({
                   {brand}
                 </span>
               </Link>
-              <div className="flex min-w-0 items-center gap-3 text-sm sm:gap-6">
+              {/* 桌機（md+）：完整橫向導覽 */}
+              <div className="hidden min-w-0 items-center gap-3 text-sm md:flex md:gap-6">
                 <NavLinks
-                  links={[
-                    { href: `/${locale}/search`, label: dict.nav.search },
-                    { href: `/${locale}/about`, label: dict.nav.about },
-                    { href: `/${locale}/contact`, label: dict.nav.contact },
-                  ]}
+                  links={navLinks}
                   activeClass="text-gold-soft font-semibold uppercase tracking-[0.14em] text-xs"
                   inactiveClass="text-white/75 transition-colors hover:text-gold-soft uppercase tracking-[0.14em] text-xs"
                 />
                 <LocaleSwitcher current={locale} label={dict.nav.language} />
-                <NavAuth
-                  locale={locale}
-                  labels={{
-                    signIn: dict.nav.signIn,
-                    signOut: dict.nav.signOut,
-                    agentDashboard: dict.nav.agentDashboard,
-                    favorites: dict.nav.favorites,
-                  }}
-                />
+                <NavAuth locale={locale} labels={authLabels} />
               </div>
+
+              {/* 手機（<md）：漢堡選單 */}
+              <MobileNav
+                locale={locale}
+                links={navLinks}
+                localeLabel={dict.nav.language}
+                authLabels={authLabels}
+                menuLabel={dict.nav.menu}
+                closeLabel={dict.nav.closeMenu}
+              />
             </div>
           </nav>
           {children}
