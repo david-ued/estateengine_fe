@@ -92,7 +92,15 @@ EstateEngine 從「多房仲 SaaS 平台」收斂為 **單一 agent 的個人品
 
 > 註：`agent/users`（會員管理）沿用既有 `components/admin/*` 與 `dict.admin`，本輪保留於側欄，未移除。買家設定頁的 display_name / 密碼寫入依賴 Supabase 已連線（`profiles` RLS 允許改自己的列）。
 
-## 6. ⚠️ 需 David 手動執行（本 session 權限限制）
+### 第四輪調整（2026-07-20，David 指示）— 會員轉換 / 親切聯絡 / 預售屋
 
-1. **套用 migrations**（二擇一）：Supabase Dashboard SQL Editor 依序執行 `20260710000005_ai_tokens.sql`（若未套用過）與 `20260716000001_single_agent_pivot.sql`；或在有 Supabase MCP 授權的 session 叫 Claude 套用。
-2. **資料歸戶**：`cd estateengine_be && node scripts/pivot-single-agent.mjs`（物件/分享清單歸戶到唯一 agent、其他 agent/admin 降 buyer、寫入品牌名片與 site_settings；會改動遠端資料，請先確認）。
+- [x] **獨家數據改登入限定**：內頁 `#exclusive` 深色區未登入時值以 `●●●●●` 遮罩（真實資料不進 HTML）+ `blur-sm`，上方覆蓋鎖頭 + 「登入解鎖獨家數據」+ 免費註冊 / 登入 CTA；登入 CTA 帶 `?next=` 回原物件頁（`login/page.tsx` + `LoginForm` 新增安全站內 `next` 轉址，僅接受 `/` 開頭且非 `//`）。
+- [x] **右下角浮動聯絡小窗**：`components/contact/contact-widget.tsx` 掛在 `(site)/layout.tsx`，全公開頁常駐（/contact 頁隱藏避免重複）。金色圓鈕 → 深色親切開場（頭像 + 「嗨，我是 {agent} 👋」+ 可問需求文案）+ 姓名/Email/訊息表單 → 免登入 POST /contact 進 agent 收件匣；於物件內頁開啟時自動帶 propertyId 關聯物件。
+- [x] **預售屋（pre-construction）**：`Property.is_presale`（BE migration `20260720000001_presale.sql`）；agent 建檔表單新增勾選；listing card 徽章優先序 預售屋 > 新上市 > 銷售中（ink 底金字）；內頁標頭加徽章、側欄 CTA 由「詢問此物件」換成 `RemindMe`（`components/property/remind-me.tsx`：展開姓名/Email 表單 → 以「【預售屋提醒登記】…」訊息寫入 contact_messages，已登入自動預填；之後串 email service 時以此前綴辨識）。
+- [x] 字典：`contactWidget.*`、`property.exclusiveLocked* / remind*`、`listings.presaleBadge`、`agentForm.isPresale`（zh-TW / en 同步）。
+- [x] 驗證：FE tsc / eslint 0 錯誤、`next build` 41 路由；瀏覽器走查（未登入）首頁與內頁小窗開合與文案、/contact 頁正確隱藏小窗、獨家數據遮罩 + CTA + `next` 連結正確、console / server 皆無錯誤。預售屋 UI 因遠端尚未套用新 migration，僅靜態驗證（見下方手動步驟）。
+
+## 6. ⚠️ 需 David 手動執行
+
+1. ~~套用 `20260710000005_ai_tokens.sql` + `20260716000001_single_agent_pivot.sql`~~ ✅ 2026-07-20 確認已套用（contact_messages / site_settings / favorites / saved_searches 皆存在，品牌資料已種）。
+2. **NEW（2026-07-20）**：SQL Editor 執行 `estateengine_be/supabase/migrations/20260720000001_presale.sql`（一行 `alter table properties add column is_presale`）。**套用前 agent 後台儲存物件會因欄位不存在而失敗**，請儘早執行。

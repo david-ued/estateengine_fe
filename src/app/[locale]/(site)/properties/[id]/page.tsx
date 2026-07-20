@@ -1,4 +1,4 @@
-import { IconChevronLeft } from '@tabler/icons-react';
+import { IconChevronLeft, IconLock } from '@tabler/icons-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -9,6 +9,7 @@ import { FeatureGrid, type FeatureRow } from '@/components/property/feature-grid
 import { MortgageCalculator } from '@/components/property/mortgage-calculator';
 import { PropertyGallery } from '@/components/property/property-gallery';
 import { PropertyMap } from '@/components/property/property-map';
+import { RemindMe } from '@/components/property/remind-me';
 import { ShareButton } from '@/components/property/share-button';
 import { ViewTracker } from '@/components/property/view-tracker';
 import { Reveal } from '@/components/reveal';
@@ -78,16 +79,17 @@ export default async function PropertyDetailPage({
   const { locale, id } = await params;
   if (!isLocale(locale)) notFound();
 
-  const [dict, publicProperty] = await Promise.all([
+  // session 同時供三處使用：私有物件 RLS fallback、獨家數據登入 gating、預售屋提醒預填
+  const [dict, publicProperty, session] = await Promise.all([
     getDictionary(locale),
     getProperty(id),
+    getUserProfile(),
   ]);
 
   // 公開 API 只回 published；未公開物件由 RLS 決定誰能看（擁有者）
   let property = publicProperty;
   let isPrivateView = false;
   if (!property) {
-    const session = await getUserProfile();
     if (session) {
       const supabase = await createClient();
       const { data } = await supabase
@@ -129,6 +131,8 @@ export default async function PropertyDetailPage({
   const sqft = Number(property.area_sqft);
   const dom = daysOnMarket(property.listed_at);
   const isPublished = property.status === 'published';
+  const isLoggedIn = Boolean(session);
+  const isPresale = property.is_presale === true;
   const isFresh = isPublished && dom !== null && dom <= FRESH_DAYS;
   const pricePerSqft = sqft > 0 ? Math.round(priceNumber / sqft) : null;
   const typeLabel = property.property_type
@@ -266,8 +270,13 @@ export default async function PropertyDetailPage({
 
       {/* 2. 標頭：徽章 / List Price / 標題 / 地址 */}
       <header className="py-8 sm:py-10">
-        {(isPublished || isFresh) && (
+        {(isPublished || isFresh || isPresale) && (
           <div className="mb-4 flex flex-wrap items-center gap-2">
+            {isPresale && (
+              <span className={`${badgeClass} bg-ink text-gold-soft`}>
+                {dict.listings.presaleBadge}
+              </span>
+            )}
             {isPublished && (
               <span className={`${badgeClass} bg-emerald-800 text-white`}>
                 {dict.listings.activeBadge}
@@ -371,7 +380,8 @@ export default async function PropertyDetailPage({
             </Reveal>
           )}
 
-          {/* 8. #exclusive：獨家數據（深色區塊突顯差異化） */}
+          {/* 8. #exclusive：獨家數據（深色區塊突顯差異化）。
+              未登入僅見模糊佔位（值以 ●●● 遮罩、不進 HTML）+ 註冊/登入 CTA。 */}
           <Reveal>
             <section
               id="exclusive"
@@ -380,17 +390,54 @@ export default async function PropertyDetailPage({
               <h2 className="font-display text-2xl sm:text-3xl">{p.exclusiveTitle}</h2>
               <div className="gold-rule mt-4" />
               <p className="mt-4 text-sm text-white/60">{p.exclusiveHint}</p>
-              <dl className="mt-6 grid gap-x-12 sm:grid-cols-2">
-                {exclusiveRows.map((row) => (
-                  <div
-                    key={row.label}
-                    className="flex items-baseline justify-between gap-6 border-b border-white/10 py-3 text-sm"
-                  >
-                    <dt className="shrink-0 text-white/55">{row.label}</dt>
-                    <dd className="text-right">{row.value}</dd>
+              <div className="relative">
+                <dl
+                  aria-hidden={!isLoggedIn}
+                  className={`mt-6 grid gap-x-12 sm:grid-cols-2 ${
+                    isLoggedIn ? '' : 'pointer-events-none select-none blur-sm'
+                  }`}
+                >
+                  {(isLoggedIn
+                    ? exclusiveRows
+                    : exclusiveRows.map((row) => ({
+                        label: row.label,
+                        value: '●●●●●',
+                      }))
+                  ).map((row) => (
+                    <div
+                      key={row.label}
+                      className="flex items-baseline justify-between gap-6 border-b border-white/10 py-3 text-sm"
+                    >
+                      <dt className="shrink-0 text-white/55">{row.label}</dt>
+                      <dd className="text-right">{row.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                {!isLoggedIn && (
+                  <div className="absolute inset-0 z-10 flex items-center justify-center bg-ink/70 p-6">
+                    <div className="max-w-md text-center">
+                      <IconLock size={30} className="mx-auto text-gold-soft" aria-hidden />
+                      <h3 className="mt-4 font-display text-xl sm:text-2xl">
+                        {p.exclusiveLockedTitle}
+                      </h3>
+                      <p className="mt-3 text-sm leading-relaxed text-white/70">
+                        {p.exclusiveLockedBody}
+                      </p>
+                      <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                        <Link href={`/${locale}/signup`} className={btn.onDark}>
+                          {p.exclusiveSignupCta}
+                        </Link>
+                        <Link
+                          href={`/${locale}/login?next=${encodeURIComponent(`/${locale}/properties/${property.id}`)}`}
+                          className={btn.onDark}
+                        >
+                          {p.exclusiveLoginCta}
+                        </Link>
+                      </div>
+                    </div>
                   </div>
-                ))}
-              </dl>
+                )}
+              </div>
             </section>
           </Reveal>
 
@@ -441,9 +488,24 @@ export default async function PropertyDetailPage({
                 )}
               </>
             )}
-            <Link href={inquireHref} className={`${btn.primary} mt-6 w-full`}>
-              {p.inquire}
-            </Link>
+            {isPresale ? (
+              <RemindMe
+                locale={locale}
+                propertyId={property.id}
+                propertyTitle={property.title}
+                labels={p}
+                defaultName={
+                  session?.profile.display_name ??
+                  session?.profile.full_name ??
+                  undefined
+                }
+                defaultEmail={session?.user.email}
+              />
+            ) : (
+              <Link href={inquireHref} className={`${btn.primary} mt-6 w-full`}>
+                {p.inquire}
+              </Link>
+            )}
           </section>
         </aside>
       </div>

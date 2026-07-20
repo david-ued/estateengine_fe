@@ -54,6 +54,8 @@ export interface Property {
   baths: number;
   property_type: string | null;
   has_parking: boolean;
+  /** 預售屋：內頁 CTA 改「提醒我」（migration 20260720000001 前可能為 undefined） */
+  is_presale?: boolean;
   school_district: string | null;
   transit_notes: string | null;
   flood_zone: boolean;

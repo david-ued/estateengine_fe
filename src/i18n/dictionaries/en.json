@@ -129,6 +129,7 @@
     "next": "Next",
     "newBadge": "New",
     "activeBadge": "Active",
+    "presaleBadge": "Pre-Construction",
     "mapView": "Map",
     "listView": "List",
     "sortLabel": "Sort",
@@ -210,7 +211,21 @@
     "listedBy": "Listed By",
     "statusBanner": "This listing is not public ({status}); only the owner can see it",
     "backToListings": "Back to Search",
-    "photoAlt": "{title} photo {index}"
+    "photoAlt": "{title} photo {index}",
+    "exclusiveLockedTitle": "Sign in to unlock exclusive data",
+    "exclusiveLockedBody": "Create a free account to view school districts, transit, feng shui orientation, builder reputation and material grades — local intel you won't find on typical platforms.",
+    "exclusiveLoginCta": "Sign In",
+    "exclusiveSignupCta": "Sign Up Free",
+    "remindCta": "Remind Me",
+    "remindTitle": "Pre-Construction Updates",
+    "remindBody": "Leave your contact info and I'll personally notify you the moment there's news — launch, completion, or open house!",
+    "remindName": "Name",
+    "remindEmail": "Email",
+    "remindSubmit": "Sign Me Up",
+    "remindSending": "Signing up…",
+    "remindSuccess": "You're on the list! I'll reach out as soon as there's an update 😊",
+    "remindError": "Something went wrong — please try again or contact me directly.",
+    "remindMessage": "[Pre-construction reminder] Please notify me when \"{title}\" has updates (launch / completion / open house)."
   },
   "about": {
     "title": "About Me",
@@ -240,6 +255,15 @@
     "infoPhone": "Phone",
     "infoEmail": "Email",
     "infoLine": "LINE"
+  },
+  "contactWidget": {
+    "open": "Contact Agent",
+    "close": "Close chat window",
+    "greeting": "Hi, I'm {name} 👋",
+    "intro": "Buying, selling, neighbourhood insights — or anything else on your mind. Leave me a note and I'll get back to you shortly!",
+    "success": "Got your message!",
+    "successBody": "I'll get back to you within 24 hours — or feel free to give me a call 😊",
+    "sendAnother": "Send another message"
   },
   "account": {
     "title": "My Account",
@@ -384,6 +408,7 @@
       "apartment": "Apartment"
     },
     "hasParking": "Parking Included",
+    "isPresale": "Pre-construction (buyers will see a \"Remind Me\" CTA instead of booking a viewing)",
     "schoolDistrict": "School District",
     "transitNotes": "Transit Notes",
     "floodZone": "In Flood Zone",

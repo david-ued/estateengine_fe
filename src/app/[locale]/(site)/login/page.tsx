@@ -7,8 +7,12 @@ import { getUserProfile, homePathForRole } from '@/lib/auth';
 
 export default async function LoginPage({
   params,
-}: Readonly<{ params: Promise<{ locale: string }> }>) {
-  const { locale } = await params;
+  searchParams,
+}: Readonly<{
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ next?: string }>;
+}>) {
+  const [{ locale }, { next }] = await Promise.all([params, searchParams]);
   if (!isLocale(locale)) notFound();
 
   // 已登入者直接送往角色對應的介面
@@ -23,7 +27,7 @@ export default async function LoginPage({
         <h1 className="font-display text-3xl">{dict.auth.loginTitle}</h1>
         <p className="mt-3 text-sm text-neutral-500">{dict.auth.loginSubtitle}</p>
       </div>
-      <LoginForm locale={locale} labels={dict.auth} />
+      <LoginForm locale={locale} labels={dict.auth} next={next} />
       <p className="text-center text-sm text-neutral-500">
         {dict.auth.noAccount}{' '}
         <Link href={`/${locale}/signup`} className="font-medium underline">

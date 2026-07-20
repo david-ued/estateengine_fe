@@ -129,6 +129,7 @@
     "next": "下一頁",
     "newBadge": "新上市",
     "activeBadge": "銷售中",
+    "presaleBadge": "預售屋",
     "mapView": "地圖",
     "listView": "列表",
     "sortLabel": "排序",
@@ -210,7 +211,21 @@
     "listedBy": "專屬房仲",
     "statusBanner": "此物件尚未公開（{status}），只有物件擁有者看得到",
     "backToListings": "返回搜尋",
-    "photoAlt": "{title} 照片 {index}"
+    "photoAlt": "{title} 照片 {index}",
+    "exclusiveLockedTitle": "登入解鎖獨家數據",
+    "exclusiveLockedBody": "免費註冊會員，即可查看學區、交通、風水座向、建商評價與建材等級等一般平台沒有的在地情報。",
+    "exclusiveLoginCta": "登入",
+    "exclusiveSignupCta": "免費註冊",
+    "remindCta": "有新進度提醒我",
+    "remindTitle": "預售屋進度通知",
+    "remindBody": "留下聯絡方式，開案、完工、開放賞屋等最新進度，我會第一時間通知你！",
+    "remindName": "姓名",
+    "remindEmail": "電子郵件",
+    "remindSubmit": "登記提醒",
+    "remindSending": "登記中…",
+    "remindSuccess": "已為你登記！有最新進度我會馬上通知你 😊",
+    "remindError": "登記失敗，請稍後再試或直接與我聯絡。",
+    "remindMessage": "【預售屋提醒登記】請在「{title}」有最新進度（開案 / 完工 / 開放賞屋）時通知我。"
   },
   "about": {
     "title": "關於我",
@@ -240,6 +255,15 @@
     "infoPhone": "電話",
     "infoEmail": "Email",
     "infoLine": "LINE"
+  },
+  "contactWidget": {
+    "open": "聯絡房仲",
+    "close": "關閉聊天視窗",
+    "greeting": "嗨，我是 {name} 👋",
+    "intro": "買房、賣房、區域行情，或任何看屋需求，都可以直接問我！留言後我會盡快回覆你。",
+    "success": "收到你的訊息了！",
+    "successBody": "我會在 24 小時內回覆你，也歡迎直接來電聊聊 😊",
+    "sendAnother": "再留一則訊息"
   },
   "account": {
     "title": "我的帳號",
@@ -384,6 +408,7 @@
       "apartment": "公寓"
     },
     "hasParking": "含車位",
+    "isPresale": "預售屋（尚未完工交屋，前台將顯示「提醒我」取代預約賞屋）",
     "schoolDistrict": "學區",
     "transitNotes": "交通備註",
     "floodZone": "位於淹水區",

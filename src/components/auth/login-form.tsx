@@ -9,7 +9,8 @@ import { createClient } from '@/lib/supabase/client';
 export function LoginForm({
   locale,
   labels,
-}: Readonly<{ locale: string; labels: Dictionary['auth'] }>) {
+  next,
+}: Readonly<{ locale: string; labels: Dictionary['auth']; next?: string }>) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,14 +35,16 @@ export function LoginForm({
     }
 
     // 依角色導向（雙角色，PIVOT.md）：agent → 後台、buyer → 首頁
+    // buyer 帶安全的站內 next（如獨家數據 gating CTA）時導回原頁
     const { data: profile } = await supabase
       .from('profiles')
       .select('role')
       .eq('id', data.user.id)
       .single();
 
+    const safeNext = next?.startsWith('/') && !next.startsWith('//') ? next : null;
     const destination =
-      profile?.role === 'agent' ? `/${locale}/agent` : `/${locale}`;
+      profile?.role === 'agent' ? `/${locale}/agent` : (safeNext ?? `/${locale}`);
 
     router.push(destination);
     router.refresh();

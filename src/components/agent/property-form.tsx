@@ -100,6 +100,7 @@ export function PropertyForm({
       baths: num('baths') ?? 0,
       propertyType: text('propertyType'),
       hasParking: form.get('hasParking') === 'on',
+      isPresale: form.get('isPresale') === 'on',
       schoolDistrict: text('schoolDistrict'),
       transitNotes: text('transitNotes'),
       floodZone: form.get('floodZone') === 'on',
@@ -322,6 +323,15 @@ export function PropertyForm({
             className="size-5"
           />
           {labels.hasParking}
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            name="isPresale"
+            type="checkbox"
+            defaultChecked={property?.is_presale ?? false}
+            className="size-5"
+          />
+          {labels.isPresale}
         </label>
       </section>
 

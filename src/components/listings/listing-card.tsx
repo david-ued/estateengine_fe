@@ -35,6 +35,7 @@ export function ListingCard({
   const dom = daysOnMarket(property.listed_at);
   const agent = property.agent;
   const isFresh = dom !== null && dom <= FRESH_DAYS;
+  const isPresale = property.is_presale === true;
 
   // 特色標籤：頂級建材 / 優質學區（獨家數據差異化）
   const tags: string[] = [];
@@ -74,12 +75,21 @@ export function ListingCard({
                 🏠
               </div>
             )}
+            {/* 徽章優先序：預售屋 > 新上市 > 銷售中 */}
             <span
-              className={`absolute left-3 top-3 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-white ${
-                isFresh ? 'bg-gold' : 'bg-emerald-800'
+              className={`absolute left-3 top-3 px-2.5 py-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] ${
+                isPresale
+                  ? 'bg-ink text-gold-soft'
+                  : isFresh
+                    ? 'bg-gold text-white'
+                    : 'bg-emerald-800 text-white'
               }`}
             >
-              {isFresh ? dict.listings.newBadge : dict.listings.activeBadge}
+              {isPresale
+                ? dict.listings.presaleBadge
+                : isFresh
+                  ? dict.listings.newBadge
+                  : dict.listings.activeBadge}
             </span>
             {dom !== null && (
               <span className="absolute bottom-3 left-3 bg-black/45 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm">

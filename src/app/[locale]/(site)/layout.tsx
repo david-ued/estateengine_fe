@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { NavAuth } from '@/components/auth/nav-auth';
+import { ContactWidget } from '@/components/contact/contact-widget';
 import { LocaleSwitcher } from '@/components/locale-switcher';
 import { MobileNav } from '@/components/mobile-nav';
 import { NavLinks } from '@/components/nav-links';
@@ -148,6 +149,14 @@ export default async function SiteLayout({
           </Link>
         </div>
       </footer>
+      {/* 右下角浮動聯絡小窗（親切留言 → agent 收件匣） */}
+      <ContactWidget
+        locale={locale}
+        agentName={brand}
+        avatarUrl={site.agent?.avatar_url ?? null}
+        labels={dict.contactWidget}
+        form={dict.contact}
+      />
     </>
   );
 }
