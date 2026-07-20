@@ -252,7 +252,26 @@
     "deleteConfirm": "Delete this item?",
     "savedOn": "Saved on",
     "unavailable": "Off market",
-    "actionError": "Action failed. Please try again."
+    "actionError": "Action failed. Please try again.",
+    "navSaved": "Saved",
+    "navSettings": "Settings",
+    "settings": {
+      "title": "Account Settings",
+      "profileSection": "Profile",
+      "email": "Email",
+      "emailReadonly": "Email can't be changed here.",
+      "displayName": "Display name",
+      "passwordSection": "Change password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "updatePassword": "Update password",
+      "passwordMismatch": "Passwords don't match.",
+      "passwordTooShort": "Password must be at least 6 characters.",
+      "saveError": "Save failed. Please try again."
+    }
   },
   "admin": {
     "usersTitle": "Members",
@@ -288,6 +307,7 @@
     "inboxNav": "Messages",
     "brandNav": "Brand Settings",
     "usersNav": "Members",
+    "viewSite": "View site",
     "edit": "Edit",
     "actions": {
       "publish": "Publish",

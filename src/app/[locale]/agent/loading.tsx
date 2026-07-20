@@ -1,6 +1,6 @@
 export default function LoadingAgent() {
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 p-8">
+    <main className="mx-auto w-full max-w-5xl flex-1 p-4 sm:p-8">
       <div className="mb-6 flex items-center justify-between">
         <div className="skeleton h-7 w-32" />
         <div className="skeleton h-9 w-28" />

@@ -82,6 +82,16 @@ EstateEngine 從「多房仲 SaaS 平台」收斂為 **單一 agent 的個人品
 
 > ⚠️ 資料註記：DB 目前有兩個 agent 帳號（`agent@estateengine.test` 測試種子 + `davidlin1727@gmail.com` 真實帳號），兩者顯示名稱都已更新為 Tim Lin。跑歸戶腳本時請用參數指定要保留哪一個：`node scripts/pivot-single-agent.mjs davidlin1727@gmail.com`（或不帶參數保留最早的測試帳號）。
 
+### 第三輪調整（2026-07-16，David 指示）— 後台重新整頓
+
+- [x] **Route group 重構**：`[locale]/layout.tsx` 精簡為 html/body/字體/`FavoritesProvider` 純外殼；行銷版深色頁首+頁尾移入新 group `[locale]/(site)/layout.tsx`，所有公開頁（首頁 / search / properties / about / contact / login / signup / account / share / terms / privacy / `[...rest]`）移入 `(site)`（route group 不影響 URL）。頁面轉場 `template.tsx` 下放到 `(site)` 與 `agent`，頁首/頁尾不再隨導航重播。
+- [x] **Agent 後台改左側 side nav**：新增 `components/agent/agent-shell.tsx`（shadcn 風格、`@tabler/icons-react` 圖示、`lib/utils.ts` 的 `cn()`）。深色 ink 側欄＋金色 active，桌機常駐、手機為漢堡抽屜；底部含使用者名稱 / 回到網站 / 登出。`agent/layout.tsx` 改用此外殼，後台不再套行銷頁首/頁尾。導覽項目：我的物件 / 新增物件 / 推薦清單 / 聯絡訊息 / 品牌設定 / 會員管理。
+- [x] **Buyer 不做獨立後台**：帳號區續留行銷殼、由 `NavAuth` 反應登入狀態。`/account` 加水平子導覽（收藏與搜尋 ↔ 帳號設定）；新增 `/account/settings`（`ProfileSettingsForm`：更新 `profiles.display_name` + `supabase.auth.updateUser` 變更密碼，email 唯讀）。
+- [x] 字典：`account.navSaved/navSettings/settings.*`、`agent.viewSite`（zh-TW / en 同步）。
+- [x] 驗證：`next build` 39 路由正常（含 `/[locale]/account/settings`，`(site)` 不進 URL）、FE tsc/eslint 0 錯誤。
+
+> 註：`agent/users`（會員管理）沿用既有 `components/admin/*` 與 `dict.admin`，本輪保留於側欄，未移除。買家設定頁的 display_name / 密碼寫入依賴 Supabase 已連線（`profiles` RLS 允許改自己的列）。
+
 ## 6. ⚠️ 需 David 手動執行（本 session 權限限制）
 
 1. **套用 migrations**（二擇一）：Supabase Dashboard SQL Editor 依序執行 `20260710000005_ai_tokens.sql`（若未套用過）與 `20260716000001_single_agent_pivot.sql`；或在有 Supabase MCP 授權的 session 叫 Claude 套用。

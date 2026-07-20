@@ -1,6 +1,6 @@
 export default function LoadingEditProperty() {
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 p-8">
+    <main className="mx-auto w-full max-w-3xl flex-1 p-4 sm:p-8">
       <div className="skeleton mb-6 h-4 w-24" />
       <div className="skeleton mb-8 h-7 w-40" />
       {Array.from({ length: 3 }).map((_, index) => (

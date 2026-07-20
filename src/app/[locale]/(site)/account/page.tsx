@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
+import { AccountTabs } from '@/components/account/account-tabs';
 import { SavedSearchList } from '@/components/account/saved-search-list';
 import { ListingCard } from '@/components/listings/listing-card';
 import { badgeClass, btn } from '@/components/ui/styles';
@@ -62,6 +63,14 @@ export default async function AccountPage({
         <h1 className="font-display text-3xl sm:text-4xl">{dict.account.title}</h1>
         <div className="gold-rule mt-5" />
       </header>
+
+      <AccountTabs
+        locale={locale}
+        labels={{
+          saved: dict.account.navSaved,
+          settings: dict.account.navSettings,
+        }}
+      />
 
       {data === null ? (
         <div className="mt-12 flex flex-col items-center gap-4 border border-neutral-200 py-16 text-center dark:border-neutral-800">

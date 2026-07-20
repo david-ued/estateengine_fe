@@ -91,7 +91,7 @@ export default async function AgentDashboardPage({
   };
 
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 p-8">
+    <main className="mx-auto w-full max-w-5xl flex-1 p-4 sm:p-8">
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-xl font-bold">{dict.agent.myListings}</h2>
         <Link href={`/${locale}/agent/properties/new`} className={btn.primary}>

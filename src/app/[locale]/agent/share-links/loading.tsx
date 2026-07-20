@@ -1,6 +1,6 @@
 export default function LoadingShareLinks() {
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 p-8">
+    <main className="mx-auto w-full max-w-5xl flex-1 p-4 sm:p-8">
       <div className="skeleton mb-6 h-7 w-44" />
       <div className="mb-8 rounded-2xl border border-neutral-200 p-5 dark:border-neutral-800">
         <div className="skeleton mb-4 h-5 w-36" />
