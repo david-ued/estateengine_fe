@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
+import { SignupModal } from '@/components/auth/signup-modal';
 import { FavoriteButton } from '@/components/favorites/favorite-button';
 import { EmbedFrame } from '@/components/property/embed-frame';
 import { FeatureGrid, type FeatureRow } from '@/components/property/feature-grid';
@@ -176,6 +177,8 @@ export default async function PropertyDetailPage({
   ];
 
   const additionalRows: FeatureRow[] = [];
+  if (property.mls_number)
+    additionalRows.push({ label: p.mlsNumber, value: property.mls_number });
   if (typeLabel) additionalRows.push({ label: p.type, value: typeLabel });
   additionalRows.push({
     label: p.status,
@@ -424,9 +427,12 @@ export default async function PropertyDetailPage({
                         {p.exclusiveLockedBody}
                       </p>
                       <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                        <Link href={`/${locale}/signup`} className={btn.onDark}>
-                          {p.exclusiveSignupCta}
-                        </Link>
+                        <SignupModal
+                          labels={dict.auth}
+                          triggerLabel={p.exclusiveSignupCta}
+                          triggerClass={btn.onDark}
+                          closeLabel={dict.common.close}
+                        />
                         <Link
                           href={`/${locale}/login?next=${encodeURIComponent(`/${locale}/properties/${property.id}`)}`}
                           className={btn.onDark}
@@ -475,6 +481,12 @@ export default async function PropertyDetailPage({
                     <p className="truncate font-display text-lg">
                       {agent.display_name ?? agent.full_name}
                     </p>
+                    {/* BCFSA 廣告規範：brokerage 名稱一經設定即揭露（目前 DB 為 null，畫面不變） */}
+                    {agent.agency_name && (
+                      <p className="mt-0.5 truncate text-xs text-neutral-500">
+                        {agent.agency_name}
+                      </p>
+                    )}
                   </div>
                 </Link>
                 {agent.phone && (

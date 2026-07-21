@@ -225,7 +225,9 @@
     "remindSending": "Signing up…",
     "remindSuccess": "You're on the list! I'll reach out as soon as there's an update 😊",
     "remindError": "Something went wrong — please try again or contact me directly.",
-    "remindMessage": "[Pre-construction reminder] Please notify me when \"{title}\" has updates (launch / completion / open house)."
+    "remindMessage": "[Pre-construction reminder] Please notify me when \"{title}\" has updates (launch / completion / open house).",
+    "mlsNumber": "MLS® Number",
+    "remindConsent": "I consent to receive email updates about this property (unsubscribe anytime)"
   },
   "about": {
     "title": "About Me",
@@ -254,7 +256,8 @@
     "infoTitle": "Direct Contact",
     "infoPhone": "Phone",
     "infoEmail": "Email",
-    "infoLine": "LINE"
+    "infoLine": "LINE",
+    "caslConsent": "I consent to be contacted by email about this inquiry (unsubscribe anytime)"
   },
   "contactWidget": {
     "open": "Contact Agent",
@@ -459,7 +462,8 @@
     "photosSection": "Photos",
     "upload": "Upload Photos",
     "uploading": "Uploading…",
-    "uploadError": "Upload failed. Please retry."
+    "uploadError": "Upload failed. Please retry.",
+    "mlsNumber": "MLS® Number (optional)"
   },
   "share": {
     "curatedTitle": "Curated for You",

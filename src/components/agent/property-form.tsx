@@ -101,6 +101,7 @@ export function PropertyForm({
       propertyType: text('propertyType'),
       hasParking: form.get('hasParking') === 'on',
       isPresale: form.get('isPresale') === 'on',
+      mlsNumber: text('mlsNumber'),
       schoolDistrict: text('schoolDistrict'),
       transitNotes: text('transitNotes'),
       floodZone: form.get('floodZone') === 'on',
@@ -296,6 +297,15 @@ export function PropertyForm({
               type="number"
               min="0"
               defaultValue={property?.baths ?? 0}
+              className={inputClass}
+            />
+          </label>
+          <label className={labelClass}>
+            {labels.mlsNumber}
+            <input
+              name="mlsNumber"
+              maxLength={30}
+              defaultValue={property?.mls_number ?? ''}
               className={inputClass}
             />
           </label>

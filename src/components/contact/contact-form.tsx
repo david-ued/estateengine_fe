@@ -32,6 +32,7 @@ export function ContactForm({
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [message, setMessage] = useState('');
+  const [casl, setCasl] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -48,12 +49,14 @@ export function ContactForm({
           message,
           propertyId,
           locale,
+          caslConsent: casl,
         }),
       });
       setName('');
       setEmail('');
       setPhone('');
       setMessage('');
+      setCasl(false);
       setStatus('success');
     } catch {
       setStatus('error');
@@ -114,6 +117,18 @@ export function ContactForm({
           onChange={(e) => setMessage(e.target.value)}
           className={inputClass}
         />
+      </label>
+
+      {/* CASL：明示同意（送出必勾），後端記 casl_consent_at */}
+      <label className="flex items-start gap-2 text-xs leading-relaxed text-neutral-500">
+        <input
+          type="checkbox"
+          required
+          checked={casl}
+          onChange={(e) => setCasl(e.target.checked)}
+          className="mt-0.5 size-4 shrink-0"
+        />
+        {labels.caslConsent}
       </label>
 
       {status === 'success' && (

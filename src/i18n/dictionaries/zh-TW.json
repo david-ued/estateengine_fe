@@ -225,7 +225,9 @@
     "remindSending": "登記中…",
     "remindSuccess": "已為你登記！有最新進度我會馬上通知你 😊",
     "remindError": "登記失敗，請稍後再試或直接與我聯絡。",
-    "remindMessage": "【預售屋提醒登記】請在「{title}」有最新進度（開案 / 完工 / 開放賞屋）時通知我。"
+    "remindMessage": "【預售屋提醒登記】請在「{title}」有最新進度（開案 / 完工 / 開放賞屋）時通知我。",
+    "mlsNumber": "MLS® 編號",
+    "remindConsent": "我同意透過電子郵件接收此物件的進度通知（可隨時取消訂閱）"
   },
   "about": {
     "title": "關於我",
@@ -254,7 +256,8 @@
     "infoTitle": "直接聯絡",
     "infoPhone": "電話",
     "infoEmail": "Email",
-    "infoLine": "LINE"
+    "infoLine": "LINE",
+    "caslConsent": "我同意就此詢問透過電子郵件與我聯繫（可隨時取消訂閱）"
   },
   "contactWidget": {
     "open": "聯絡房仲",
@@ -459,7 +462,8 @@
     "photosSection": "照片管理",
     "upload": "上傳照片",
     "uploading": "上傳中…",
-    "uploadError": "上傳失敗，請重試"
+    "uploadError": "上傳失敗，請重試",
+    "mlsNumber": "MLS® 編號（選填）"
   },
   "share": {
     "curatedTitle": "專屬推薦清單",

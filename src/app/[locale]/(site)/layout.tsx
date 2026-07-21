@@ -135,6 +135,9 @@ export default async function SiteLayout({
           <span>
             © {new Date().getFullYear()} {brand}. {dict.footer.rights}.
           </span>
+          {/* BCFSA 廣告規範：brokerage 名稱一經設定即於全站 footer 揭露（目前 DB 為 null，畫面不變） */}
+          {site.agent?.agency_name && <span>{site.agent.agency_name}</span>}
+          {site.agent?.license_no && <span>Lic. {site.agent.license_no}</span>}
           <Link
             href={`/${locale}/terms`}
             className="transition-colors hover:text-gold-soft"

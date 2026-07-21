@@ -37,6 +37,17 @@
 - [ ] sitemap 補已上架物件動態 URL
 - [ ] 內頁 / 列表頁 per-page hreflang alternates
 
+## 🎯 MLS 認證房仲正式使用缺口（2026-07-21 分析，完整清單見 `estateengine_be/TODO.md` 同名段落）
+
+> **已做（同日）**：建檔表單 + 內頁「MLS® 編號」、聯絡表單與預售屋提醒 CASL 必勾同意、
+> footer 與內頁名片 brokerage / 牌照條件揭露（`agency_name` 填回 DB 即顯示，目前 null 畫面不變）。
+
+- [ ] Cookie / 追蹤同意橫幅（PIPEDA / BC PIPA：全站有瀏覽/停留/影片點擊追蹤）
+- [ ] 預約賞屋時段選擇（行事曆或 Calendly 嵌入，內頁 CTA 升級）
+- [ ] Open House 場次欄位 + 列表標籤（原「標籤概念」待辦升級為正式功能）
+- [ ] Sold Properties / Testimonials 從「之後再補」提前（成交力證明；Sold 價格須登入可見＝VOW 規則）
+- [ ] 帳號資料匯出 / 刪除流程（PIPEDA 資料權利）
+
 ## 📦 之後再補（參考站 sitemap 的延伸頁）
 - Sold Properties（已成交作品集）
 - Testimonials（客戶見證）

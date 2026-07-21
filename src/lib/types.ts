@@ -56,6 +56,8 @@ export interface Property {
   has_parking: boolean;
   /** 預售屋：內頁 CTA 改「提醒我」（migration 20260720000001 前可能為 undefined） */
   is_presale?: boolean;
+  /** MLS® 刊登編號（手動建檔可空） */
+  mls_number?: string | null;
   school_district: string | null;
   transit_notes: string | null;
   flood_zone: boolean;

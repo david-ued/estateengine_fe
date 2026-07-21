@@ -36,6 +36,7 @@ export function RemindMe({
   const [expanded, setExpanded] = useState(false);
   const [name, setName] = useState(defaultName ?? '');
   const [email, setEmail] = useState(defaultEmail ?? '');
+  const [casl, setCasl] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -50,6 +51,7 @@ export function RemindMe({
           message: labels.remindMessage.replace('{title}', propertyTitle),
           propertyId,
           locale,
+          caslConsent: casl,
         }),
       });
       setStatus('success');
@@ -105,6 +107,17 @@ export function RemindMe({
           onChange={(e) => setEmail(e.target.value)}
           className={inputClass}
         />
+      </label>
+      {/* CASL：提醒登記本質是行銷 email，必須明示同意（後端記 casl_consent_at） */}
+      <label className="flex items-start gap-2 text-xs leading-relaxed text-neutral-500">
+        <input
+          type="checkbox"
+          required
+          checked={casl}
+          onChange={(e) => setCasl(e.target.checked)}
+          className="mt-0.5 size-4 shrink-0"
+        />
+        {labels.remindConsent}
       </label>
       {status === 'error' && (
         <p className={errorTextClass} role="alert">
