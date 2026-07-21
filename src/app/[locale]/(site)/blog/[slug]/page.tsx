@@ -2,10 +2,15 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { articleDate } from '@/components/blog/article-card';
+import {
+  ArticleActions,
+  ReadingProgress,
+} from '@/components/blog/article-reader';
 import { btn } from '@/components/ui/styles';
 import { isLocale } from '@/i18n/config';
 import { getDictionary } from '@/i18n/get-dictionary';
 import { ApiError, apiFetch } from '@/lib/api';
+import { readingTimeMinutes } from '@/lib/reading-time';
 import type { Article } from '@/lib/types';
 
 async function fetchArticle(slug: string): Promise<Article | null> {
@@ -57,8 +62,29 @@ export default async function ArticlePage({
   const authorName =
     article.author?.display_name ?? article.author?.full_name ?? null;
 
+  const minutes = readingTimeMinutes(article.content_html);
+  const readingLabel = dict.blog.readingTime.replace('{n}', String(minutes));
+  const actionLabels = {
+    clap: dict.blog.clap,
+    shareOnX: dict.blog.shareOnX,
+    shareOnFacebook: dict.blog.shareOnFacebook,
+    shareOnLinkedin: dict.blog.shareOnLinkedin,
+    copyLink: dict.blog.copyLink,
+    copied: dict.blog.copied,
+  };
+
   return (
     <main className="flex-1 bg-white">
+      <ReadingProgress />
+
+      {/* 桌機右側 Medium 式浮動互動列 */}
+      <ArticleActions
+        slug={article.slug}
+        title={article.title}
+        labels={actionLabels}
+        variant="rail"
+      />
+
       <article className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-8 sm:py-20">
         <header className="fade-up text-center">
           <Link
@@ -80,10 +106,12 @@ export default async function ArticlePage({
               />
             )}
             {authorName && <span>{authorName}</span>}
-            <span aria-hidden="true">·</span>
+            {authorName && <span aria-hidden="true">·</span>}
             <time dateTime={article.published_at ?? undefined}>
               {articleDate(article, locale)}
             </time>
+            <span aria-hidden="true">·</span>
+            <span>{readingLabel}</span>
           </div>
           <div className="gold-rule mx-auto mt-8" />
         </header>
@@ -104,6 +132,16 @@ export default async function ArticlePage({
           className="article-prose mt-10"
           dangerouslySetInnerHTML={{ __html: article.content_html ?? '' }}
         />
+
+        {/* 行動裝置：文末置中互動列（桌機改用右側浮動列） */}
+        <div className="mt-12 border-t border-neutral-200 pt-8 dark:border-neutral-800">
+          <ArticleActions
+            slug={article.slug}
+            title={article.title}
+            labels={actionLabels}
+            variant="inline"
+          />
+        </div>
       </article>
 
       {/* 文末聯絡 CTA（延續全站深色帶收尾） */}

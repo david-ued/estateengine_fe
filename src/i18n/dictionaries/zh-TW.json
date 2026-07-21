@@ -509,7 +509,14 @@
     "eyebrow": "市場觀點",
     "subtitle": "掌握房市趨勢、購屋策略與在地生活情報。",
     "empty": "文章即將上線，敬請期待。",
-    "backToList": "回專欄列表"
+    "backToList": "回專欄列表",
+    "readingTime": "{n} 分鐘閱讀",
+    "clap": "拍手",
+    "shareOnX": "分享到 X",
+    "shareOnFacebook": "分享到 Facebook",
+    "shareOnLinkedin": "分享到 LinkedIn",
+    "copyLink": "複製連結",
+    "copied": "已複製"
   },
   "agentBlog": {
     "listTitle": "專欄文章",

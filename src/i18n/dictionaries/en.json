@@ -509,7 +509,14 @@
     "eyebrow": "Market Insights",
     "subtitle": "Market trends, buying strategy, and local know-how.",
     "empty": "Articles coming soon — stay tuned.",
-    "backToList": "Back to all articles"
+    "backToList": "Back to all articles",
+    "readingTime": "{n} min read",
+    "clap": "Clap",
+    "shareOnX": "Share on X",
+    "shareOnFacebook": "Share on Facebook",
+    "shareOnLinkedin": "Share on LinkedIn",
+    "copyLink": "Copy link",
+    "copied": "Copied"
   },
   "agentBlog": {
     "listTitle": "Articles",
