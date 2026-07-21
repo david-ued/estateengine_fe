@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { ArticleCard } from '@/components/blog/article-card';
 import { ListingCard } from '@/components/listings/listing-card';
 import { Reveal } from '@/components/reveal';
 import { btn } from '@/components/ui/styles';
@@ -9,7 +10,7 @@ import { getDictionary } from '@/i18n/get-dictionary';
 import { apiFetch } from '@/lib/api';
 import { coverImageUrl } from '@/lib/media';
 import { agentName, getSite, siteCopy } from '@/lib/site';
-import type { PagedResult, Property } from '@/lib/types';
+import type { Article, PagedResult, Property } from '@/lib/types';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000';
 
@@ -18,6 +19,19 @@ async function fetchFeatured(): Promise<Property[]> {
   try {
     const result = await apiFetch<PagedResult<Property>>(
       '/properties?page=1&pageSize=6&sort=newest',
+      { next: { revalidate: 60 } } as RequestInit,
+    );
+    return result.items;
+  } catch {
+    return [];
+  }
+}
+
+/** 首頁精選文章（is_featured）：沒有精選就整段隱藏 */
+async function fetchFeaturedArticles(): Promise<Article[]> {
+  try {
+    const result = await apiFetch<PagedResult<Article>>(
+      '/articles?featured=true&page=1&pageSize=3',
       { next: { revalidate: 60 } } as RequestInit,
     );
     return result.items;
@@ -48,17 +62,18 @@ export async function generateMetadata({
   };
 }
 
-/** 品牌首頁（The BRAND 式）：hero → 認識房仲 → 實績 → 核心價值 → 精選物件 → 聯絡 CTA */
+/** 品牌首頁（The BRAND 式）：hero → 認識房仲 → 實績 → 核心價值 → 精選物件 → 專欄精選 → 聯絡 CTA */
 export default async function HomePage({
   params,
 }: Readonly<{ params: Promise<{ locale: string }> }>) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const [dict, site, featured] = await Promise.all([
+  const [dict, site, featured, featuredArticles] = await Promise.all([
     getDictionary(locale),
     getSite(),
     fetchFeatured(),
+    fetchFeaturedArticles(),
   ]);
 
   const copy = siteCopy(site, locale);
@@ -252,7 +267,36 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* 6. CTA band：深色聯絡召喚 */}
+      {/* 6. Featured articles：白底專欄精選（無精選文章整段隱藏） */}
+      {featuredArticles.length > 0 && (
+        <section className="bg-white py-20 sm:py-28">
+          <div className="mx-auto max-w-7xl px-4 sm:px-8">
+            <Reveal className="text-center">
+              <p className="eyebrow">{dict.home.articlesEyebrow}</p>
+              <h2 className="font-display mt-4 text-3xl sm:text-4xl">
+                {dict.home.articlesTitle}
+              </h2>
+            </Reveal>
+            <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {featuredArticles.map((article, index) => (
+                <ArticleCard
+                  key={article.id}
+                  locale={locale}
+                  article={article}
+                  index={index}
+                />
+              ))}
+            </div>
+            <div className="mt-12 text-center">
+              <Link href={`/${locale}/blog`} className={btn.secondary}>
+                {dict.common.viewAll}
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* 7. CTA band：深色聯絡召喚 */}
       <section className="bg-ink py-24 text-white sm:py-32">
         <Reveal className="mx-auto max-w-2xl px-4 text-center sm:px-8">
           <h2 className="font-display text-3xl sm:text-4xl">

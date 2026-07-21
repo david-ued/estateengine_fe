@@ -1,6 +1,7 @@
 'use client';
 
 import {
+  IconArticle,
   IconExternalLink,
   IconInbox,
   IconLayoutDashboard,
@@ -20,7 +21,7 @@ import { cn } from '@/lib/utils';
 
 export interface AgentNavItem {
   /** 對應圖示的鍵值（圖示只在 client 端解析，故 server 僅傳字串） */
-  key: 'listings' | 'new' | 'shareLinks' | 'inbox' | 'brand' | 'users';
+  key: 'listings' | 'new' | 'shareLinks' | 'inbox' | 'posts' | 'brand' | 'users';
   href: string;
   label: string;
 }
@@ -30,6 +31,7 @@ const ICONS: Record<AgentNavItem['key'], ComponentType<IconProps>> = {
   new: IconPlus,
   shareLinks: IconShare3,
   inbox: IconInbox,
+  posts: IconArticle,
   brand: IconPalette,
   users: IconUsers,
 };

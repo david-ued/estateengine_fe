@@ -30,6 +30,7 @@ export default async function SiteLayout({
   // 桌機與手機導覽共用同一份連結與登入標籤
   const navLinks = [
     { href: `/${locale}/search`, label: dict.nav.search },
+    { href: `/${locale}/blog`, label: dict.nav.blog },
     { href: `/${locale}/about`, label: dict.nav.about },
     { href: `/${locale}/contact`, label: dict.nav.contact },
   ];
@@ -91,6 +92,14 @@ export default async function SiteLayout({
                   className="transition-colors hover:text-gold-soft"
                 >
                   {dict.nav.search}
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href={`/${locale}/blog`}
+                  className="transition-colors hover:text-gold-soft"
+                >
+                  {dict.nav.blog}
                 </Link>
               </li>
               <li>

@@ -235,6 +235,128 @@ a.press:active {
   border-color: var(--color-gold);
 }
 
+/* ---------------------------------------------------------------
+   專欄文章排版（.article-prose）
+   公開內頁與後台 Tiptap 編輯器共用，確保所見即所得
+---------------------------------------------------------------- */
+.article-prose {
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  color: var(--foreground);
+  overflow-wrap: break-word;
+}
+
+.article-prose > :first-child {
+  margin-top: 0;
+}
+
+.article-prose p {
+  margin: 1.25em 0;
+}
+
+.article-prose h2,
+.article-prose h3 {
+  font-family: var(--font-heading), Georgia, serif;
+  line-height: 1.3;
+}
+
+.article-prose h2 {
+  font-size: 1.65em;
+  margin: 2em 0 0.75em;
+}
+
+.article-prose h3 {
+  font-size: 1.3em;
+  margin: 1.75em 0 0.6em;
+}
+
+.article-prose a {
+  color: var(--color-gold);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.article-prose blockquote {
+  margin: 1.75em 0;
+  border-left: 2px solid var(--color-gold);
+  padding-left: 1.25em;
+  font-family: var(--font-heading), Georgia, serif;
+  font-size: 1.1em;
+  color: color-mix(in srgb, var(--foreground) 72%, transparent);
+}
+
+.article-prose ul,
+.article-prose ol {
+  margin: 1.25em 0;
+  padding-left: 1.5em;
+}
+
+.article-prose ul {
+  list-style: disc;
+}
+
+.article-prose ol {
+  list-style: decimal;
+}
+
+.article-prose li {
+  margin: 0.4em 0;
+}
+
+.article-prose img {
+  display: block;
+  width: 100%;
+  margin: 2em 0;
+}
+
+.article-prose hr {
+  margin: 2.5em auto;
+  width: 3.5rem;
+  border: none;
+  border-top: 1px solid var(--color-gold);
+}
+
+.article-prose code {
+  background: rgb(0 0 0 / 0.06);
+  padding: 0.15em 0.35em;
+  font-size: 0.9em;
+}
+
+.dark .article-prose code {
+  background: rgb(255 255 255 / 0.1);
+}
+
+.article-prose pre {
+  margin: 1.5em 0;
+  overflow-x: auto;
+  background: var(--color-ink);
+  color: #ededed;
+  padding: 1em 1.25em;
+  font-size: 0.9em;
+}
+
+.article-prose pre code {
+  background: none;
+  padding: 0;
+}
+
+/* Tiptap 編輯器：空文件 placeholder + 選取中的圖片外框 */
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: rgb(0 0 0 / 0.25);
+}
+
+.dark .tiptap p.is-editor-empty:first-child::before {
+  color: rgb(255 255 255 / 0.25);
+}
+
+.tiptap img.ProseMirror-selectednode {
+  outline: 2px solid var(--color-gold);
+}
+
 /* 地圖價格 pill（Airbnb 式標記） */
 .map-pill-wrap {
   background: transparent;

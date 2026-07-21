@@ -122,6 +122,27 @@ export interface FavoriteEntry {
   property: Property;
 }
 
+// ---------- 專欄文章（Blog） ----------
+
+export type ArticleStatus = 'draft' | 'published';
+
+export interface Article {
+  id: string;
+  author_id: string;
+  slug: string;
+  title: string;
+  excerpt: string | null;
+  /** 列表端點不回傳內文，僅內頁 / 編輯載入 */
+  content_html?: string;
+  cover_image_url: string | null;
+  is_featured: boolean;
+  status: ArticleStatus;
+  published_at: string | null;
+  created_at: string;
+  updated_at: string;
+  author?: AgentCard;
+}
+
 export interface ContactMessage {
   id: string;
   name: string;

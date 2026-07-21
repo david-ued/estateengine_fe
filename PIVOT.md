@@ -41,7 +41,8 @@ EstateEngine 從「多房仲 SaaS 平台」收斂為 **單一 agent 的個人品
 | （Login / Save Search） | `/[locale]/account/favorites`、`/[locale]/account/saved-searches` | 買家帳號區 |
 | — | `/[locale]/agent/**` | agent 後台照舊（物件/分享清單/AI 建檔），新增：聯絡訊息收件匣、品牌設定 |
 | — | `/[locale]/share/[slug]` | 推薦清單分享頁保留 |
-| ~~Blog / Sold / Testimonials~~ | （本期不做） | 之後再補 |
+| Blog | `/[locale]/blog`、`/[locale]/blog/[slug]` | ✅ 2026-07-21 補上：專欄列表 + 內頁；首頁「專欄精選」區塊；後台 `agent/posts` Tiptap 編輯器 |
+| ~~Sold / Testimonials~~ | （本期不做） | 之後再補 |
 | ~~/admin~~ | **移除** | Super Admin 後台與相關元件全刪 |
 
 ## 4. 視覺方向（複製參考站 style）
@@ -99,6 +100,17 @@ EstateEngine 從「多房仲 SaaS 平台」收斂為 **單一 agent 的個人品
 - [x] **預售屋（pre-construction）**：`Property.is_presale`（BE migration `20260720000001_presale.sql`）；agent 建檔表單新增勾選；listing card 徽章優先序 預售屋 > 新上市 > 銷售中（ink 底金字）；內頁標頭加徽章、側欄 CTA 由「詢問此物件」換成 `RemindMe`（`components/property/remind-me.tsx`：展開姓名/Email 表單 → 以「【預售屋提醒登記】…」訊息寫入 contact_messages，已登入自動預填；之後串 email service 時以此前綴辨識）。
 - [x] 字典：`contactWidget.*`、`property.exclusiveLocked* / remind*`、`listings.presaleBadge`、`agentForm.isPresale`（zh-TW / en 同步）。
 - [x] 驗證：FE tsc / eslint 0 錯誤、`next build` 41 路由；瀏覽器走查（未登入）首頁與內頁小窗開合與文案、/contact 頁正確隱藏小窗、獨家數據遮罩 + CTA + `next` 連結正確、console / server 皆無錯誤。預售屋 UI 因遠端尚未套用新 migration，僅靜態驗證（見下方手動步驟）。
+
+### 第五輪調整（2026-07-21，David 指示）— 專欄部落格（Blog）
+
+- [x] **公開專欄**：`(site)/blog/page.tsx`（深色刊頭 + 卡片格線 + 分頁）與 `(site)/blog/[slug]/page.tsx`（Substack 式窄欄長文、OG metadata、文末聯絡 CTA）；`components/blog/article-card.tsx` 共用卡片（無封面時深色底金色字首）。內文排版 `.article-prose` 定義於 `globals.css`，前台與編輯器共用（所見即所得）。
+- [x] **首頁「專欄精選」**：精選物件與聯絡 CTA 之間新增白底區塊，取 `is_featured` 已發佈文章前 3 篇；無精選整段隱藏。頂部導覽與 footer 加「專欄」連結。
+- [x] **後台編輯器（Substack 式）**：側欄新增「專欄管理」（`agent/posts` 列表 + `new` / `[id]/edit`）。`components/agent/article-editor.tsx` 以 **Tiptap v3**（StarterKit + Image + Placeholder）實作：大標題/摘要無框輸入、sticky 工具列（粗體/斜體/刪除線/H2/H3/引言/清單/連結/圖片/分隔線/復原）、封面與內文圖直傳 `article-media` bucket（RLS 限自己 uid 資料夾）、slug 自訂（留空由 BE 產生，中文標題退回亂數）、首頁精選勾選、草稿/發佈/轉回草稿/刪除。
+- [x] **BE `articles` module**：公開 `GET /articles`（分頁 + `featured=`）與 `GET /articles/:slug`（含作者名片）；agent 限定 `GET /articles/mine`、`POST`、`PATCH /:id`、`DELETE /:id`。內文寫入前 `sanitize-html` 白名單消毒；首次發佈才記 `published_at`（重新發佈不覆寫）；slug 撞號自動補亂數尾碼。
+- [x] **DB**：migration `20260721000002_articles.sql`（`articles` 表 + RLS：公開讀已發佈、作者管自己的；`article-media` 公開 bucket 10MB + storage RLS）✅ 已透過 Supabase MCP 套用遠端（名稱 `articles`），security advisors 無新增問題。
+- [x] 字典：`nav.blog`、`home.articlesEyebrow/articlesTitle`、`blog.*`、`agent.postsNav`、`agentBlog.*`（zh-TW / en 同步）。
+- [x] 驗證：FE `next build` 44 路由 + eslint 0 錯誤、BE `nest build` 通過（lint 僅既有 supabase untyped client 型態警告同款）；smoke test：種一篇精選文章 → `/articles` 列表/內頁 API、`/zh-TW/blog` 列表、內頁 `.article-prose` 渲染、首頁「專欄精選」區塊、未知 slug 404、未帶 token `POST /articles` 401，全部通過（測試文章已清除）。
+- [x] E2E 驗證（Playwright headless，暫時 agent 帳號跑完即刪）：登入 → 後台空狀態 → 編輯器寫文（標題/摘要/H2/段落）→ 封面與內文圖直傳 `article-media` → 勾精選 → 發佈（自動轉導編輯頁、slug 自動產生）→ 後台列表「已發佈+精選」→ `/blog` 列表 → 內頁（標題/H2/內文圖）→ 首頁「專欄精選」→ 轉回草稿後公開 API 立即 404，全部通過；文章/圖檔/帳號已清除。
 
 ## 6. ⚠️ 需 David 手動執行
 
