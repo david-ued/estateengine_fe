@@ -28,6 +28,7 @@ const FILTER_KEYS = [
   'minMaterial',
   'orientation',
   'amenities',
+  'petsAllowed',
   'sort',
 ] as const;
 

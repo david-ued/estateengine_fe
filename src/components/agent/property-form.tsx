@@ -101,6 +101,7 @@ export function PropertyForm({
       propertyType: text('propertyType'),
       hasParking: form.get('hasParking') === 'on',
       isPresale: form.get('isPresale') === 'on',
+      petsAllowed: form.get('petsAllowed') === 'on',
       mlsNumber: text('mlsNumber'),
       schoolDistrict: text('schoolDistrict'),
       transitNotes: text('transitNotes'),
@@ -333,6 +334,15 @@ export function PropertyForm({
             className="size-5"
           />
           {labels.hasParking}
+        </label>
+        <label className="flex items-center gap-2 text-sm">
+          <input
+            name="petsAllowed"
+            type="checkbox"
+            defaultChecked={property?.pets_allowed ?? false}
+            className="size-5"
+          />
+          {labels.petsAllowed}
         </label>
         <label className="flex items-center gap-2 text-sm">
           <input

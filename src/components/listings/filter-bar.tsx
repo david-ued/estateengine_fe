@@ -10,6 +10,7 @@ import {
   IconChevronDown,
   IconCompass,
   IconHome,
+  IconPaw,
   IconRulerMeasure,
   IconSchool,
   IconStar,
@@ -80,6 +81,7 @@ export interface ListingFilters {
   minMaterial?: string;
   orientation?: string;
   amenities?: string;
+  petsAllowed?: string;
   sort?: string;
 }
 
@@ -97,6 +99,8 @@ interface FilterState {
   minMaterial: number;
   orientation: string;
   amenities: Amenity[];
+  /** 寵物三態：'' 不限 / 'true' 可養 / 'false' 不可養 */
+  petsAllowed: '' | 'true' | 'false';
 }
 
 function fromDefaults(defaults: ListingFilters): FilterState {
@@ -116,6 +120,10 @@ function fromDefaults(defaults: ListingFilters): FilterState {
     amenities: (defaults.amenities?.split(',') ?? []).filter((key): key is Amenity =>
       (AMENITIES as readonly string[]).includes(key),
     ),
+    petsAllowed:
+      defaults.petsAllowed === 'true' || defaults.petsAllowed === 'false'
+        ? defaults.petsAllowed
+        : '',
   };
 }
 
@@ -190,6 +198,7 @@ function useListingFilters(locale: string, defaults: ListingFilters) {
     if (s.minMaterial > 0) params.set('minMaterial', String(s.minMaterial));
     if (s.orientation) params.set('orientation', s.orientation);
     if (s.amenities.length > 0) params.set('amenities', s.amenities.join(','));
+    if (s.petsAllowed) params.set('petsAllowed', s.petsAllowed);
 
     // 排序另由 SortSelect 管理，套用篩選時保留；分頁則重設回第 1 頁
     const sort = searchParams.get('sort');
@@ -212,6 +221,7 @@ function useListingFilters(locale: string, defaults: ListingFilters) {
     state.minMaterial > 0,
     state.orientation !== '',
     state.amenities.length > 0,
+    state.petsAllowed !== '',
   ].filter(Boolean).length;
 
   const activeCount =
@@ -591,6 +601,31 @@ function AdvancedSection({
                 </button>
               );
             })}
+          </div>
+        </div>
+
+        {/* 寵物：三態單選（不限 / 可養 / 不可養），對應 BE petsAllowed=true/false */}
+        <div>
+          <h4 className={sectionTitle}>
+            <IconPaw size={18} className="text-gold" /> {labels.pets}
+          </h4>
+          <div className="flex flex-wrap gap-2">
+            {(
+              [
+                ['', labels.any],
+                ['true', labels.petsAllowed],
+                ['false', labels.petsNotAllowed],
+              ] as const
+            ).map(([value, label]) => (
+              <button
+                key={value || 'any'}
+                type="button"
+                className={chip(state.petsAllowed === value)}
+                onClick={() => patch({ petsAllowed: value })}
+              >
+                {label}
+              </button>
+            ))}
           </div>
         </div>
       </div>

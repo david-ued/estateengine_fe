@@ -174,6 +174,7 @@ export default async function PropertyDetailPage({
     { label: p.bathrooms, value: property.baths.toLocaleString(locale) },
     { label: p.basement, value: form.basementOptions[property.basement_status] },
     { label: p.parking, value: property.has_parking ? p.parkingYes : p.parkingNo },
+    { label: p.pets, value: property.pets_allowed ? p.petsYes : p.petsNo },
   ];
 
   const additionalRows: FeatureRow[] = [];

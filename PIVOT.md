@@ -112,7 +112,15 @@ EstateEngine 從「多房仲 SaaS 平台」收斂為 **單一 agent 的個人品
 - [x] 驗證：FE `next build` 44 路由 + eslint 0 錯誤、BE `nest build` 通過（lint 僅既有 supabase untyped client 型態警告同款）；smoke test：種一篇精選文章 → `/articles` 列表/內頁 API、`/zh-TW/blog` 列表、內頁 `.article-prose` 渲染、首頁「專欄精選」區塊、未知 slug 404、未帶 token `POST /articles` 401，全部通過（測試文章已清除）。
 - [x] E2E 驗證（Playwright headless，暫時 agent 帳號跑完即刪）：登入 → 後台空狀態 → 編輯器寫文（標題/摘要/H2/段落）→ 封面與內文圖直傳 `article-media` → 勾精選 → 發佈（自動轉導編輯頁、slug 自動產生）→ 後台列表「已發佈+精選」→ `/blog` 列表 → 內頁（標題/H2/內文圖）→ 首頁「專欄精選」→ 轉回草稿後公開 API 立即 404，全部通過；文章/圖檔/帳號已清除。
 
+### 第六輪調整（2026-07-22，David 指示）— 可養寵物篩選
+
+- [x] **可養寵物（pets allowed）**：`Property.pets_allowed`（BE migration `20260722000001_pets_allowed.sql`，✅ 已透過 Supabase MCP 套用遠端，名稱 `pets_allowed`）；agent 建檔表單新增「可養寵物」勾選（含車位下方）；內頁「室內資訊」新增「寵物：可養/不可養」列。
+- [x] **搜尋三態篩選**：filter-bar「更多條件」進階面板新增「寵物」段（IconPaw，chips：不限 / 可養寵物 / 不可養寵物），URL 參數 `petsAllowed=true|false`（不帶 = 不限），計入進階篩選 badge 數；`search/page.tsx` FILTER_KEYS 加入 `petsAllowed`。
+- [x] BE：`QueryPropertiesDto.petsAllowed`（`@IsIn(['true','false'])`，`findPublished` 以 `eq('pets_allowed', …)` 過濾）、`CreatePropertyDto.petsAllowed` + `toRow` 對應 `pets_allowed`。
+- [x] 字典：`filters.pets / petsAllowed / petsNotAllowed`、`property.pets / petsYes / petsNo`、`agentForm.petsAllowed`（zh-TW / en 同步）。
+- [x] 驗證：FE / BE tsc 皆 0 錯誤；本機 API 實測 `petsAllowed=false` 回傳既有 7 筆（`pets_allowed: false`）、`petsAllowed=true` 回空、非法值 400。
+
 ## 6. ⚠️ 需 David 手動執行
 
 1. ~~套用 `20260710000005_ai_tokens.sql` + `20260716000001_single_agent_pivot.sql`~~ ✅ 2026-07-20 確認已套用（contact_messages / site_settings / favorites / saved_searches 皆存在，品牌資料已種）。
-2. **NEW（2026-07-20）**：SQL Editor 執行 `estateengine_be/supabase/migrations/20260720000001_presale.sql`（一行 `alter table properties add column is_presale`）。**套用前 agent 後台儲存物件會因欄位不存在而失敗**，請儘早執行。
+2. ~~SQL Editor 執行 `estateengine_be/supabase/migrations/20260720000001_presale.sql`~~ ✅ 2026-07-20 已透過 Supabase MCP 套用遠端（見 BE PIVOT.md 執行日誌）。
