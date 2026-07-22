@@ -120,6 +120,18 @@ EstateEngine 從「多房仲 SaaS 平台」收斂為 **單一 agent 的個人品
 - [x] 字典：`filters.pets / petsAllowed / petsNotAllowed`、`property.pets / petsYes / petsNo`、`agentForm.petsAllowed`（zh-TW / en 同步）。
 - [x] 驗證：FE / BE tsc 皆 0 錯誤；本機 API 實測 `petsAllowed=false` 回傳既有 7 筆（`pets_allowed: false`）、`petsAllowed=true` 回空、非法值 400。
 
+### 第七輪調整（2026-07-22，David 指示）— Prospect CRM（買家準備度 / lock-in / Act Fast）
+
+對應 Tim 訊息的 1（pre-approval 房貸/資產證明）、4（Act Fast 先與賣家談）、5（walk in/walk away 表態），並利用買家後台自助申報。
+
+- [x] **買家後台「購屋準備」**：`/account` 子導覽新增第三分頁 `account/readiness`（收藏與搜尋 ↔ 購屋準備 ↔ 帳號設定）。上半 `ProspectReadinessForm`：房貸預批三態（未辦理/辦理中/已取得）、預批額度、資產證明勾選、補充說明，PUT `/prospects/me` 整份覆寫。下半 `InterestList`「物件表態」：清單 = 已表態物件 + 收藏未表態物件（視為考慮中），每列可「鎖定，請 Tim 洽談 / 先跳過 / 改回考慮中」；agent 設了 Act Fast 會顯示金框徽章「Tim 正在為你與賣家洽談」。
+- [x] **Agent 後台「客戶 CRM」**：側欄新增（IconAddressBook，聯絡訊息之下）。`agent/prospects` 列表：全部買家＋預批徽章（已取得金底）/資產證明/表態彙總（鎖定 n、洽談中 n）/收藏數/最後活動，按活動排序。`agent/prospects/[id]` 明細（`ProspectManager`）：財務準備度卡（agent 可代為更新＋「內部備註（買家看不到）」；買家補充以金邊引用框顯示）＋物件表態清單（決策下拉代為表態、Act Fast 勾選、洽談備註，收藏未表態的物件存檔時自動建立表態列）。
+- [x] 型別：`types.ts` 新增 `PreApprovalStatus / InterestDecision / ProspectFinance / InterestProperty / PropertyInterest / ProspectListItem / ProspectDetail`。
+- [x] 字典：`account.navReadiness / account.readiness.*`、`agent.prospectsNav`、`agentCrm.*`（zh-TW / en 同步）。
+- [x] 驗證：FE `next build` 46 路由 + 新檔 eslint 0 錯誤；E2E（Playwright + API，暫時 buyer/agent 跑完即刪）：買家申報財務（回應不含 agent_note）→ 收藏 + lock-in → 買家打 CRM 端點 403 → agent 列表彙總（lockedIn/favorites/finance）→ 明細（買家補充可見）→ agent 改預批為已取得＋內部備註（不覆寫買家補充）→ Act Fast（不重設 decision）→ 買家端看得到 act_fast、看不到兩處 agent_note → 三頁瀏覽器渲染（readiness 徽章 / CRM 列表 / CRM 明細）全數通過。
+
+> 設計註記：`prospect_profiles` / `property_interests` 僅 BE service_role 存取（RLS 啟用但無 client policy）——`agent_note` 需對買家保密，RLS 是 row-level 藏不住欄位，故買家/agent 分別走 BE 端點的不同欄位集。
+
 ## 6. ⚠️ 需 David 手動執行
 
 1. ~~套用 `20260710000005_ai_tokens.sql` + `20260716000001_single_agent_pivot.sql`~~ ✅ 2026-07-20 確認已套用（contact_messages / site_settings / favorites / saved_searches 皆存在，品牌資料已種）。

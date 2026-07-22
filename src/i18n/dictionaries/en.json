@@ -290,6 +290,7 @@
     "unavailable": "Off market",
     "actionError": "Action failed. Please try again.",
     "navSaved": "Saved",
+    "navReadiness": "Buying readiness",
     "navSettings": "Settings",
     "settings": {
       "title": "Account Settings",
@@ -307,6 +308,36 @@
       "passwordMismatch": "Passwords don't match.",
       "passwordTooShort": "Password must be at least 6 characters.",
       "saveError": "Save failed. Please try again."
+    },
+    "readiness": {
+      "financeTitle": "Financing",
+      "financeIntro": "Share your mortgage and funding progress so Tim can move fast when you're ready to offer. Only you and Tim can see this.",
+      "statusLabel": "Mortgage pre-approval",
+      "statusOptions": {
+        "none": "Not started",
+        "in_progress": "In progress",
+        "approved": "Approved"
+      },
+      "amountLabel": "Pre-approved amount (CAD, optional)",
+      "proofLabel": "Proof of funds ready (down payment)",
+      "noteLabel": "Notes (optional)",
+      "notePlaceholder": "e.g. your bank, buying timeline, mortgage specialist contact…",
+      "save": "Save",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "interestsTitle": "Property decisions",
+      "interestsIntro": "Pick your next moves from your saved homes — lock in the ones you want Tim to pursue with the seller; walk away from the rest (you can always change your mind).",
+      "interestsEmpty": "Save a few homes from the search page first, then come back and tell Tim how you want to proceed.",
+      "decision": {
+        "considering": "Considering",
+        "locked_in": "Locked in",
+        "walked_away": "Walked away"
+      },
+      "lockIn": "Lock in — have Tim negotiate",
+      "walkAway": "Walk away",
+      "reset": "Back to considering",
+      "actFastBadge": "Tim is negotiating with the seller",
+      "error": "Something went wrong. Please try again."
     }
   },
   "admin": {
@@ -341,6 +372,7 @@
     "videoClicks": "Video Clicks",
     "shareLinksNav": "Curated Lists",
     "inboxNav": "Messages",
+    "prospectsNav": "Prospects",
     "postsNav": "Articles",
     "brandNav": "Brand Settings",
     "usersNav": "Members",
@@ -360,6 +392,50 @@
       "sold": "Sold"
     },
     "actionError": "Action failed. Please try again."
+  },
+  "agentCrm": {
+    "title": "Prospect CRM",
+    "subtitle": "Every buyer's financing readiness and property decisions at a glance — know where they stand before the offer.",
+    "empty": "No buyer members yet.",
+    "loadError": "Failed to load. Please retry.",
+    "colName": "Prospect",
+    "colPreApproval": "Pre-approval",
+    "colSignals": "Decisions",
+    "colFavorites": "Saved",
+    "colActivity": "Last activity",
+    "view": "Manage",
+    "preApproval": {
+      "none": "Not started",
+      "in_progress": "In progress",
+      "approved": "Approved"
+    },
+    "proofReady": "Proof of funds ready",
+    "lockedShort": "Locked {n}",
+    "actFastShort": "Negotiating {n}",
+    "backToList": "All prospects",
+    "registered": "Joined",
+    "financeTitle": "Financing readiness",
+    "amountLabel": "Pre-approved amount (CAD)",
+    "proofLabel": "Proof of funds ready",
+    "agentNoteLabel": "Internal note (hidden from buyer)",
+    "buyerNoteLabel": "Buyer notes",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "error": "Something went wrong. Please try again.",
+    "interestsTitle": "Property decisions & negotiations",
+    "interestsIntro": "Includes decided and saved-only properties. Act Fast marks that you are already negotiating with the seller — the buyer sees it too.",
+    "interestsEmpty": "This buyer has not saved or decided on any properties yet.",
+    "decision": {
+      "considering": "Considering",
+      "locked_in": "Locked in",
+      "walked_away": "Walked away"
+    },
+    "decisionLabel": "Decision",
+    "actFastLabel": "Act Fast: negotiating with seller",
+    "actFastBadge": "Act Fast in progress",
+    "interestNotePlaceholder": "Negotiation note (hidden from buyer)…",
+    "updated": "Updated"
   },
   "inbox": {
     "title": "Messages",

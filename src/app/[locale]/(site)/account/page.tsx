@@ -68,6 +68,7 @@ export default async function AccountPage({
         locale={locale}
         labels={{
           saved: dict.account.navSaved,
+          readiness: dict.account.navReadiness,
           settings: dict.account.navSettings,
         }}
       />

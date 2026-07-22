@@ -4,17 +4,18 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 
-/** 買家帳號區的水平子導覽（收藏/搜尋 ↔ 帳號設定），金色底線標示所在頁。 */
+/** 買家帳號區的水平子導覽（收藏/搜尋 ↔ 購屋準備 ↔ 帳號設定），金色底線標示所在頁。 */
 export function AccountTabs({
   locale,
   labels,
 }: Readonly<{
   locale: string;
-  labels: Readonly<{ saved: string; settings: string }>;
+  labels: Readonly<{ saved: string; readiness: string; settings: string }>;
 }>) {
   const pathname = usePathname();
   const tabs = [
     { href: `/${locale}/account`, label: labels.saved },
+    { href: `/${locale}/account/readiness`, label: labels.readiness },
     { href: `/${locale}/account/settings`, label: labels.settings },
   ];
 

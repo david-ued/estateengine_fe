@@ -290,6 +290,7 @@
     "unavailable": "已下架",
     "actionError": "操作失敗，請稍後再試",
     "navSaved": "收藏與搜尋",
+    "navReadiness": "購屋準備",
     "navSettings": "帳號設定",
     "settings": {
       "title": "帳號設定",
@@ -307,6 +308,36 @@
       "passwordMismatch": "兩次密碼不一致",
       "passwordTooShort": "密碼至少需 6 個字元",
       "saveError": "儲存失敗，請稍後再試"
+    },
+    "readiness": {
+      "financeTitle": "財務準備",
+      "financeIntro": "讓 Tim 先掌握你的房貸與資金進度，出價時就能更快行動。這些資訊只有你與 Tim 看得到。",
+      "statusLabel": "房貸預批（Pre-approval）",
+      "statusOptions": {
+        "none": "尚未辦理",
+        "in_progress": "辦理中",
+        "approved": "已取得"
+      },
+      "amountLabel": "預批額度（CAD，選填）",
+      "proofLabel": "已備妥資產證明（頭期款資金證明）",
+      "noteLabel": "補充說明（選填）",
+      "notePlaceholder": "例如：往來銀行、預計購屋時程、貸款專員聯絡方式…",
+      "save": "儲存",
+      "saving": "儲存中…",
+      "saved": "已儲存",
+      "interestsTitle": "物件表態",
+      "interestsIntro": "從收藏挑出想進一步的物件——「鎖定」的物件 Tim 會優先為你與賣家洽談；「先跳過」之後隨時可以改。",
+      "interestsEmpty": "先到搜尋頁收藏幾個物件，再回來這裡告訴 Tim 你想怎麼進行。",
+      "decision": {
+        "considering": "考慮中",
+        "locked_in": "已鎖定",
+        "walked_away": "先跳過"
+      },
+      "lockIn": "鎖定，請 Tim 洽談",
+      "walkAway": "先跳過",
+      "reset": "改回考慮中",
+      "actFastBadge": "Tim 正在為你與賣家洽談",
+      "error": "操作失敗，請再試一次。"
     }
   },
   "admin": {
@@ -341,6 +372,7 @@
     "videoClicks": "影片點擊",
     "shareLinksNav": "推薦清單",
     "inboxNav": "聯絡訊息",
+    "prospectsNav": "客戶 CRM",
     "postsNav": "專欄管理",
     "brandNav": "品牌設定",
     "usersNav": "會員管理",
@@ -360,6 +392,50 @@
       "sold": "已成交"
     },
     "actionError": "操作失敗，請稍後再試"
+  },
+  "agentCrm": {
+    "title": "客戶管理（Prospect CRM）",
+    "subtitle": "買家的財務準備度與物件表態一目了然，出價前先掌握。",
+    "empty": "目前還沒有買家會員。",
+    "loadError": "讀取失敗，請重試。",
+    "colName": "客戶",
+    "colPreApproval": "房貸預批",
+    "colSignals": "表態",
+    "colFavorites": "收藏",
+    "colActivity": "最後活動",
+    "view": "管理",
+    "preApproval": {
+      "none": "未辦理",
+      "in_progress": "辦理中",
+      "approved": "已取得"
+    },
+    "proofReady": "資產證明已備妥",
+    "lockedShort": "鎖定 {n}",
+    "actFastShort": "洽談中 {n}",
+    "backToList": "客戶列表",
+    "registered": "註冊於",
+    "financeTitle": "財務準備度",
+    "amountLabel": "預批額度（CAD）",
+    "proofLabel": "資產證明已備妥",
+    "agentNoteLabel": "內部備註（買家看不到）",
+    "buyerNoteLabel": "買家補充",
+    "save": "儲存",
+    "saving": "儲存中…",
+    "saved": "已儲存",
+    "error": "操作失敗，請再試一次。",
+    "interestsTitle": "物件表態與洽談",
+    "interestsIntro": "含買家已表態與收藏中的物件。勾選 Act Fast 代表你已優先與賣家洽談，買家端會同步顯示。",
+    "interestsEmpty": "這位買家還沒有收藏或表態任何物件。",
+    "decision": {
+      "considering": "考慮中",
+      "locked_in": "已鎖定",
+      "walked_away": "已跳過"
+    },
+    "decisionLabel": "表態",
+    "actFastLabel": "Act Fast：已優先與賣家洽談",
+    "actFastBadge": "Act Fast 洽談中",
+    "interestNotePlaceholder": "洽談備註（買家看不到）…",
+    "updated": "更新於"
   },
   "inbox": {
     "title": "聯絡訊息",

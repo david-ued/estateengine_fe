@@ -145,6 +145,76 @@ export interface Article {
   author?: AgentCard;
 }
 
+// ---------- Prospect CRM（購屋準備 / 物件表態） ----------
+
+export type PreApprovalStatus = 'none' | 'in_progress' | 'approved';
+export type InterestDecision = 'considering' | 'locked_in' | 'walked_away';
+
+export interface ProspectFinance {
+  user_id: string;
+  pre_approval_status: PreApprovalStatus;
+  pre_approval_amount: number | null;
+  proof_of_funds: boolean;
+  buyer_note: string | null;
+  /** 僅 agent 端點回傳（買家不可見） */
+  agent_note?: string | null;
+  updated_at: string | null;
+}
+
+/** 表態 / 收藏列表用的輕量物件欄位 */
+export interface InterestProperty {
+  id: string;
+  title: string;
+  status: PropertyStatus;
+  city: string;
+  district: string | null;
+  price: number;
+  currency: string;
+  is_presale?: boolean;
+}
+
+export interface PropertyInterest {
+  id: string;
+  property_id: string;
+  decision: InterestDecision;
+  /** agent 已優先與賣家洽談（Act Fast）；買家可見 */
+  act_fast: boolean;
+  decided_at: string | null;
+  updated_at: string;
+  /** 僅 agent 端點回傳 */
+  agent_note?: string | null;
+  property: InterestProperty;
+}
+
+export interface ProspectListItem {
+  id: string;
+  email: string | null;
+  full_name: string | null;
+  display_name: string | null;
+  phone: string | null;
+  created_at: string;
+  finance: ProspectFinance | null;
+  lockedIn: number;
+  walkedAway: number;
+  actFast: number;
+  favorites: number;
+  lastActivity: string | null;
+}
+
+export interface ProspectDetail {
+  buyer: {
+    id: string;
+    email: string | null;
+    full_name: string | null;
+    display_name: string | null;
+    phone: string | null;
+    created_at: string;
+  };
+  finance: ProspectFinance;
+  interests: PropertyInterest[];
+  favorites: { created_at: string; property: InterestProperty }[];
+}
+
 export interface ContactMessage {
   id: string;
   name: string;

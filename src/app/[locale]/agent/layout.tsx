@@ -37,6 +37,11 @@ export default async function AgentLayout({
       label: dict.agent.shareLinksNav,
     },
     { key: 'inbox', href: `/${locale}/agent/inbox`, label: dict.agent.inboxNav },
+    {
+      key: 'prospects',
+      href: `/${locale}/agent/prospects`,
+      label: dict.agent.prospectsNav,
+    },
     { key: 'posts', href: `/${locale}/agent/posts`, label: dict.agent.postsNav },
     { key: 'brand', href: `/${locale}/agent/brand`, label: dict.agent.brandNav },
     { key: 'users', href: `/${locale}/agent/users`, label: dict.agent.usersNav },
